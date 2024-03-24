@@ -12,8 +12,7 @@ let prioIndex = 1;
 let isFilterActive = false;
 
 function initAddTask() {
-  currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  console.log(currentUser)
+  currentUser = JSON.parse(localStorage.getItem('currentUser'));  
   renderAssignedToContacts();
   setCurrentDate();
   addSubtaskVisibilityListener();

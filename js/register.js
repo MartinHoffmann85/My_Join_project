@@ -82,8 +82,7 @@ async function addNewUserToBackend(user) {
     try {
         let existingUsers = await loadUsersFromBackend('users');
         existingUsers.push(user);
-        await setItem('users', JSON.stringify(existingUsers));
-        console.log('New user added to backend:', user);
+        await setItem('users', JSON.stringify(existingUsers));        
     } catch (error) {
         console.error('Error adding new user to backend:', error);
     }
@@ -271,8 +270,7 @@ function closeSignUp() {
 async function login() {
         const loggedInUser = loadCurrentUser();
         if (loggedInUser) {
-            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));
-            console.log('Logged in user:', loggedInUser);
+            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
             window.location.assign("../summary.html");
             getUserInitials();            
         } else {
@@ -411,8 +409,7 @@ function getPasswordInput(whichform) {
 function loadCurrentUser() {
     const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
     const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const foundUser = users.find(user => user.userEMail === loginUserEmail);
-    console.log("function loadCurrentUser()" , foundUser);
+    const foundUser = users.find(user => user.userEMail === loginUserEmail);    
     if (foundUser) {
         if (foundUser.userPassword === loginUserPassword) {
             return foundUser;
@@ -445,8 +442,7 @@ function getUserInitials() {
         const userName = userEmail.split('@')[0];        
         const [firstName, lastName] = userName.split('.');        
         const initials = `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;        
-        localStorage.setItem('userInitials', initials);
-        console.log("function getUserInitials()" , initials);
+        localStorage.setItem('userInitials', initials);        
         return initials;
     } else {
         return '';

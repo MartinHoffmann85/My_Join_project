@@ -1,6 +1,5 @@
 async function updateGreeting() {
-    let existingUsers = await loadUsersFromBackend('users');
-    console.log('existingUsersexistingUsers',existingUsers)
+    let existingUsers = await loadUsersFromBackend('users');    
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes();
@@ -22,19 +21,15 @@ async function updateGreeting() {
     } else { // bis 04:00 Uhr
       e.innerHTML = "Good evening,";
       addHours = 23 - h;
-    }
-  
-
-    const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;
-    
+    }  
+    const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;    
     setTimeout(updateGreeting, waitTime)
   }
   
   updateGreeting();
   
   function button() {
-    const currentUser = requestToBackend() ;
-    console.log('currentuser', currentUser)
+    const currentUser = requestToBackend() ;    
 }
 
 
