@@ -7,13 +7,8 @@ let newUserArray = [];
 let emptyInput = true;
 let pwVisibility = { pwVisibilityOn: false };
 let confirmPwVisibility = { pwVisibilityOn: false };
-// let pwVisibilityOn = false;
-// let confirmPwVisibilityOn = false;
-// test test
-// test@test.de
-// pw: tEst1!
 
-// work in progress
+
 async function init() {
     users = await loadUsersFromBackend('users');
     console.log(users)
@@ -25,6 +20,7 @@ async function init() {
                                 pwVisibility);
 }
 
+
 async function loadUsersFromBackend(key) {
     try {
         const result = await getItem(key);
@@ -35,6 +31,7 @@ async function loadUsersFromBackend(key) {
     }
 }
 
+
 function register() {     
         
     if (!(registerValidationCheck() && ppCheckboxConfirmed))
@@ -44,9 +41,10 @@ function register() {
     closeSignUp();
 }
 
+
 async function addNewUser() {
     const newUser = generateNewUserObject();
-    newUserArray.push(newUser);   // braucht man  dieses Array?
+    newUserArray.push(newUser);
     try {
         await addNewUserToBackend(newUser);
 
@@ -283,7 +281,6 @@ async function login() {
 }    
 
 
-
 function handlerFieldValidationLogin(boolArr) {
     toggleVisibility('empty-email-id', boolArr[0]);
     toggleVisibility('this-is-no-email-id', boolArr[1]);
@@ -332,10 +329,7 @@ function toggleVisibility(elementId, show = true, className = 'd-none') {
 
 
 function saveCurrentUser() {
-    localStorage.setItem('users', JSON.stringify(users)); // Speichert die "users" lokal ab um später dort Kontakte zu speichern
-    // currentUser = foundUser; // Setzen Sie den aktuellen Benutzer
-    // localStorage.setItem('currentUser', JSON.stringify(currentUser));  // Speichert den "currentUser" lokal ab
-    // console.log("Saved currentUser:", currentUser); // Überprüfen, ob currentUser erfolgreich gespeichert wurde
+    localStorage.setItem('users', JSON.stringify(users));
 }
 
 
@@ -417,10 +411,10 @@ function getPasswordInput(whichform) {
 function loadCurrentUser() {
     const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
     const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const foundUser = users.find(user => user.userEMail === loginUserEmail); // Suche den Benutzer anhand der E-Mail-Adresse
+    const foundUser = users.find(user => user.userEMail === loginUserEmail);
     console.log("function loadCurrentUser()" , foundUser);
     if (foundUser) {
-        if (foundUser.userPassword === loginUserPassword) { // Überprüfe das Passwort des gefundenen Benutzers
+        if (foundUser.userPassword === loginUserPassword) {
             return foundUser;
         } else {
             console.error("Error: Incorrect password.");
