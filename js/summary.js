@@ -1,3 +1,6 @@
+setTimeout(showHeaderUserInitials, 500);
+
+
 async function updateGreeting() {
     let existingUsers = await loadUsersFromBackend('users');    
     const now = new Date();

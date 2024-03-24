@@ -19,6 +19,7 @@ function initAddTask() {
   closeAssignedToMenu();
   closeCategoryMenu();
   filterAssignedToContacts();
+  setTimeout(showHeaderUserInitials, 500);
 }
 
 function filterAssignedToContacts() {
