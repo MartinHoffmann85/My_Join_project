@@ -387,12 +387,12 @@ function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
           </div>
           <div id="editContactDestopID">
             <div class="addContactContainerFooter">
-              <form id="addContactForm" onsubmit="event.preventDefault(); updateContactDesktop(${selectedContact.id})">
+              <form id="addContactForm" onsubmit="event.preventDefault(); updateContactDesktop(${lastClickedContactId})">
                 <input class="addContactInputNameDesktop" type="text" name="editContactInputNameDesktop" id="editContactInputNameDesktopID" required placeholder="Name" value="${selectedContact.name}">
                 <input class="addContactInputMailAddresssDesktop" type="email" name="editContactInputMailAddresssDesktop" id="editContactInputMailAddresssDesktopID" required placeholder="E-Mail" value="${selectedContact.email}">
                 <input class="addContactInputPhoneDesktop" type="tel" name="editContactInputPhoneDesktop" id="editContactInputPhoneDesktopID" required pattern="[0-9]{1,}" placeholder="Phone" value="${selectedContact.phone}">
                 <div class="addContactButtonContainerDesktop">
-                  <button class="cancelContactDesktopDeleteButton" onclick="deleteContact(${selectedContact.id})">Delete</button>
+                  <button class="cancelContactDesktopDeleteButton" onclick="deleteContactDesktop(${lastClickedContactId})">Delete</button>
                   <button class="createContactButton" type="submit">Save</button>
                 </div>
               </form>
@@ -497,9 +497,9 @@ function checkForChangesDesktop(oldContact, updatedInputs) {
  * @param {string} updatedInputs - This are the new contact / email / phone number
  * @param {boolean} hasChanged - Example {hasNameChanged: false, hasMailChanged: false, hasPhoneChanged: true}
  */
-function updateContactsDataDesktop(contactId, updatedInputs, hasChanged) {    
+function updateContactsDataDesktop(lastClickedContactId, updatedInputs, hasChanged) {    
   return currentUser.contacts.map((contact) =>
-      contact.id === contactId
+      contact.id === lastClickedContactId
           ? {              
             ...contact,
             name: hasChanged.hasNameChanged ? updatedInputs.updatedName : contact.name,

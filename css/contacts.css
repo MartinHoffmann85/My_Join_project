@@ -553,7 +553,7 @@
         padding-bottom: 60px;
         margin-left: 240px;
         max-width: 30vw;
-        margin-top: 80px;
+        margin-top: 160px;
     }
 
     .letterAndContactsContainer {
@@ -646,13 +646,11 @@
         display: flex !important;
         flex-direction: column;
         min-width: calc(70vw - 232px);
-        background-color: var(--white-grey);
-        /* position: sticky; */
-        top: 10px;
-        /* max-height: calc(100vh - 100px); /* Calculate the maximum height (100vh minus header-height) */
+        background-color: var(--white-grey);        
+        top: 10px;        
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
         margin-left: 5px;
-        margin-top: 40px;
+        margin-top: 100px;
     }
 
     .contactsContentRightSideHeadLine {

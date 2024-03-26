@@ -1,6 +1,7 @@
 .footer {
     background-color: #2a3647;
     position: absolute;
+    height: 100dvh;
     width: 232px;
     bottom: 0;
     top: 0;
@@ -8,8 +9,7 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    z-index: 1000;
-    
+    z-index: 1000;    
 }
 
 .desktop-logo {
