@@ -257,8 +257,9 @@ function addContactShowOverlayDesktop() {
     overlayContainer.appendChild(overlayContent);
     generateHTMLAddContactShowOverlayDesktop(overlayContent);    
     overlayContainer.style.animation = "slide-in-menu 0.5s ease-out";
-  }
-  
+}
+
+
 /**
   * Generate HTML for add contact show overlay desktop
   * @param {string} overlayContent - Overlay div container
@@ -335,6 +336,189 @@ function getNewContactDesktop() {
 
 // Edit contact screen overlay desktop
 
+/**
+ * Show overlay for editing a contact at desktop view
+ * @param {string} lastClickedContactId - The ID of the last clicked contact
+ */
 function editContactDestop(lastClickedContactId) {
+  const currentUser = getLoggedInUser();
+  if (!currentUser) {
+      console.error("Logged in user not found.");
+      return;
+  }
+  const selectedContact = currentUser.contacts.find(contact => contact.id === lastClickedContactId);
+  if (!selectedContact) {
+      console.error('Error: Selected contact not found.');
+      return;
+  }  
+  const overlayContainer = document.createElement("div");
+  overlayContainer.classList.add("overlay-container");
+  document.body.appendChild(overlayContainer);  
+  const overlayContent = document.createElement("div");
+  overlayContent.classList.add("overlay-content");
+  overlayContainer.appendChild(overlayContent);  
+  generateHTMLEditContactDesktop(overlayContent, selectedContact);  
+  overlayContainer.style.animation = "slide-in 0.5s ease-out";
+}
 
+
+/**
+ * Generate HTML for editContactDestop
+ * @param {string} overlayContent - Overlay div container
+ * @param {string} selectedContact - This is the selected contact to open
+ */
+function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
+  overlayContent.innerHTML = /*html*/ `
+    <div class="overlay-card">
+      <div class="addContactDesktopLeftSideContainer">
+        <div class="flexDirectionColumn">
+          <img class="joinLogoGreyBackgroundImg" src="../../assets/img/contacts/joinLogoGreyBackground.png" alt="">
+          <h1 class="addContactDesktopLeftSideContainerH1">Edit contact</h1>          
+          <img class="addContactBlueStroked" src="../../assets/img/contacts/addContactBlueStroked.svg" alt="">
+        </div>
+      </div>
+      <div class="addContactDesktopRightSideContainer">
+        <div class="addContactBlankUserImgContainer">          
+          ${singleMemberToHTMLOpenContactMobile(selectedContact, 0)}
+        </div>
+        <div class="addContactDesktopRightSideContent">
+          <div class="addContactCloseXContainerDesktop">
+            <button class="addContactCloseXButton" onclick="hideOverlay()">X</button>
+          </div>
+          <div id="editContactDestopID">
+            <div class="addContactContainerFooter">
+              <form id="addContactForm" onsubmit="event.preventDefault(); updateContactDesktop(${selectedContact.id})">
+                <input class="addContactInputNameDesktop" type="text" name="editContactInputNameDesktop" id="editContactInputNameDesktopID" required placeholder="Name" value="${selectedContact.name}">
+                <input class="addContactInputMailAddresssDesktop" type="email" name="editContactInputMailAddresssDesktop" id="editContactInputMailAddresssDesktopID" required placeholder="E-Mail" value="${selectedContact.email}">
+                <input class="addContactInputPhoneDesktop" type="tel" name="editContactInputPhoneDesktop" id="editContactInputPhoneDesktopID" required pattern="[0-9]{1,}" placeholder="Phone" value="${selectedContact.phone}">
+                <div class="addContactButtonContainerDesktop">
+                  <button class="cancelContactDesktopDeleteButton" onclick="deleteContact(${selectedContact.id})">Delete</button>
+                  <button class="createContactButton" type="submit">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+/**
+  * Function to generate user image with random background-color on mobile view
+  */
+function singleMemberToHTMLOpenContactMobile(member, index) {
+  let textcolor;
+  let iconRightStep = 10;
+  if (!isColorLight(member.colorCode)) textcolor = 'white';
+  return `
+      <div class="openContactUserImgMobile" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
+            ${getFirstLettersOfName(member.name)}
+      </div>
+  `;
+}
+
+
+/**
+ * Update function if already exist contact was edit
+ * @param {string} contactId - This is the contact ID example "5"
+ */
+function updateContactDesktop(contactId) {
+  const updatedInputs = getUpdatedInputsDesktop();
+  if (validateInputs(updatedInputs)) {
+      const existingContact = findExistingContactDesktop(updatedInputs, contactId);
+      if (!existingContact) {
+          const oldContact = findOldContactDesktop(contactId);
+          const hasChanged = checkForChangesDesktop(oldContact, updatedInputs);
+          const updatedContactsData = updateContactsDataDesktop(contactId, updatedInputs, hasChanged);
+          saveAndInitDesktop(updatedContactsData);
+      }
+  }
+}
+
+
+/**
+ * Get updated input data for desktop view
+ */
+function getUpdatedInputsDesktop() {
+  const nameInput = document.querySelector(".addContactInputNameDesktop");
+  const mailInput = document.querySelector(".addContactInputMailAddresssDesktop");
+  const phoneInput = document.querySelector(".addContactInputPhoneDesktop");
+  return {
+      updatedName: nameInput.value.trim(),
+      updatedMail: mailInput.value.trim(),
+      updatedPhone: phoneInput.value.trim()
+  };
+}
+
+
+/**
+ * Get the contact to edit
+ * @param {string} updatedInputs - Here are the new contact name / the new contact email / the new contact phone number
+ * @param {string} contactId - This is the contact ID example "5"
+ */
+function findExistingContactDesktop(updatedInputs, contactId) {
+  return currentUser.contacts.find(
+      (contact) =>
+          contact.name === updatedInputs.updatedName &&
+          contact.email === updatedInputs.updatedMail &&
+          contact.id !== contactId
+  );
+}
+
+
+/**
+ * Find the contact by ID
+ * @param {string} contactId - This is the contact ID example "5"
+ */
+function findOldContactDesktop(contactId) {
+  return currentUser.contacts.find((contact) => contact.id === contactId);
+}
+
+
+/**
+ * Check if contact data changed
+ * @param {string} oldContact - This are the old contact name / emal / phone number
+ * @param {string} updatedInputs - This are the new contact / email / phone number
+ */
+function checkForChangesDesktop(oldContact, updatedInputs) {
+  return {
+      hasNameChanged: oldContact.name !== updatedInputs.updatedName,
+      hasMailChanged: oldContact.email !== updatedInputs.updatedMail,
+      hasPhoneChanged: oldContact.phone !== updatedInputs.updatedPhone
+  };
+}
+
+
+/**
+ * Overwrite the old contact data with the new contact data
+ * @param {string} contactId - This is the contact ID example "5"
+ * @param {string} updatedInputs - This are the new contact / email / phone number
+ * @param {boolean} hasChanged - Example {hasNameChanged: false, hasMailChanged: false, hasPhoneChanged: true}
+ */
+function updateContactsDataDesktop(contactId, updatedInputs, hasChanged) {    
+  return currentUser.contacts.map((contact) =>
+      contact.id === contactId
+          ? {              
+            ...contact,
+            name: hasChanged.hasNameChanged ? updatedInputs.updatedName : contact.name,
+            email: hasChanged.hasMailChanged ? updatedInputs.updatedMail : contact.email,
+            phone: hasChanged.hasPhoneChanged ? updatedInputs.updatedPhone : contact.phone
+            }
+      : contact
+  );    
+}
+
+
+/**
+ * Save the edit contact at the current user
+ * @param {string} updatedContactsData - Includes the updated contacts data name / email / phone number
+ */
+function saveAndInitDesktop(updatedContactsData) {
+  currentUser.contacts = updatedContactsData;
+  currentUser.save();
+  clearAddContactDesktopRightSideContainer();
+  hideOverlay();
+  contactsInit();    
 }
