@@ -19,7 +19,7 @@ function contactsInit() {
         const content = document.getElementById("all-contacts-id");
         content.style.paddingTop = '100px';
         content.style.paddingBottom = '60px';
-        content.style.overflow= 'auto';        
+        content.style.overflow= 'auto';
     } else {
         setTimeout(showHeaderAndFooter, 250);
         renderContactsDesktop();        
