@@ -379,7 +379,7 @@ function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
       </div>
       <div class="addContactDesktopRightSideContainer">
         <div class="addContactBlankUserImgContainer">          
-          ${singleMemberToHTMLOpenContactMobile(selectedContact, 0)}
+          ${singleMemberToHTMLOpenContactDesktop2(selectedContact, 0)}
         </div>
         <div class="addContactDesktopRightSideContent">
           <div class="addContactCloseXContainerDesktop">
@@ -408,12 +408,12 @@ function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
 /**
   * Function to generate user image with random background-color on mobile view
   */
-function singleMemberToHTMLOpenContactMobile(member, index) {
+function singleMemberToHTMLOpenContactDesktop2(member, index) {
   let textcolor;
   let iconRightStep = 10;
   if (!isColorLight(member.colorCode)) textcolor = 'white';
   return `
-      <div class="openContactUserImgMobile" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
+      <div class="openContactUserImgMobile2" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
             ${getFirstLettersOfName(member.name)}
       </div>
   `;

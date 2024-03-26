@@ -1017,5 +1017,16 @@
         display: flex;
         flex-direction: column;
     }
+
+    .openContactUserImgMobile2 {
+        height: 100px;
+        width: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100px;
+        border: 2px solid var(--white-color);
+        margin-top: 120px;
+    }
 }
 
