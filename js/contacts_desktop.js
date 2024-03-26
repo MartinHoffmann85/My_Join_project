@@ -387,7 +387,7 @@ function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
           </div>
           <div id="editContactDestopID">
             <div class="addContactContainerFooter">
-              <form id="addContactForm" onsubmit="event.preventDefault(); updateContactDesktop(${lastClickedContactId})">
+              <form id="addContactForm" onsubmit="event.preventDefault(); updateContactsDataDesktop(lastClickedContactId)">
                 <input class="addContactInputNameDesktop" type="text" name="editContactInputNameDesktop" id="editContactInputNameDesktopID" required placeholder="Name" value="${selectedContact.name}">
                 <input class="addContactInputMailAddresssDesktop" type="email" name="editContactInputMailAddresssDesktop" id="editContactInputMailAddresssDesktopID" required placeholder="E-Mail" value="${selectedContact.email}">
                 <input class="addContactInputPhoneDesktop" type="tel" name="editContactInputPhoneDesktop" id="editContactInputPhoneDesktopID" required pattern="[0-9]{1,}" placeholder="Phone" value="${selectedContact.phone}">
@@ -417,24 +417,6 @@ function singleMemberToHTMLOpenContactDesktop2(member, index) {
             ${getFirstLettersOfName(member.name)}
       </div>
   `;
-}
-
-
-/**
- * Update function if already exist contact was edit
- * @param {string} contactId - This is the contact ID example "5"
- */
-function updateContactDesktop(contactId) {
-  const updatedInputs = getUpdatedInputsDesktop();
-  if (validateInputs(updatedInputs)) {
-      const existingContact = findExistingContactDesktop(updatedInputs, contactId);
-      if (!existingContact) {
-          const oldContact = findOldContactDesktop(contactId);
-          const hasChanged = checkForChangesDesktop(oldContact, updatedInputs);
-          const updatedContactsData = updateContactsDataDesktop(contactId, updatedInputs, hasChanged);
-          saveAndInitDesktop(updatedContactsData);
-      }
-  }
 }
 
 
@@ -497,28 +479,35 @@ function checkForChangesDesktop(oldContact, updatedInputs) {
  * @param {string} updatedInputs - This are the new contact / email / phone number
  * @param {boolean} hasChanged - Example {hasNameChanged: false, hasMailChanged: false, hasPhoneChanged: true}
  */
-function updateContactsDataDesktop(lastClickedContactId, updatedInputs, hasChanged) {    
-  return currentUser.contacts.map((contact) =>
-      contact.id === lastClickedContactId
-          ? {              
-            ...contact,
-            name: hasChanged.hasNameChanged ? updatedInputs.updatedName : contact.name,
-            email: hasChanged.hasMailChanged ? updatedInputs.updatedMail : contact.email,
-            phone: hasChanged.hasPhoneChanged ? updatedInputs.updatedPhone : contact.phone
-            }
-      : contact
-  );    
+function updateContactsDataDesktop(contactId) {    
+  const updatedName = document.getElementById('editContactInputNameDesktopID').value;
+  const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
+  const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value;  
+  const currentUser = getLoggedInUser();
+  if (!currentUser) {
+      console.error("Logged in user not found.");
+      return;
+  }  
+  const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
+  if (contactIndex === -1) {
+      console.error("Contact not found.");
+      return;
+  }  
+  currentUser.contacts[contactIndex].name = updatedName;
+  currentUser.contacts[contactIndex].email = updatedEmail;
+  currentUser.contacts[contactIndex].phone = updatedPhone;  
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  updateCurrentUserInBackend(currentUser);  
+  clearAddContactDesktopRightSideContainer();
+  hideOverlay();
+  contactsInit();
 }
 
 
 /**
- * Save the edit contact at the current user
- * @param {string} updatedContactsData - Includes the updated contacts data name / email / phone number
+ * Clear add contact desktop right side container
  */
-function saveAndInitDesktop(updatedContactsData) {
-  currentUser.contacts = updatedContactsData;
-  currentUser.save();
-  clearAddContactDesktopRightSideContainer();
-  hideOverlay();
-  contactsInit();    
+function clearAddContactDesktopRightSideContainer() {
+  let addContactDesktopRightSideContainer = document.getElementById("contactsContentRightSideContactDataContainerID");
+  addContactDesktopRightSideContainer.innerHTML = "";
 }
