@@ -545,7 +545,7 @@ function editContactOverlayMobile(contactId) {
     content.innerHTML = editContactHTML;  
     hideHeaderAndFooter();
     content.style.height = '100dvh';
-    content.style.margin = '0px';
+    content.style.marginTop = '0px';
     content.style.overflow = 'hidden';
 }
 
