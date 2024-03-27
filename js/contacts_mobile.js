@@ -18,6 +18,7 @@ function contactsInit() {
         document.body.style.overflow = 'hidden';
         const content = document.getElementById("all-contacts-id");
         // content.style.paddingTop = '100px';
+        content.style.marginTop = '100px';
         content.style.paddingBottom = '60px';
         content.style.overflow= 'auto';
     } else {
@@ -199,7 +200,7 @@ function showHeaderAndFooter() {
 function addContactScreenMobile() {
     const content = document.getElementById("all-contacts-id");
     content.innerHTML = addContactFormMobileHTML();
-    content.style.paddingTop = '0px';
+    content.style.marginTop = '0px';
     content.style.overflow = 'hidden';
     hideHeaderAndFooter();
 }
