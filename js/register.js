@@ -32,8 +32,7 @@ async function loadUsersFromBackend(key) {
 }
 
 
-function register() {     
-        
+function register() {
     if (!(registerValidationCheck() && ppCheckboxConfirmed))
         return;
     addNewUser();
@@ -268,14 +267,38 @@ function closeSignUp() {
 
 
 async function login() {
-        const loggedInUser = loadCurrentUser();
+    try {
+        const loggedInUser = await authenticateUser(); // Warte auf die Authentifizierung
         if (loggedInUser) {
             localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
             window.location.assign("../summary.html");
-            getUserInitials();            
+            setTimeout(showHeaderUserInitials, 500);
         } else {
             console.error('Error: Unable to log in user.');
         }
+    } catch (error) {
+        console.error('Error during login:', error);
+    }
+}
+
+
+async function authenticateUser() {
+    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
+    const loginUserPassword = document.getElementById("login-user-password-id").value;
+    const users = await loadUsersFromBackend('users'); // Laden aller Benutzerdaten aus dem Backend
+
+    const foundUser = users.find(user => user.userEMail === loginUserEmail);    
+    if (foundUser) {
+        if (foundUser.userPassword === loginUserPassword) {
+            return foundUser; // Rückgabe des gefundenen Benutzers
+        } else {
+            console.error("Error: Incorrect password.");
+            return null;
+        }
+    } else {
+        console.error("Error: User not found.");
+        return null;
+    }
 }    
 
 
@@ -406,19 +429,27 @@ function getPasswordInput(whichform) {
 }
 
 
-function loadCurrentUser() {
+async function loadCurrentUser() {
     const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
     const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const foundUser = users.find(user => user.userEMail === loginUserEmail);    
-    if (foundUser) {
-        if (foundUser.userPassword === loginUserPassword) {
-            return foundUser;
+    try {
+        const users = await loadUsersFromBackend('users');
+        const foundUser = users.find(user => user.userEMail === loginUserEmail);
+        
+        if (foundUser) {
+            if (foundUser.userPassword === loginUserPassword) {
+                localStorage.setItem('currentUser', JSON.stringify(foundUser));
+                return foundUser;
+            } else {
+                console.error("Error: Incorrect password.");
+                return null;
+            }
         } else {
-            console.error("Error: Incorrect password.");
+            console.error("Error: User not found.");
             return null;
         }
-    } else {
-        console.error("Error: User not found.");
+    } catch (error) {
+        console.error("Error loading current user:", error);
         return null;
     }
 }
@@ -432,7 +463,7 @@ function guestLogin() {
     document.getElementById("login-user-e-mail-id").value = guestEmail;
     document.getElementById("login-user-password-id").value = guestPassword;    
     login();
-    getUserInitials();
+    setTimeout(showHeaderUserInitials, 500);
 }
 
 
