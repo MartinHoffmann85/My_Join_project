@@ -128,6 +128,10 @@
         justify-content: center;
         align-items: center;
     }
+    
+    .footer-icon-box:hover {    
+        background-color: initial;
+    }
 
     .footer-icon {
         height: 24px;
