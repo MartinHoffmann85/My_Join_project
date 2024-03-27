@@ -13,9 +13,9 @@
     position: relative;
     overflow-y: auto;    
     padding-bottom: 60px;
-    height: 100vh;
+    height: 82vh;
     width: 100vw;
-    margin-top: 80px;
+    margin-top: 80px;    
 }
 
 .addContactButtonContainerMobile {
@@ -24,7 +24,7 @@
     align-items: center; 
     cursor: pointer;  
     margin-right: 1em;
-    margin-bottom: 8em;    
+    /* margin-bottom: 8em; */
 }
 
 .addContactImageMobile {
