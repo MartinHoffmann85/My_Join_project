@@ -90,7 +90,7 @@
     font-size: 1rem;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 950px) {
 
     .footer {
         height: 80px;

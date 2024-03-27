@@ -3,13 +3,13 @@
 if (window.location.pathname === '/contacts.html') {
     window.addEventListener('resize', contactsInit);
 } else {
-    window.removeEventListener('resize', contactsInit);
+  window.removeEventListener('resize', contactsInit);
 }
 window.onload = contactsInit;
 
 
 function contactsInit() {
-    const maxWidth = 759;    
+    const maxWidth = 950;    
     if (window.innerWidth <= maxWidth) {
         setTimeout(showHeaderAndFooter, 250);
         renderContacts();
@@ -17,7 +17,7 @@ function contactsInit() {
         setTimeout(showHeaderUserInitials, 500);
         document.body.style.overflow = 'hidden';
         const content = document.getElementById("all-contacts-id");
-        content.style.paddingTop = '100px';
+        // content.style.paddingTop = '100px';
         content.style.paddingBottom = '60px';
         content.style.overflow= 'auto';
     } else {
