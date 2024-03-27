@@ -594,8 +594,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 20vw;
-        height: 4vw;
+        width: 180px;
+        height: 40px;
         margin-top: 2vh;
         margin-bottom: 1vh;
         background-color: var(--mockup-color);
@@ -603,7 +603,7 @@
         border-radius: 10px;
         color: var(--white-color);
         padding: 12px 0 12px 0;
-        font-size: 21px;
+        /* font-size: 21px; */
         font-weight: 700;
         gap: 16px;    
         flex-shrink: 0;
