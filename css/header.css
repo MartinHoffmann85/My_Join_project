@@ -25,7 +25,10 @@
     border-style: solid;
     border-width: 2px;
     border-radius: 50px;
+    border-color: var(--mockup-color);
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: bold;
+    color: var(--mockup-highlight);
 }
