@@ -551,13 +551,13 @@ function editContactOverlayMobile(contactId) {
 
 
 function closeContactOverlay() {
-    let content = document.getElementById('all-contacts-id');
-    content.style.height = '85dvh';
-    content.style.marginTop = '80px';
+    let content = document.getElementById('all-contacts-id');    
     const overlay = document.querySelector(".overlay");
     if (overlay) {
       overlay.remove();
     }
+    content.style.height = '85dvh';
+    content.style.marginTop = '80px';
 }
 
 
@@ -566,7 +566,7 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
     return /*html*/ `
       <div class="editContactContainerHeader">
         <div class="addContactCloseXContainer">
-          <button class="addContactCloseXButtonMobile" onclick="contactsInit(); closeContactOverlay()">X</button>
+          <button class="addContactCloseXButtonMobile" onclick="redirectToContacts()">X</button>
         </div>
         <div class="addContactBlockHeader">
           <p class="addContactH1">Edit contact</p>
