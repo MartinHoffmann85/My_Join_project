@@ -250,8 +250,7 @@ async function addContactToCurrentUser(newContact) {
   newContact.textColorCode = textColorCode;
   currentUser.contacts.push(newContact);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  updateCurrentUserInBackend(currentUser);
-  console.log("async function addContactToCurrentUser(newContact)" , currentUser);
+  updateCurrentUserInBackend(currentUser);  
 }
 
 
@@ -276,15 +275,13 @@ function generateRandomID() {
 }
 
 
-async function updateCurrentUserInBackend(currentUser) {
-  console.log("async function updateCurrentUserInBackend(currentUser)", currentUser);
+async function updateCurrentUserInBackend(currentUser) {  
   try {
       const existingUsers = await loadUsersFromBackend('users');
       const foundUserIndex = existingUsers.findIndex(user => user.userEMail === currentUser.userEMail);
       if (foundUserIndex !== -1) {
           existingUsers[foundUserIndex] = currentUser;
-          await setItem('users', JSON.stringify(existingUsers));
-          console.log("async function updateCurrentUserInBackend(currentUser)", existingUsers);
+          await setItem('users', JSON.stringify(existingUsers));          
       } else {
           console.error("Error: User not found in backend.");
       }
