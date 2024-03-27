@@ -657,6 +657,7 @@
     .contactsContentRightSide {
         display: flex !important;
         flex-direction: column;
+        height: 90dvh;
         min-width: calc(70vw - 232px);
         background-color: var(--white-grey);        
         top: 10px;        

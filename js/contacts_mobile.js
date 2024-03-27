@@ -202,6 +202,7 @@ function addContactScreenMobile() {
     content.innerHTML = addContactFormMobileHTML();
     content.style.marginTop = '0px';
     content.style.overflow = 'hidden';
+    content.style.height = '100dvh';
     hideHeaderAndFooter();
 }
 
@@ -543,12 +544,16 @@ function editContactOverlayMobile(contactId) {
     const editContactHTML = createEditContactHTML(selectedContact, randomColor, textColor);  
     content.innerHTML = editContactHTML;  
     hideHeaderAndFooter();
-    content.style.marginTop = '0px';
-    content.style.paddingBottom = '0px';
+    content.style.height = '100dvh';
+    content.style.margin = '0px';
+    content.style.overflow = 'hidden';
 }
 
 
 function closeContactOverlay() {
+    let content = document.getElementById('all-contacts-id');
+    content.style.height = '85dvh';
+    content.style.marginTop = '80px';
     const overlay = document.querySelector(".overlay");
     if (overlay) {
       overlay.remove();
