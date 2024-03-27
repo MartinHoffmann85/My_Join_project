@@ -543,7 +543,7 @@ function editContactOverlayMobile(contactId) {
     const editContactHTML = createEditContactHTML(selectedContact, randomColor, textColor);  
     content.innerHTML = editContactHTML;  
     hideHeaderAndFooter();
-    content.style.paddingTop = '0px';
+    content.style.marginTop = '0px';
     content.style.paddingBottom = '0px';
 }
 
