@@ -9,7 +9,7 @@ window.onload = contactsInit;
 
 
 function contactsInit() {
-    const maxWidth = 950;    
+    const maxWidth = 949;    
     if (window.innerWidth <= maxWidth) {
         setTimeout(showHeaderAndFooter, 250);
         renderContacts();
