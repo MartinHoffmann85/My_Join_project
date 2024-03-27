@@ -542,6 +542,17 @@
     display: none !important;
 }
 
+.openContactUserImgDesktop {
+    height: 120px;
+    min-width: 120px;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    border: 8px solid var(--white-color);
+    position: relative;
+}
+
 
 /* Desktop view */
 /*-----------------------------------------------------------------------------------------------------------------------*/

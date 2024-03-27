@@ -569,7 +569,7 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
         </div>
       </div>
       <div class="addContactBlankUserImg">        
-        ${renderSingleMemberToHTMLMobile(selectedContact, colorCode, textColor)}
+          ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
       </div>
       <form id="editcontactFormMobileID" onsubmit="updateContactMobile(${selectedContact.id})">
         <div class="addContactContainerFooter">
