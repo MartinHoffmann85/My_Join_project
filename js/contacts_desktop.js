@@ -313,24 +313,24 @@ function hideOverlay() {
 
 
 function createContactDesktop() {
-  const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("No user logged in.");
-        return;
-    }    
-    const newContact = getNewContactDesktop();
-    newContact.id = generateUniqueID();    
-    addContactToCurrentUser(newContact);
-    hideOverlay();
-    contactsInit();
+    const currentUser = getLoggedInUser();
+      if (!currentUser) {
+          console.error("No user logged in.");
+          return;
+      }    
+      const newContact = getNewContactDesktop();
+      newContact.id = generateUniqueID();    
+      addContactToCurrentUser(newContact);
+      hideOverlay();
+      contactsInit();
 }
 
 
 function getNewContactDesktop() {
-  const contactName = document.getElementById("add-contact-input-name-desktop-id").value;
-  const contactEmail = document.getElementById("add-contact-input-mail-addresss-desktop-id").value;
-  const contactPhone = document.getElementById("add-contact-input-phone-desktop-id").value;
-  return { name: contactName, email: contactEmail, phone: contactPhone };
+    const contactName = document.getElementById("add-contact-input-name-desktop-id").value;
+    const contactEmail = document.getElementById("add-contact-input-mail-addresss-desktop-id").value;
+    const contactPhone = document.getElementById("add-contact-input-phone-desktop-id").value;
+    return { name: contactName, email: contactEmail, phone: contactPhone };
 }
 
 
@@ -341,24 +341,24 @@ function getNewContactDesktop() {
  * @param {string} lastClickedContactId - The ID of the last clicked contact
  */
 function editContactDestop(lastClickedContactId) {
-  const currentUser = getLoggedInUser();
-  if (!currentUser) {
-      console.error("Logged in user not found.");
-      return;
-  }
-  const selectedContact = currentUser.contacts.find(contact => contact.id === lastClickedContactId);
-  if (!selectedContact) {
-      console.error('Error: Selected contact not found.');
-      return;
-  }  
-  const overlayContainer = document.createElement("div");
-  overlayContainer.classList.add("overlay-container");
-  document.body.appendChild(overlayContainer);  
-  const overlayContent = document.createElement("div");
-  overlayContent.classList.add("overlay-content");
-  overlayContainer.appendChild(overlayContent);  
-  generateHTMLEditContactDesktop(overlayContent, selectedContact);  
-  overlayContainer.style.animation = "slide-in 0.5s ease-out";
+    const currentUser = getLoggedInUser();
+    if (!currentUser) {
+        console.error("Logged in user not found.");
+        return;
+    }
+    const selectedContact = currentUser.contacts.find(contact => contact.id === lastClickedContactId);
+    if (!selectedContact) {
+        console.error('Error: Selected contact not found.');
+        return;
+    }  
+    const overlayContainer = document.createElement("div");
+    overlayContainer.classList.add("overlay-container");
+    document.body.appendChild(overlayContainer);  
+    const overlayContent = document.createElement("div");
+    overlayContent.classList.add("overlay-content");
+    overlayContainer.appendChild(overlayContent);  
+    generateHTMLEditContactDesktop(overlayContent, selectedContact);  
+    overlayContainer.style.animation = "slide-in 0.5s ease-out";
 }
 
 
@@ -368,40 +368,40 @@ function editContactDestop(lastClickedContactId) {
  * @param {string} selectedContact - This is the selected contact to open
  */
 function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
-  overlayContent.innerHTML = /*html*/ `
-    <div class="overlay-card">
-      <div class="addContactDesktopLeftSideContainer">
-        <div class="flexDirectionColumn">
-          <img class="joinLogoGreyBackgroundImg" src="../../assets/img/contacts/joinLogoGreyBackground.png" alt="">
-          <h1 class="addContactDesktopLeftSideContainerH1">Edit contact</h1>          
-          <img class="addContactBlueStroked" src="../../assets/img/contacts/addContactBlueStroked.svg" alt="">
-        </div>
-      </div>
-      <div class="addContactDesktopRightSideContainer">
-        <div class="addContactBlankUserImgContainer">          
-          ${singleMemberToHTMLOpenContactDesktop2(selectedContact, 0)}
-        </div>
-        <div class="addContactDesktopRightSideContent">
-          <div class="addContactCloseXContainerDesktop">
-            <button class="addContactCloseXButton" onclick="hideOverlay()">X</button>
+    overlayContent.innerHTML = /*html*/ `
+      <div class="overlay-card">
+        <div class="addContactDesktopLeftSideContainer">
+          <div class="flexDirectionColumn">
+            <img class="joinLogoGreyBackgroundImg" src="../../assets/img/contacts/joinLogoGreyBackground.png" alt="">
+            <h1 class="addContactDesktopLeftSideContainerH1">Edit contact</h1>          
+            <img class="addContactBlueStroked" src="../../assets/img/contacts/addContactBlueStroked.svg" alt="">
           </div>
-          <div id="editContactDestopID">
-            <div class="addContactContainerFooter">
-              <form id="addContactForm" onsubmit="event.preventDefault(); updateContactsDataDesktop(lastClickedContactId)">
-                <input class="addContactInputNameDesktop" type="text" name="editContactInputNameDesktop" id="editContactInputNameDesktopID" required placeholder="Name" value="${selectedContact.name}">
-                <input class="addContactInputMailAddresssDesktop" type="email" name="editContactInputMailAddresssDesktop" id="editContactInputMailAddresssDesktopID" required placeholder="E-Mail" value="${selectedContact.email}">
-                <input class="addContactInputPhoneDesktop" type="tel" name="editContactInputPhoneDesktop" id="editContactInputPhoneDesktopID" required pattern="[0-9]{1,}" placeholder="Phone" value="${selectedContact.phone}">
-                <div class="addContactButtonContainerDesktop">
-                  <button class="cancelContactDesktopDeleteButton" onclick="deleteContactDesktop(${lastClickedContactId})">Delete</button>
-                  <button class="createContactButton" type="submit">Save</button>
-                </div>
-              </form>
+        </div>
+        <div class="addContactDesktopRightSideContainer">
+          <div class="addContactBlankUserImgContainer">          
+            ${singleMemberToHTMLOpenContactDesktop2(selectedContact, 0)}
+          </div>
+          <div class="addContactDesktopRightSideContent">
+            <div class="addContactCloseXContainerDesktop">
+              <button class="addContactCloseXButton" onclick="hideOverlay()">X</button>
+            </div>
+            <div id="editContactDestopID">
+              <div class="addContactContainerFooter">
+                <form id="addContactForm" onsubmit="event.preventDefault(); updateContactsDataDesktop(lastClickedContactId)">
+                  <input class="addContactInputNameDesktop" type="text" name="editContactInputNameDesktop" id="editContactInputNameDesktopID" required placeholder="Name" value="${selectedContact.name}">
+                  <input class="addContactInputMailAddresssDesktop" type="email" name="editContactInputMailAddresssDesktop" id="editContactInputMailAddresssDesktopID" required placeholder="E-Mail" value="${selectedContact.email}">
+                  <input class="addContactInputPhoneDesktop" type="tel" name="editContactInputPhoneDesktop" id="editContactInputPhoneDesktopID" required pattern="[0-9]{1,}" placeholder="Phone" value="${selectedContact.phone}">
+                  <div class="addContactButtonContainerDesktop">
+                    <button class="cancelContactDesktopDeleteButton" onclick="deleteContactDesktop(${lastClickedContactId})">Delete</button>
+                    <button class="createContactButton" type="submit">Save</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  `;
+    `;
 }
 
 
@@ -409,14 +409,14 @@ function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
   * Function to generate user image with random background-color on mobile view
   */
 function singleMemberToHTMLOpenContactDesktop2(member, index) {
-  let textcolor;
-  let iconRightStep = 10;
-  if (!isColorLight(member.colorCode)) textcolor = 'white';
-  return `
-      <div class="openContactUserImgMobile2" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
-            ${getFirstLettersOfName(member.name)}
-      </div>
-  `;
+    let textcolor;
+    let iconRightStep = 10;
+    if (!isColorLight(member.colorCode)) textcolor = 'white';
+    return `
+        <div class="openContactUserImgMobile2" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
+              ${getFirstLettersOfName(member.name)}
+        </div>
+    `;
 }
 
 
@@ -424,14 +424,14 @@ function singleMemberToHTMLOpenContactDesktop2(member, index) {
  * Get updated input data for desktop view
  */
 function getUpdatedInputsDesktop() {
-  const nameInput = document.querySelector(".addContactInputNameDesktop");
-  const mailInput = document.querySelector(".addContactInputMailAddresssDesktop");
-  const phoneInput = document.querySelector(".addContactInputPhoneDesktop");
-  return {
-      updatedName: nameInput.value.trim(),
-      updatedMail: mailInput.value.trim(),
-      updatedPhone: phoneInput.value.trim()
-  };
+    const nameInput = document.querySelector(".addContactInputNameDesktop");
+    const mailInput = document.querySelector(".addContactInputMailAddresssDesktop");
+    const phoneInput = document.querySelector(".addContactInputPhoneDesktop");
+    return {
+        updatedName: nameInput.value.trim(),
+        updatedMail: mailInput.value.trim(),
+        updatedPhone: phoneInput.value.trim()
+    };
 }
 
 
@@ -441,12 +441,12 @@ function getUpdatedInputsDesktop() {
  * @param {string} contactId - This is the contact ID example "5"
  */
 function findExistingContactDesktop(updatedInputs, contactId) {
-  return currentUser.contacts.find(
-      (contact) =>
-          contact.name === updatedInputs.updatedName &&
-          contact.email === updatedInputs.updatedMail &&
-          contact.id !== contactId
-  );
+    return currentUser.contacts.find(
+        (contact) =>
+            contact.name === updatedInputs.updatedName &&
+            contact.email === updatedInputs.updatedMail &&
+            contact.id !== contactId
+    );
 }
 
 
@@ -455,7 +455,7 @@ function findExistingContactDesktop(updatedInputs, contactId) {
  * @param {string} contactId - This is the contact ID example "5"
  */
 function findOldContactDesktop(contactId) {
-  return currentUser.contacts.find((contact) => contact.id === contactId);
+    return currentUser.contacts.find((contact) => contact.id === contactId);
 }
 
 
@@ -465,11 +465,11 @@ function findOldContactDesktop(contactId) {
  * @param {string} updatedInputs - This are the new contact / email / phone number
  */
 function checkForChangesDesktop(oldContact, updatedInputs) {
-  return {
-      hasNameChanged: oldContact.name !== updatedInputs.updatedName,
-      hasMailChanged: oldContact.email !== updatedInputs.updatedMail,
-      hasPhoneChanged: oldContact.phone !== updatedInputs.updatedPhone
-  };
+    return {
+        hasNameChanged: oldContact.name !== updatedInputs.updatedName,
+        hasMailChanged: oldContact.email !== updatedInputs.updatedMail,
+        hasPhoneChanged: oldContact.phone !== updatedInputs.updatedPhone
+    };
 }
 
 
@@ -480,27 +480,27 @@ function checkForChangesDesktop(oldContact, updatedInputs) {
  * @param {boolean} hasChanged - Example {hasNameChanged: false, hasMailChanged: false, hasPhoneChanged: true}
  */
 function updateContactsDataDesktop(contactId) {    
-  const updatedName = document.getElementById('editContactInputNameDesktopID').value;
-  const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
-  const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value;  
-  const currentUser = getLoggedInUser();
-  if (!currentUser) {
-      console.error("Logged in user not found.");
-      return;
-  }  
-  const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
-  if (contactIndex === -1) {
-      console.error("Contact not found.");
-      return;
-  }  
-  currentUser.contacts[contactIndex].name = updatedName;
-  currentUser.contacts[contactIndex].email = updatedEmail;
-  currentUser.contacts[contactIndex].phone = updatedPhone;  
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  updateCurrentUserInBackend(currentUser);  
-  clearAddContactDesktopRightSideContainer();
-  hideOverlay();
-  contactsInit();
+    const updatedName = document.getElementById('editContactInputNameDesktopID').value;
+    const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
+    const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value;  
+    const currentUser = getLoggedInUser();
+    if (!currentUser) {
+        console.error("Logged in user not found.");
+        return;
+    }  
+    const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
+    if (contactIndex === -1) {
+        console.error("Contact not found.");
+        return;
+    }  
+    currentUser.contacts[contactIndex].name = updatedName;
+    currentUser.contacts[contactIndex].email = updatedEmail;
+    currentUser.contacts[contactIndex].phone = updatedPhone;  
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateCurrentUserInBackend(currentUser);  
+    clearAddContactDesktopRightSideContainer();
+    hideOverlay();
+    contactsInit();
 }
 
 
@@ -508,6 +508,6 @@ function updateContactsDataDesktop(contactId) {
  * Clear add contact desktop right side container
  */
 function clearAddContactDesktopRightSideContainer() {
-  let addContactDesktopRightSideContainer = document.getElementById("contactsContentRightSideContactDataContainerID");
-  addContactDesktopRightSideContainer.innerHTML = "";
+    let addContactDesktopRightSideContainer = document.getElementById("contactsContentRightSideContactDataContainerID");
+    addContactDesktopRightSideContainer.innerHTML = "";
 }

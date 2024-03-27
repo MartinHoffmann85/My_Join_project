@@ -1,4 +1,4 @@
-const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471";  // Old Token VORXWOHN4ATC5QT3Z5TB4EP1VRUAGMHB44HR2ZKT
+const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471";
 const STORAGE_URL = "https://remote-storage.developerakademie.org/item";
 let rmCheckboxConfirmed = false;
 let ppCheckboxConfirmed = false;
@@ -46,7 +46,6 @@ async function addNewUser() {
     newUserArray.push(newUser);
     try {
         await addNewUserToBackend(newUser);
-
     } catch (error) {
         handleError(error);
     }
@@ -250,7 +249,6 @@ function signUp() {
 }
 
 
-
 function closeSignUp() {
     document.getElementById('login-user-password-id').type = 'password';
     pwVisibility.pwVisibilityOn = false;
@@ -268,7 +266,7 @@ function closeSignUp() {
 
 async function login() {
     try {
-        const loggedInUser = await authenticateUser(); // Warte auf die Authentifizierung
+        const loggedInUser = await authenticateUser();
         if (loggedInUser) {
             localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
             window.location.assign("../summary.html");
@@ -285,12 +283,11 @@ async function login() {
 async function authenticateUser() {
     const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
     const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const users = await loadUsersFromBackend('users'); // Laden aller Benutzerdaten aus dem Backend
-
+    const users = await loadUsersFromBackend('users');
     const foundUser = users.find(user => user.userEMail === loginUserEmail);    
     if (foundUser) {
         if (foundUser.userPassword === loginUserPassword) {
-            return foundUser; // Rückgabe des gefundenen Benutzers
+            return foundUser;
         } else {
             console.error("Error: Incorrect password.");
             return null;
@@ -434,8 +431,7 @@ async function loadCurrentUser() {
     const loginUserPassword = document.getElementById("login-user-password-id").value;
     try {
         const users = await loadUsersFromBackend('users');
-        const foundUser = users.find(user => user.userEMail === loginUserEmail);
-        
+        const foundUser = users.find(user => user.userEMail === loginUserEmail);        
         if (foundUser) {
             if (foundUser.userPassword === loginUserPassword) {
                 localStorage.setItem('currentUser', JSON.stringify(foundUser));

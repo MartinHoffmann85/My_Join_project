@@ -1,9 +1,9 @@
 // Render contacts mobile view
 
 if (window.location.pathname === '/contacts.html') {
-  window.addEventListener('resize', contactsInit);
+    window.addEventListener('resize', contactsInit);
 } else {
-  window.removeEventListener('resize', contactsInit);
+    window.removeEventListener('resize', contactsInit);
 }
 window.onload = contactsInit;
 
@@ -108,13 +108,13 @@ function registerContactClickHandlers() {
   
   
 function renderAddContactButtonMobile() {
-  const content = document.getElementById("all-contacts-id");
-  const addContactButtonMobile = document.createElement('div');
-  addContactButtonMobile.classList.add("addContactButtonContainerMobile");
-  addContactButtonMobile.innerHTML = `
-    <img class="addContactButtonImgMobile" src="../assets/img/contacts/addContactButtonMobile.svg" alt="createContactButton" onclick="addContactScreenMobile()"></img>
-  `;
-  content.appendChild(addContactButtonMobile);
+    const content = document.getElementById("all-contacts-id");
+    const addContactButtonMobile = document.createElement('div');
+    addContactButtonMobile.classList.add("addContactButtonContainerMobile");
+    addContactButtonMobile.innerHTML = `
+      <img class="addContactButtonImgMobile" src="../assets/img/contacts/addContactButtonMobile.svg" alt="createContactButton" onclick="addContactScreenMobile()"></img>
+    `;
+    content.appendChild(addContactButtonMobile);
 }
 
 function hideAddContactButtonMobile() {
@@ -139,12 +139,12 @@ function renderSingleMemberToHTMLMobile(oneContact, colorCode, textColor) {
   
   
 function getFirstLettersOfName(name) {
-  let words = name.replace(/\s+/g, ' ').trim().split(" ");
-  let initials = "";
-  for (let word of words) {
-    initials += word[0].toUpperCase();
-  }  
-  return initials;
+    let words = name.replace(/\s+/g, ' ').trim().split(" ");
+    let initials = "";
+    for (let word of words) {
+      initials += word[0].toUpperCase();
+    }  
+    return initials;
 }
   
   
@@ -188,20 +188,20 @@ function hideHeaderAndFooter() {
   * Show header and footer screen on mobile view
   */
 function showHeaderAndFooter() {
-  const mobileHeader = document.querySelector(".header");
-  const menuTemplate = document.querySelector(".footer");
-  mobileHeader.style.display = "block";
-  menuTemplate.style.display = "flex";
+    const mobileHeader = document.querySelector(".header");
+    const menuTemplate = document.querySelector(".footer");
+    mobileHeader.style.display = "block";
+    menuTemplate.style.display = "flex";
 }
 
 // Add contact screen
 
 function addContactScreenMobile() {
-  const content = document.getElementById("all-contacts-id");
-  content.innerHTML = addContactFormMobileHTML();
-  content.style.paddingTop = '0px';
-  content.style.overflow = 'hidden';
-  hideHeaderAndFooter();
+    const content = document.getElementById("all-contacts-id");
+    content.innerHTML = addContactFormMobileHTML();
+    content.style.paddingTop = '0px';
+    content.style.overflow = 'hidden';
+    hideHeaderAndFooter();
 }
 
 
@@ -234,23 +234,23 @@ function getNewContact() {
 
 
 async function addContactToCurrentUser(newContact) {
-  const currentUser = getLoggedInUser();
-  if (!currentUser) {
-      console.error("Logged in user not found.");
-      return;
-  }
-  newContact.id = generateUniqueID();  
-  let colorCode = localStorage.getItem(`color_${newContact.id}`);
-  let textColorCode = localStorage.getItem(`textColor_${newContact.id}`);
-  if (!colorCode || !textColorCode) {      
-      colorCode = getRandomColorHex();
-      textColorCode = isColorLight(colorCode) ? 'white' : 'black';
-  }  
-  newContact.colorCode = colorCode;
-  newContact.textColorCode = textColorCode;
-  currentUser.contacts.push(newContact);
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  updateCurrentUserInBackend(currentUser);  
+    const currentUser = getLoggedInUser();
+    if (!currentUser) {
+        console.error("Logged in user not found.");
+        return;
+    }
+    newContact.id = generateUniqueID();  
+    let colorCode = localStorage.getItem(`color_${newContact.id}`);
+    let textColorCode = localStorage.getItem(`textColor_${newContact.id}`);
+    if (!colorCode || !textColorCode) {      
+        colorCode = getRandomColorHex();
+        textColorCode = isColorLight(colorCode) ? 'white' : 'black';
+    }  
+    newContact.colorCode = colorCode;
+    newContact.textColorCode = textColorCode;
+    currentUser.contacts.push(newContact);
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateCurrentUserInBackend(currentUser);  
 }
 
 
@@ -384,8 +384,7 @@ function closeOverlay() {
 }
 
 
-function setupContactScreen() {
-    // contactsContentBackgroundColorWhiteGray();
+function setupContactScreen() {    
     addDropdownMenuClickListener();
 }
 
@@ -508,103 +507,103 @@ function singleMemberToHTML(member) {
 // Delete contact mobile
 
 function deleteContactMobile(contactId) {
-  const currentUser = getLoggedInUser();
-  if (!currentUser) {
-      console.error("Logged in user not found.");
-      return;
-  }
-  const index = currentUser.contacts.findIndex(contact => contact.id === contactId);
-  if (index === -1) {
-      console.error("Contact not found.");
-      return;
-  }
-  currentUser.contacts.splice(index, 1);  
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  updateCurrentUserInBackend(currentUser);  
-  contactsInit();  
+    const currentUser = getLoggedInUser();
+    if (!currentUser) {
+        console.error("Logged in user not found.");
+        return;
+    }
+    const index = currentUser.contacts.findIndex(contact => contact.id === contactId);
+    if (index === -1) {
+        console.error("Contact not found.");
+        return;
+    }
+    currentUser.contacts.splice(index, 1);  
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateCurrentUserInBackend(currentUser);  
+    contactsInit();  
 }
 
 
 // Edit contact mobile
 
 function editContactOverlayMobile(contactId) {  
-  let content = document.getElementById('all-contacts-id');
-  content.innerHTML = "";
-  const overlay = document.createElement("div");
-  overlay.classList.add("overlay");
-  const currentUser = getLoggedInUser();
-  if (!currentUser) {
-      console.error("Logged in user not found.");
-      return;
-  }
-  const selectedContact = currentUser.contacts.find(contact => contact.id === contactId);  
-  const randomColor = getRandomColorHex();
-  const textColor = isColorLight(randomColor) ? 'white' : 'black';
-  const editContactHTML = createEditContactHTML(selectedContact, randomColor, textColor);  
-  content.innerHTML = editContactHTML;  
-  hideHeaderAndFooter();
-  content.style.paddingTop = '0px';
-  content.style.paddingBottom = '0px';
+    let content = document.getElementById('all-contacts-id');
+    content.innerHTML = "";
+    const overlay = document.createElement("div");
+    overlay.classList.add("overlay");
+    const currentUser = getLoggedInUser();
+    if (!currentUser) {
+        console.error("Logged in user not found.");
+        return;
+    }
+    const selectedContact = currentUser.contacts.find(contact => contact.id === contactId);  
+    const randomColor = getRandomColorHex();
+    const textColor = isColorLight(randomColor) ? 'white' : 'black';
+    const editContactHTML = createEditContactHTML(selectedContact, randomColor, textColor);  
+    content.innerHTML = editContactHTML;  
+    hideHeaderAndFooter();
+    content.style.paddingTop = '0px';
+    content.style.paddingBottom = '0px';
 }
 
 
 function closeContactOverlay() {
-  const overlay = document.querySelector(".overlay");
-  if (overlay) {
-    overlay.remove();
-  }
+    const overlay = document.querySelector(".overlay");
+    if (overlay) {
+      overlay.remove();
+    }
 }
 
 
 function createEditContactHTML(selectedContact, colorCode, textColor) {  
-  const { name, email, phone } = selectedContact;  
-  return /*html*/ `
-    <div class="editContactContainerHeader">
-      <div class="addContactCloseXContainer">
-        <button class="addContactCloseXButtonMobile" onclick="contactsInit(); closeContactOverlay()">X</button>
-      </div>
-      <div class="addContactBlockHeader">
-        <p class="addContactH1">Edit contact</p>
-        <img class="addContactBlueStroked" src="../assets/img/contacts/addContactBlueStroked.svg" alt="">          
-      </div>
-    </div>
-    <div class="addContactBlankUserImg">        
-      ${renderSingleMemberToHTMLMobile(selectedContact, colorCode, textColor)}
-    </div>
-    <form id="editcontactFormMobileID" onsubmit="updateContactMobile(${selectedContact.id})">
-      <div class="addContactContainerFooter">
-        <input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z]+" placeholder="Name" value="${name}">
-        <input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
-        <input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
-        <div>
-          <img class="createContactButtonImg" src="../assets/img/contacts/editContactDeleteButtonImg.svg" alt="" onclick="deleteContactMobile('${selectedContact.id}')">
-          <img class="createContactButtonImg" src="../assets/img/contacts/editContactSaveButtonImg.svg" alt="" onclick="updateContactMobile('${selectedContact.id}')">
+    const { name, email, phone } = selectedContact;  
+    return /*html*/ `
+      <div class="editContactContainerHeader">
+        <div class="addContactCloseXContainer">
+          <button class="addContactCloseXButtonMobile" onclick="contactsInit(); closeContactOverlay()">X</button>
+        </div>
+        <div class="addContactBlockHeader">
+          <p class="addContactH1">Edit contact</p>
+          <img class="addContactBlueStroked" src="../assets/img/contacts/addContactBlueStroked.svg" alt="">          
         </div>
       </div>
-    </form>
-  `;
+      <div class="addContactBlankUserImg">        
+        ${renderSingleMemberToHTMLMobile(selectedContact, colorCode, textColor)}
+      </div>
+      <form id="editcontactFormMobileID" onsubmit="updateContactMobile(${selectedContact.id})">
+        <div class="addContactContainerFooter">
+          <input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z]+" placeholder="Name" value="${name}">
+          <input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
+          <input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
+          <div>
+            <img class="createContactButtonImg" src="../assets/img/contacts/editContactDeleteButtonImg.svg" alt="" onclick="deleteContactMobile('${selectedContact.id}')">
+            <img class="createContactButtonImg" src="../assets/img/contacts/editContactSaveButtonImg.svg" alt="" onclick="updateContactMobile('${selectedContact.id}')">
+          </div>
+        </div>
+      </form>
+    `;
 }
 
 
 function updateContactMobile(contactId) {  
-  const updatedName = document.getElementById('editContactInputNameMobileID').value;
-  const updatedEmail = document.getElementById('editContactInputMailAddresssMobileID').value;
-  const updatedPhone = document.getElementById('editContactInputPhoneMobileID').value;  
-  const currentUser = getLoggedInUser();
-  if (!currentUser) {
-      console.error("Logged in user not found.");
-      return;
-  }  
-  const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
-  if (contactIndex === -1) {
-      console.error("Contact not found.");
-      return;
-  }  
-  currentUser.contacts[contactIndex].name = updatedName;
-  currentUser.contacts[contactIndex].email = updatedEmail;
-  currentUser.contacts[contactIndex].phone = updatedPhone;  
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  updateCurrentUserInBackend(currentUser);  
-  closeContactOverlay();  
-  contactsInit();
+    const updatedName = document.getElementById('editContactInputNameMobileID').value;
+    const updatedEmail = document.getElementById('editContactInputMailAddresssMobileID').value;
+    const updatedPhone = document.getElementById('editContactInputPhoneMobileID').value;  
+    const currentUser = getLoggedInUser();
+    if (!currentUser) {
+        console.error("Logged in user not found.");
+        return;
+    }  
+    const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
+    if (contactIndex === -1) {
+        console.error("Contact not found.");
+        return;
+    }  
+    currentUser.contacts[contactIndex].name = updatedName;
+    currentUser.contacts[contactIndex].email = updatedEmail;
+    currentUser.contacts[contactIndex].phone = updatedPhone;  
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateCurrentUserInBackend(currentUser);  
+    closeContactOverlay();  
+    contactsInit();
 }
