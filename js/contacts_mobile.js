@@ -18,7 +18,7 @@ function contactsInit() {
         document.body.style.overflow = 'hidden';
         const content = document.getElementById("all-contacts-id");
         // content.style.paddingTop = '100px';
-        content.style.marginTop = '80px';
+        // content.style.marginTop = '80px';
         content.style.paddingBottom = '60px';
         content.style.overflow= 'auto';
     } else {
