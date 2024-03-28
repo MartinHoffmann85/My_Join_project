@@ -26,12 +26,23 @@ body {
     justify-content: space-between;
 }
 
+.privacyPoliceAElement {
+    color: var(--mockup-highlight);
+    cursor: pointer;
+    overflow-wrap: break-word;
+}
+
+.privacyPoliceAElement:hover {
+    color: var(--hyper-link-color);
+}
+
 @media only screen and (max-width: 949px) and (min-width: 320px) {
     .privacyPoliceContainer {
         height: 80dvh;
         margin-left: 10px;
         margin-top: 90px;
         overflow-y: scroll;
+        overflow-x: hidden;
         width: -webkit-fill-available; 
     }
 }
