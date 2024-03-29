@@ -16,7 +16,7 @@ function renderAllTasks() {
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {        
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
-            renderTask(task, 'todo');
+            renderTask(task, task.columnId); // Übergeben Sie die Spalten-ID des Tasks
         });
     } else {
         console.error('Invalid tasks data in localStorage');
@@ -33,8 +33,8 @@ function clearTaskContainers() {
 }
 
 
-function renderTask(taskData, columnId) {
-    const { id, title, description, category, assignedTo, prio, dueDate } = taskData;
+function renderTask(taskData) {
+    const { id, title, description, category, assignedTo, prio, dueDate, columnId } = taskData;
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
     taskCard.setAttribute('id', id);
@@ -48,65 +48,58 @@ function renderTask(taskData, columnId) {
         <div><strong>Due Date:</strong> ${dueDate}</div>
     `;
     const taskContainer = document.getElementById(`${columnId}-tasks`);
-    taskContainer.appendChild(taskCard);    
-    taskCard.addEventListener('dragstart', dragStart);
+    if (taskContainer) {
+        taskContainer.appendChild(taskCard);
+        taskCard.addEventListener('dragstart', dragStart);
+    } else {
+        console.error('Task container not found for column:', columnId);
+    }
 }
 
 
 function saveTasksToLocalStorage() {
     const columns = document.querySelectorAll('.boardColumn');
-    let boardTasks = localStorage.getItem('currentUser.BoardTasks');
-    if (!boardTasks) {
-        boardTasks = {};
-    } else {
-        boardTasks = JSON.parse(boardTasks);
-    }
+    let tasks = [];
     columns.forEach(column => {
         const columnId = column.id;
-        const tasks = column.querySelectorAll('.task');
-        const taskList = [];
-        tasks.forEach(task => {
-            // Überprüfen, ob der Task bereits in den gespeicherten Daten vorhanden ist
-            const taskId = task.id;
-            if (!boardTasks[columnId].includes(taskId)) {
-                // Wenn der Task nicht vorhanden ist, fügen Sie ihn der Taskliste hinzu
-                taskList.push(taskId);
-            }
+        const taskElements = column.querySelectorAll('.task');
+        taskElements.forEach(taskElement => {
+            const task = {
+                id: taskElement.id,
+                columnId: columnId,
+                title: taskElement.querySelector('strong:nth-of-type(1)').textContent,
+                description: taskElement.querySelector('strong:nth-of-type(2)').textContent,
+                category: taskElement.querySelector('strong:nth-of-type(3)').textContent,
+                assignedTo: taskElement.querySelector('strong:nth-of-type(4)').textContent,
+                prio: taskElement.querySelector('strong:nth-of-type(5)').textContent,
+                dueDate: taskElement.querySelector('strong:nth-of-type(6)').textContent
+            };
+            tasks.push(task);
         });
-        // Fügen Sie die aktualisierte Taskliste nur hinzu, wenn sie nicht leer ist
-        if (taskList.length > 0) {
-            boardTasks[columnId] = taskList;
-        }
-    });    
-    localStorage.setItem('currentUser.BoardTasks', JSON.stringify(boardTasks));
+    });
+    localStorage.setItem('currentUser.tasks', JSON.stringify(tasks));
 }
 
 
 function loadTasksFromLocalStorage() {
-    const boardTasksJSON = localStorage.getItem('currentUser.BoardTasks');
-    console.log("function loadTasksFromLocalStorage()" , boardTasksJSON);
-    if (boardTasksJSON) {
-        const boardTasks = JSON.parse(boardTasksJSON);
-        Object.keys(boardTasks).forEach(columnId => {
-            const tasks = boardTasks[columnId];
-            const column = document.getElementById(columnId);
-            if (column) {
-                tasks.forEach(taskText => {
-                    const taskElement = document.createElement('div');
-                    taskElement.classList.add('task');
-                    taskElement.textContent = taskText;
-                    taskElement.setAttribute('draggable', 'true');
-                    column.appendChild(taskElement);                    
-                    taskElement.addEventListener('dragstart', dragStart);
-                });
-            }
+    const tasksJSON = localStorage.getItem('currentUser.tasks');
+    console.log("function loadTasksFromLocalStorage()", tasksJSON);
+    if (tasksJSON) {
+        const tasks = JSON.parse(tasksJSON);
+        // Löschen Sie zuerst alle vorhandenen Aufgaben im currentUser-Objekt
+        currentUser.tasks = [];
+        tasks.forEach(task => {
+            // Fügen Sie jede geladene Aufgabe dem currentUser-Objekt hinzu
+            currentUser.tasks.push(task);
+            // Rendern Sie dann die Aufgabe auf der Seite
+            renderTask(task);
         });
     }
 }
 
 
 function dragStart(event) {
-    console.log("function dragStart(event)" , event);
+    console.log("function dragStart(event)", event);
     const taskId = event.target.id;
     event.dataTransfer.setData("text/plain", taskId);
 }
@@ -126,8 +119,8 @@ function drop(event) {
     event.preventDefault();
     const taskId = event.dataTransfer.getData("text/plain");
     const targetColumnId = event.target.closest('.boardColumn').id.split('-')[0];
-    const targetContainer = document.getElementById(targetColumnId + '-tasks');    
-    const draggedTaskElement = document.getElementById(taskId);    
+    const targetContainer = document.getElementById(targetColumnId + '-tasks');
+    const draggedTaskElement = document.getElementById(taskId);
     if (draggedTaskElement && targetContainer) {
         targetContainer.appendChild(draggedTaskElement);
         saveTasksToLocalStorage();
@@ -149,4 +142,11 @@ function clearTasksFromLocalStorage() {
 
 function clearAllTasksFromLocalStorage() {
     localStorage.removeItem('currentUser.BoardTasks');
+}
+
+
+function clearAllTasksFromLocalStorage2() {
+    const tasksJSON = localStorage.getItem('currentUser.tasks');
+    tasksJSON = localStorage.removeItem('currentUser.tasks');
+    tasksJSON= localStorage.setItem('currentUser.tasks', JSON.stringify(tasks));
 }

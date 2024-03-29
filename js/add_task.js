@@ -307,6 +307,7 @@ async function createTask() {
   const textareaInput = document.getElementById('textarea-input-id').value;
   const dateInput = document.getElementById('date-input-id').value;
   const categoryInput = document.getElementById('category-input-id').value;
+  const columnId = 'todo'; // Hier die Spalten-ID festlegen, z.B. 'todo'
   const atBoolArr = [false, false, false, false, false, false];
   validateInput(titleInput, atBoolArr, 0, 3);
   validateInput(dateInput, atBoolArr, 1, 4);
@@ -316,13 +317,13 @@ async function createTask() {
       return;
   }
   const taskID = generateTaskID();
-  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput);
+  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
   await updateCurrentUserInBackend(currentUser);
   redirectToAddBoard();
 }
 
-function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput) {
+function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId) {
   if (!Array.isArray(currentUser.tasks)) {
     currentUser.tasks = [];
   }
@@ -331,7 +332,8 @@ function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categor
     title: titleInput,
     description: textareaInput,
     date: dateInput,
-    category: categoryInput,    
+    category: categoryInput,
+    columnId: columnId // Spalten-ID hinzufügen
   });
 }
 
