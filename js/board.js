@@ -10,43 +10,29 @@ function redirectToAddTask() {
 
 
 function renderAllTasks() {
-    const tasks = document.querySelectorAll('.task');
-    const columns = document.querySelectorAll('.boardColumn');
-    let draggedTask = null;
-    tasks.forEach(task => {
-        task.addEventListener('dragstart', function (e) {
-            draggedTask = this;            
-            e.dataTransfer.setData('text/plain', null);
-            setTimeout(() => {
-                this.style.display = 'none';
-            }, 0);
-        });
-        task.addEventListener('dragend', function () {
-            draggedTask = null;
-            this.style.display = 'block';
-            saveTasksToLocalStorage();
-        });
+    const tasksData = JSON.parse(localStorage.getItem('currentUser')).tasks;
+    tasksData.forEach(task => {
+        const { title, description, category } = task;
+        const assignedTo = task.userName; // Annahme: Der Benutzername des zugewiesenen Benutzers wird benötigt
+        const prio = task.priority; // Annahme: Die Priorität des Tasks wird benötigt
+        const subtasks = task.subtasks; // Annahme: Die Liste der Teilaufgaben wird benötigt
+        const dueDate = task.date; // Annahme: Das Fälligkeitsdatum des Tasks wird benötigt
+        const taskCard = document.createElement('div');
+        taskCard.classList.add('task-card');
+        taskCard.innerHTML = `
+            <div><strong>Title:</strong> ${title}</div>
+            <div><strong>Description:</strong> ${description}</div>
+            <div><strong>Category:</strong> ${category}</div>
+            <div><strong>Assigned to:</strong> ${assignedTo}</div>
+            <div><strong>Prio:</strong> ${prio}</div>
+            
+            <div><strong>Due Date:</strong> ${dueDate}</div>
+        `;
+        // Annahme: Hier wird angenommen, dass eine Container-Div mit der Klasse "task-container" vorhanden ist, in der die Task-Karten gerendert werden sollen.
+        document.querySelector('.boardContent').appendChild(taskCard);
     });
-    columns.forEach(column => {
-        column.addEventListener('dragover', function (e) {
-            e.preventDefault();
-        });
-        column.addEventListener('dragenter', function (e) {
-            e.preventDefault();
-            this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-        });
-        column.addEventListener('dragleave', function () {
-            this.style.backgroundColor = '';
-        });
-        column.addEventListener('drop', function (e) {            
-            this.appendChild(draggedTask);
-            this.style.backgroundColor = '';
-            saveTasksToLocalStorage();
-        });
-    });
-    loadTasksFromLocalStorage();
 }
-
+// <div><strong>Subtasks:</strong> ${subtasks.join(', ')}</div>
 
 function saveTasksToLocalStorage() {
     const columns = document.querySelectorAll('.boardColumn');
