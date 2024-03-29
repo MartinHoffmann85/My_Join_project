@@ -33,3 +33,9 @@
     font-weight: bold;
     color: var(--mockup-highlight);    
 }
+
+.helpButtonContainer {
+    display: flex;
+    margin-left: 300px;
+    color: blue;
+}
