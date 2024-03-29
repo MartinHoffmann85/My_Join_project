@@ -13,13 +13,23 @@ function redirectToAddTask() {
 function renderAllTasks() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     console.log('currentUser:', currentUser);
-    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {        
+        clearTaskContainers();        
         currentUser.tasks.forEach(task => {
             renderTask(task, 'todo');
         });
     } else {
         console.error('Invalid tasks data in localStorage');
     }
+}
+
+
+function clearTaskContainers() {
+    const columns = document.querySelectorAll('.boardColumn');
+    columns.forEach(column => {
+        const taskContainer = column.querySelector('.task-container');
+        taskContainer.innerHTML = '';
+    });
 }
 
 
@@ -56,9 +66,17 @@ function saveTasksToLocalStorage() {
         const tasks = column.querySelectorAll('.task');
         const taskList = [];
         tasks.forEach(task => {
-            taskList.push(task.textContent.trim());
+            // Überprüfen, ob der Task bereits in den gespeicherten Daten vorhanden ist
+            const taskId = task.id;
+            if (!boardTasks[columnId].includes(taskId)) {
+                // Wenn der Task nicht vorhanden ist, fügen Sie ihn der Taskliste hinzu
+                taskList.push(taskId);
+            }
         });
-        boardTasks[columnId] = taskList;
+        // Fügen Sie die aktualisierte Taskliste nur hinzu, wenn sie nicht leer ist
+        if (taskList.length > 0) {
+            boardTasks[columnId] = taskList;
+        }
     });    
     localStorage.setItem('currentUser.BoardTasks', JSON.stringify(boardTasks));
 }
@@ -126,4 +144,9 @@ function clearTasksFromLocalStorage() {
     taskContainers.forEach(container => {
         container.innerHTML = '';
     });
+}
+
+
+function clearAllTasksFromLocalStorage() {
+    localStorage.removeItem('currentUser.BoardTasks');
 }
