@@ -1,0 +1,38 @@
+body {
+    overflow-y: hidden;
+}
+
+.helpContentContainer {
+    height: 90dvh;
+    margin-left: 280px;
+    margin-top: 90px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.backArrowhelpContainer {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    cursor: pointer;
+}
+
+.BackArrowHelp {
+    height: 37px;
+}
+
+.helpHeadlineAndBackArrow {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media only screen and (max-width: 949px) and (min-width: 320px) {
+    .helpContentContainer {
+        height: 80dvh;
+        margin-left: 10px;
+        margin-top: 90px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        width: -webkit-fill-available; 
+    }
+}
