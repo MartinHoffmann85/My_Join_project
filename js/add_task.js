@@ -302,7 +302,7 @@ function deleteSubtask(index) {
   renderSubtasks();
 }
 
-async function createTask() {
+async function createTask() {  
   const titleInput = document.getElementById('title-input-id').value;
   const textareaInput = document.getElementById('textarea-input-id').value;
   const dateInput = document.getElementById('date-input-id').value;
@@ -312,12 +312,53 @@ async function createTask() {
   validateInput(dateInput, atBoolArr, 1, 4);
   validateInput(categoryInput, atBoolArr, 2, 5);
   if (handlerAddTaskValidation(atBoolArr)) {
-    handlerAddTaskValidation(atBoolArr);
-    return;
+      handlerAddTaskValidation(atBoolArr);
+      return;
   }
-  const taskID = generateTaskID(); // Generiere eine eindeutige ID
-  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput); // Füge die ID dem Task hinzu
-  await sendAddTask();
+  const taskID = generateTaskID();
+  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput); // Hinzufügen des neuen Tasks zu currentUser
+  localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Aktualisieren von currentUser im localStorage
+  await updateCurrentUserInBackend(currentUser); // Optional: Aktualisieren des Benutzers im Backend
+  redirectToAddBoard();
+}
+
+function checkUserExists(email) {
+  const storedUsers = JSON.parse(localStorage.getItem('currentUser'));
+  if (storedUsers && storedUsers.length > 0) {
+    return storedUsers.some(user => user.userEMail === email);
+  }
+  return false;
+}
+
+async function updateExistingUser(email, taskID, titleInput, textareaInput, dateInput, categoryInput) {
+  try {      
+      let users = JSON.parse(localStorage.getItem('currentUser'));
+      if (!users) {
+          console.error("Error: Users not found in localStorage.");
+          return;
+      }
+      const existingUserIndex = users.findIndex(user => user.userEMail === email);
+      if (existingUserIndex !== -1) {
+          const existingUser = users[existingUserIndex];
+          if (!Array.isArray(existingUser.tasks)) {
+              existingUser.tasks = [];
+          }
+          existingUser.tasks.push({
+              id: taskID,
+              title: titleInput,
+              description: textareaInput,
+              date: dateInput,
+              category: categoryInput,
+          });
+          users[existingUserIndex] = existingUser;
+          await setItem('users', JSON.stringify(users));
+          localStorage.setItem('currentUser', JSON.stringify(existingUser));
+      } else {
+          console.error("Error: Existing user not found in localStorage.");
+      }
+  } catch (error) {
+      console.error("Error updating existing user:", error);
+  }
 }
 
 function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput) {
@@ -349,8 +390,28 @@ function handlerAddTaskValidation(atBoolArr) {
 }
 
 async function sendAddTask() {
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  await addNewUserToBackend(currentUser);
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateCurrentUserInBackend(currentUser);
+}
+
+async function updateExistingUserInBackend(currentUser) {
+  try {
+    let users = JSON.parse(localStorage.getItem('currentUser'));
+    if (!users) {
+      console.error("Error: Users not found in localStorage.");
+      return;
+    }
+    const existingUserIndex = users.findIndex(user => user.userEMail === currentUser.userEMail);
+    if (existingUserIndex !== -1) {
+      users[existingUserIndex] = currentUser;
+      await setItem('users', JSON.stringify(users));
+      console.log("User updated in backend:", currentUser);
+    } else {
+      console.error("Error: Existing user not found in localStorage.");
+    }
+  } catch (error) {
+    console.error("Error updating existing user in backend:", error);
+  }
 }
 
 function clearAll() {
@@ -391,3 +452,6 @@ function generateTaskID() {
   return Math.random().toString(36).substr(2, 9);
 }
 
+function redirectToAddBoard() {
+  window.location.assign("../board.html");
+}

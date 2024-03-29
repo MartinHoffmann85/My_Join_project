@@ -493,3 +493,22 @@ function showHeaderUserInitials() {
         console.error("Benutzerdaten nicht gefunden!");
     }
 }
+
+
+// Function only for developers to clear double user entrys
+async function removeDuplicateUsers() {
+    try {
+        let existingUsers = await loadUsersFromBackend('users');
+        let uniqueUsers = [];
+        let emailsSet = new Set();
+        for (let user of existingUsers) {            
+            if (!emailsSet.has(user.userEMail)) {                
+                uniqueUsers.push(user);                
+                emailsSet.add(user.userEMail);
+            }
+        }
+        await setItem('users', JSON.stringify(uniqueUsers));
+    } catch (error) {
+        console.error('Fehler beim Entfernen doppelter Benutzer:', error);
+    }
+}
