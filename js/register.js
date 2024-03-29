@@ -24,10 +24,10 @@ async function init() {
 async function loadUsersFromBackend(key) {
     try {
         const result = await getItem(key);
-        return JSON.parse(result) || [];
+        return JSON.parse(result) || []; // Stelle sicher, dass hier immer ein Array zurückgegeben wird
     } catch (e) {
-        console.error('Loading error:', e);
-        return [];
+        console.error('Ladefehler:', e);
+        return []; // Gebe ein leeres Array zurück, wenn ein Fehler auftritt
     }
 }
 
@@ -79,6 +79,9 @@ function generateNewUserObject() {
 async function addNewUserToBackend(user) {
     try {
         let existingUsers = await loadUsersFromBackend('users');
+        if (!Array.isArray(existingUsers)) {
+            existingUsers = []; // Wenn der Wert kein Array ist, initialisiere ihn als leeres Array
+        }
         existingUsers.push(user);
         await setItem('users', JSON.stringify(existingUsers));        
     } catch (error) {
