@@ -316,49 +316,10 @@ async function createTask() {
       return;
   }
   const taskID = generateTaskID();
-  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput); // Hinzufügen des neuen Tasks zu currentUser
-  localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Aktualisieren von currentUser im localStorage
-  await updateCurrentUserInBackend(currentUser); // Optional: Aktualisieren des Benutzers im Backend
+  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput);
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  await updateCurrentUserInBackend(currentUser);
   redirectToAddBoard();
-}
-
-function checkUserExists(email) {
-  const storedUsers = JSON.parse(localStorage.getItem('currentUser'));
-  if (storedUsers && storedUsers.length > 0) {
-    return storedUsers.some(user => user.userEMail === email);
-  }
-  return false;
-}
-
-async function updateExistingUser(email, taskID, titleInput, textareaInput, dateInput, categoryInput) {
-  try {      
-      let users = JSON.parse(localStorage.getItem('currentUser'));
-      if (!users) {
-          console.error("Error: Users not found in localStorage.");
-          return;
-      }
-      const existingUserIndex = users.findIndex(user => user.userEMail === email);
-      if (existingUserIndex !== -1) {
-          const existingUser = users[existingUserIndex];
-          if (!Array.isArray(existingUser.tasks)) {
-              existingUser.tasks = [];
-          }
-          existingUser.tasks.push({
-              id: taskID,
-              title: titleInput,
-              description: textareaInput,
-              date: dateInput,
-              category: categoryInput,
-          });
-          users[existingUserIndex] = existingUser;
-          await setItem('users', JSON.stringify(users));
-          localStorage.setItem('currentUser', JSON.stringify(existingUser));
-      } else {
-          console.error("Error: Existing user not found in localStorage.");
-      }
-  } catch (error) {
-      console.error("Error updating existing user:", error);
-  }
 }
 
 function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput) {
@@ -387,31 +348,6 @@ function handlerAddTaskValidation(atBoolArr) {
     toggleVisibility('at-date-border-id', !atBoolArr[4],'error-border')
     toggleVisibility('category-container-id', !atBoolArr[5],'error-border')
     return atBoolArr.some(Boolean);
-}
-
-async function sendAddTask() {
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    updateCurrentUserInBackend(currentUser);
-}
-
-async function updateExistingUserInBackend(currentUser) {
-  try {
-    let users = JSON.parse(localStorage.getItem('currentUser'));
-    if (!users) {
-      console.error("Error: Users not found in localStorage.");
-      return;
-    }
-    const existingUserIndex = users.findIndex(user => user.userEMail === currentUser.userEMail);
-    if (existingUserIndex !== -1) {
-      users[existingUserIndex] = currentUser;
-      await setItem('users', JSON.stringify(users));
-      console.log("User updated in backend:", currentUser);
-    } else {
-      console.error("Error: Existing user not found in localStorage.");
-    }
-  } catch (error) {
-    console.error("Error updating existing user in backend:", error);
-  }
 }
 
 function clearAll() {
