@@ -34,8 +34,19 @@
     color: var(--mockup-highlight);    
 }
 
+.helpAndInitialsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
 .helpButtonContainer {
     display: flex;
-    margin-left: 300px;
-    color: blue;
+    margin-left: 300px;    
+    cursor: pointer;
+}
+
+.helpSVG {
+    height: 20px;
 }
