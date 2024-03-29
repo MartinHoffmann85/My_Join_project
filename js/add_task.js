@@ -315,18 +315,22 @@ async function createTask() {
     handlerAddTaskValidation(atBoolArr);
     return;
   }
-  updateCurrentUser(titleInput, textareaInput, dateInput, categoryInput);
+  const taskID = generateTaskID(); // Generiere eine eindeutige ID
+  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput); // Füge die ID dem Task hinzu
   await sendAddTask();
 }
 
-function updateCurrentUser(titleInput, textareaInput, dateInput, categoryInput) {
-  currentUser.tasks.titles.push(titleInput);
-  currentUser.tasks.descriptions.push(textareaInput)
-  currentUser.tasks.dates.push(dateInput)
-  currentUser.tasks.assignedTo.push(assignedTo.userNames)
-  currentUser.tasks.prios.push(prio[prioIndex])
-  currentUser.tasks.categories.push(categoryInput)
-  currentUser.tasks.subtasks.push(subtaskList)
+function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput) {
+  if (!Array.isArray(currentUser.tasks)) {
+    currentUser.tasks = [];
+  }
+  currentUser.tasks.push({
+    id: taskID,
+    title: titleInput,
+    description: textareaInput,
+    date: dateInput,
+    category: categoryInput,    
+  });
 }
 
 function validateInput(input, atBoolArr, index1, index2) {
@@ -358,6 +362,7 @@ function clearAll() {
   togglePrioImg('medium-default-id');
   
 }
+
 function clearAllInputs() {
   document.getElementById('title-input-id').value = '';
   document.getElementById('textarea-input-id').value = '';
@@ -381,3 +386,8 @@ function clearAllErrMsg() {
   toggleVisibility('at-date-border-id', !false,'error-border')
   toggleVisibility('category-container-id', !false,'error-border')
 }
+
+function generateTaskID() {  
+  return Math.random().toString(36).substr(2, 9);
+}
+
