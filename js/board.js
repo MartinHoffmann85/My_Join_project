@@ -12,13 +12,11 @@ function redirectToAddTask() {
 
 
 function renderAllTasks() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    console.log('currentUser:', currentUser);
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {        
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
-            renderTask(task, task.columnId); // Übergeben Sie die Spalten-ID des Tasks
-            console.log("function renderAllTasks()" , task.columnId);
+            renderTask(task, task.columnId);
         });
     } else {
         console.error('Invalid tasks data in localStorage');
@@ -36,21 +34,10 @@ function clearTaskContainers() {
 
 
 function renderTask(taskData) {
-    const { id, title, description, category, assignedTo, prio, dueDate, columnId } = taskData;
-    // Überprüfen, ob die columnId gültig ist, sonst Standardwert verwenden
+    const { id, title, description, category, assignedTo, prio, dueDate, columnId } = taskData;    
     const validColumnIds = ["todo", "inprogress", "awaitfeedback", "done"];
     const actualColumnId = validColumnIds.includes(columnId) ? columnId : "todo";
-    const taskCard = document.createElement('div');
-    taskCard.classList.add('task');
-    taskCard.setAttribute('id', id);
-    taskCard.innerHTML = `
-        <div><strong>Title:</strong> ${title}</div>
-        <div><strong>Description:</strong> ${description}</div>
-        <div><strong>Category:</strong> ${category}</div>
-        <div><strong>Assigned to:</strong> ${assignedTo}</div>
-        <div><strong>Prio:</strong> ${prio}</div>
-        <div><strong>Due Date:</strong> ${dueDate}</div>
-    `;    
+    const taskCard = renderTaskCard(id, title, description, category, assignedTo, prio, dueDate);    
     const taskContainer = document.querySelector(`#${actualColumnId}-column .task-container`);
     if (taskContainer) {
         taskContainer.appendChild(taskCard);
@@ -61,6 +48,21 @@ function renderTask(taskData) {
     }
 }
 
+
+function renderTaskCard(id, title, description, category, assignedTo, prio, dueDate) {
+    const taskCard = document.createElement('div');
+    taskCard.classList.add('task');
+    taskCard.setAttribute('id', id);
+    taskCard.innerHTML = `
+        <div><strong>Title:</strong> ${title}</div>
+        <div><strong>Description:</strong> ${description}</div>
+        <div><strong>Category:</strong> ${category}</div>
+        <div><strong>Assigned to:</strong> ${assignedTo}</div>
+        <div><strong>Prio:</strong> ${prio}</div>
+        <div><strong>Due Date:</strong> ${dueDate}</div>
+    `;
+    return taskCard;
+}
 
 function saveTasksToLocalStorage() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -80,18 +82,15 @@ function loadTasksFromLocalStorage(currentUser) {
             currentUser.tasks = tasks;
             clearTaskContainers();
             tasks.forEach(task => {
-                renderTask(task); // Übergeben Sie die Spalten-ID nicht hier, damit sie aus dem Task-Objekt verwendet wird
-            });
+                renderTask(task);
+        });
         }
-    } else {
-        console.error('Invalid tasks data in localStorage');
-    }
+    }    
 }
 
 
 
-function dragStart(event) {
-    console.log("function dragStart(event)", event);
+function dragStart(event) {    
     const taskId = event.target.id;
     event.dataTransfer.setData("text/plain", taskId);
 }
@@ -117,13 +116,8 @@ function drop(event) {
         const draggedTaskElement = document.getElementById(taskId);
         if (draggedTaskElement && targetContainer) {
             targetContainer.appendChild(draggedTaskElement);
-            updateTaskColumnId(taskId, targetColumnId); // Update the task's columnId
-            console.log("function drop(targetColumnId)" , targetColumnId);
-        } else {
-            console.error('Invalid dragged task element or target container');
+            updateTaskColumnId(taskId, targetColumnId);
         }
-    } else {
-        console.error('Target column not found');
     }
 }
 
@@ -134,12 +128,8 @@ function updateTaskColumnId(taskId, newColumnId) {
         const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
         if (taskIndex !== -1) {
             currentUser.tasks[taskIndex].columnId = newColumnId;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Aktualisiertes currentUser-Objekt speichern
-        } else {
-            console.error('Task with id', taskId, 'not found');
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));        
         }
-    } else {
-        console.error('Invalid currentUser data in localStorage');
     }
 }
 
@@ -154,11 +144,13 @@ function clearTasksFromLocalStorage() {
 }
 
 
+// Clear function for task dummys only for developers
 function clearAllTasksFromLocalStorage() {
     localStorage.removeItem('currentUser.BoardTasks');
 }
 
 
+// Clear function for task dummys only for developers
 function clearAllTasksFromLocalStorage2() {
     const tasksJSON = localStorage.getItem('currentUser.tasks');
     tasksJSON = localStorage.removeItem('currentUser.tasks');
