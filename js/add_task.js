@@ -126,19 +126,38 @@ function renderAddedContacts() {
 function selectedAssignedToUser(event, index) {
   userIndex = index;
   const svgElement = event.currentTarget.querySelector('svg'); 
-  const spanElemnt = document.getElementById(`contact-id${index}`)
-  const contact = currentUser.contacts.find(contact => contact.name === spanElemnt.innerHTML);
+  const spanElement = document.getElementById(`contact-id${index}`);
+  const contact = currentUser.contacts.find(contact => contact.name === spanElement.innerHTML);
   event.currentTarget.classList.toggle('selected-contact');
+  console.log("function selectedAssignedToUser(contact)", contact);  
+  const contactIndex = assignedTo.userNames.indexOf(contact.name);
   if (event.currentTarget.classList.contains('selected-contact')) {
     svgElement.innerHTML = templateSvgCheckboxConfirmedHTML();
-    pushSelectedUser(event);
-    contact.selected = true;
+    // Wenn der Kontakt noch nicht in assignedTo ist, füge ihn hinzu
+    if (contactIndex === -1) {
+      assignedTo.initials.push(getFirstLettersOfName(contact.name));
+      assignedTo.colorCodes.push(contact.colorCode);
+      assignedTo.textColor.push(contact.textColorCode || (isColorLight(contact.colorCode) ? 'black' : 'white'));
+      assignedTo.userNames.push(contact.name);
+    }
   } else { 
     svgElement.innerHTML = templateSvgDefaultCheckboxHTML();
-    deleteSelectedUser(event);
-    contact.selected = false;
+    // Wenn der Kontakt in assignedTo ist, entferne ihn
+    if (contactIndex !== -1) {
+      assignedTo.initials.splice(contactIndex, 1);
+      assignedTo.colorCodes.splice(contactIndex, 1);
+      assignedTo.textColor.splice(contactIndex, 1);
+      assignedTo.userNames.splice(contactIndex, 1);
+    }
   }
+  // Aktualisieren der Daten im localStorage
+  updateAssignedToLocalStorage();
   renderAddedContacts(); 
+}
+
+function updateAssignedToLocalStorage() {
+  // Speichern der Daten im localStorage
+  localStorage.setItem('currentUser.tasks.assignedTo', JSON.stringify(assignedTo));
 }
 
 function getUserInfo(event) {

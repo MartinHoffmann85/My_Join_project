@@ -50,18 +50,18 @@ function renderTask(taskData) {
 }
 
 
-function renderTaskCard(id, title, description, category, assignedTo, prio, date) {
-    console.log("function renderTaskCard(assignedTo)" , assignedTo);
+function renderTaskCard(id, title, description, category, prio, date) {
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
-    taskCard.setAttribute('id', id);    
+    taskCard.setAttribute('id', id);
+    // Laden der zugewiesenen Kontakte aus dem localStorage
+    const assignedToData = JSON.parse(localStorage.getItem('currentUser.tasks.assignedTo'));
     let assignedToHTML = '';
-    if (assignedTo && assignedTo.length > 0) {
-        assignedToHTML = `<div><strong>Assigned to:</strong> ${assignedTo.map(contact => contact.name).join(', ')}</div>`;
-        console.log("function renderTaskCard(assignedTo)" , assignedTo);
+    if (assignedToData && assignedToData.userNames.length > 0) {
+        assignedToHTML = `<div><strong>Assigned to:</strong> ${assignedToData.userNames.join(', ')}</div>`;
     } else {
         assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
-    }    
+    }
     taskCard.innerHTML = `
         <div><strong>Title:</strong> ${title}</div>
         <div><strong>Description:</strong> ${description}</div>
@@ -161,7 +161,7 @@ function clearAllTasksFromLocalStorage() {
 
 // Clear function for task dummys only for developers
 function clearAllTasksFromLocalStorage2() {
-    const tasksJSON = localStorage.getItem('currentUser.tasks');
-    tasksJSON = localStorage.removeItem('currentUser.tasks');
-    tasksJSON= localStorage.setItem('currentUser.tasks', JSON.stringify(tasks));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {}; // Laden des aktuellen Benutzers oder eines leeren Objekts, wenn kein Benutzer vorhanden ist
+    currentUser.tasks = []; // Leeres Array für Tasks erstellen
+    localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Aktualisieren des Benutzers im localStorage
 }
