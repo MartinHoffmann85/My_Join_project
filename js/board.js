@@ -53,12 +53,18 @@ function renderTask(taskData) {
 function renderTaskCard(id, title, description, category, assignedTo, prio, date) {
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
-    taskCard.setAttribute('id', id);
+    taskCard.setAttribute('id', id);    
+    let assignedToHTML = '';
+    if (assignedTo && assignedTo.length > 0) {
+        assignedToHTML = `<div><strong>Assigned to:</strong> ${assignedTo.map(contact => contact.name).join(', ')}</div>`;
+    } else {
+        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
+    }    
     taskCard.innerHTML = `
         <div><strong>Title:</strong> ${title}</div>
         <div><strong>Description:</strong> ${description}</div>
         <div><strong>Category:</strong> ${category}</div>
-        <div><strong>Assigned to:</strong> ${assignedTo}</div>
+        ${assignedToHTML} <!-- Hier wird das zugewiesene HTML eingefügt -->
         <div><strong>Prio:</strong> ${prio}</div>
         <div><strong>Due Date:</strong> ${date}</div>
     `;

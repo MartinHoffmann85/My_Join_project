@@ -309,6 +309,7 @@ async function createTask() {
   const categoryInput = document.getElementById('category-input-id').value;
   const columnId = 'todo';
   const priority = prio[prioIndex];
+  const assignedContacts = getSelectedContacts();
   const atBoolArr = [false, false, false, false, false, false];
   validateInput(titleInput, atBoolArr, 0, 3);
   validateInput(dateInput, atBoolArr, 1, 4);
@@ -318,13 +319,13 @@ async function createTask() {
       return;
   }
   const taskID = generateTaskID();
-  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority);
+  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedContacts);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
   await updateCurrentUserInBackend(currentUser);
   redirectToAddBoard();
 }
 
-function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority) {
+function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedContacts) {
   if (!Array.isArray(currentUser.tasks)) {
     currentUser.tasks = [];
   }
@@ -335,8 +336,20 @@ function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categor
     date: dateInput,
     category: categoryInput,
     columnId: columnId,
-    prio: priority
+    prio: priority,
+    assignedTo: assignedContacts
   });
+}
+
+function getSelectedContacts() {
+  const selectedContacts = [];
+  const contactElements = document.querySelectorAll('#assignedto-container-id .selected-contact');
+  contactElements.forEach(contactElement => {
+    const contactName = contactElement.querySelector('.contact-name').textContent;
+    const contactColor = contactElement.querySelector('.circle-style').style.backgroundColor;
+    selectedContacts.push({ name: contactName, color: contactColor });
+  });
+  return selectedContacts;
 }
 
 function validateInput(input, atBoolArr, index1, index2) {
