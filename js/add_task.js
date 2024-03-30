@@ -7,7 +7,7 @@ let assignedTo = {
 };
 let subtaskList = [];
 let userIndex;
-let prio = ['urgnet', 'medium', 'low'];
+let prio = ['urgent', 'medium', 'low'];
 let prioIndex = 1;
 let isFilterActive = false;
 
@@ -307,7 +307,8 @@ async function createTask() {
   const textareaInput = document.getElementById('textarea-input-id').value;
   const dateInput = document.getElementById('date-input-id').value;
   const categoryInput = document.getElementById('category-input-id').value;
-  const columnId = 'todo'; // Hier die Spalten-ID festlegen, z.B. 'todo'
+  const columnId = 'todo';
+  const priority = prio[prioIndex];
   const atBoolArr = [false, false, false, false, false, false];
   validateInput(titleInput, atBoolArr, 0, 3);
   validateInput(dateInput, atBoolArr, 1, 4);
@@ -317,13 +318,13 @@ async function createTask() {
       return;
   }
   const taskID = generateTaskID();
-  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId);
+  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
   await updateCurrentUserInBackend(currentUser);
   redirectToAddBoard();
 }
 
-function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId) {
+function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority) {
   if (!Array.isArray(currentUser.tasks)) {
     currentUser.tasks = [];
   }
@@ -333,7 +334,8 @@ function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categor
     description: textareaInput,
     date: dateInput,
     category: categoryInput,
-    columnId: columnId // Spalten-ID hinzufügen
+    columnId: columnId,
+    prio: priority
   });
 }
 
