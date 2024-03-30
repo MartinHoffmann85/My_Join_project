@@ -13,7 +13,8 @@ function redirectToAddTask() {
 
 function renderAllTasks() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {        
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        console.log("function renderAllTasks(currentUser.tasks)" , currentUser.tasks);        
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
             renderTask(task, task.columnId);
@@ -34,10 +35,10 @@ function clearTaskContainers() {
 
 
 function renderTask(taskData) {
-    const { id, title, description, category, assignedTo, prio, dueDate, columnId } = taskData;    
+    const { id, title, description, category, assignedTo, prio, date, columnId } = taskData;    
     const validColumnIds = ["todo", "inprogress", "awaitfeedback", "done"];
     const actualColumnId = validColumnIds.includes(columnId) ? columnId : "todo";
-    const taskCard = renderTaskCard(id, title, description, category, assignedTo, prio, dueDate);    
+    const taskCard = renderTaskCard(id, title, description, category, assignedTo, prio, date);    
     const taskContainer = document.querySelector(`#${actualColumnId}-column .task-container`);
     if (taskContainer) {
         taskContainer.appendChild(taskCard);
@@ -49,7 +50,7 @@ function renderTask(taskData) {
 }
 
 
-function renderTaskCard(id, title, description, category, assignedTo, prio, dueDate) {
+function renderTaskCard(id, title, description, category, assignedTo, prio, date) {
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
     taskCard.setAttribute('id', id);
@@ -59,10 +60,11 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, dueD
         <div><strong>Category:</strong> ${category}</div>
         <div><strong>Assigned to:</strong> ${assignedTo}</div>
         <div><strong>Prio:</strong> ${prio}</div>
-        <div><strong>Due Date:</strong> ${dueDate}</div>
+        <div><strong>Due Date:</strong> ${date}</div>
     `;
     return taskCard;
 }
+
 
 function saveTasksToLocalStorage() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -87,7 +89,6 @@ function loadTasksFromLocalStorage(currentUser) {
         }
     }    
 }
-
 
 
 function dragStart(event) {    
