@@ -51,12 +51,14 @@ function renderTask(taskData) {
 
 
 function renderTaskCard(id, title, description, category, assignedTo, prio, date) {
+    console.log("function renderTaskCard(assignedTo)" , assignedTo);
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
     taskCard.setAttribute('id', id);    
     let assignedToHTML = '';
     if (assignedTo && assignedTo.length > 0) {
         assignedToHTML = `<div><strong>Assigned to:</strong> ${assignedTo.map(contact => contact.name).join(', ')}</div>`;
+        console.log("function renderTaskCard(assignedTo)" , assignedTo);
     } else {
         assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
     }    

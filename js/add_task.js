@@ -302,14 +302,14 @@ function deleteSubtask(index) {
   renderSubtasks();
 }
 
-async function createTask() {  
+async function createTask() {
   const titleInput = document.getElementById('title-input-id').value;
   const textareaInput = document.getElementById('textarea-input-id').value;
   const dateInput = document.getElementById('date-input-id').value;
   const categoryInput = document.getElementById('category-input-id').value;
   const columnId = 'todo';
   const priority = prio[prioIndex];
-  const assignedContacts = getSelectedContacts();
+  const assignedContacts = getAssignedContacts();
   const atBoolArr = [false, false, false, false, false, false];
   validateInput(titleInput, atBoolArr, 0, 3);
   validateInput(dateInput, atBoolArr, 1, 4);
@@ -319,35 +319,52 @@ async function createTask() {
       return;
   }
   const taskID = generateTaskID();
-  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedContacts);
+  const assignedTo = assignedContacts.map(contact => {
+      return { name: contact.name, color: contact.color }; // Assuming you need to store color too
+  });
+  console.log("async function createTask()", assignedTo);
+  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
   await updateCurrentUserInBackend(currentUser);
   redirectToAddBoard();
 }
 
-function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedContacts) {
-  if (!Array.isArray(currentUser.tasks)) {
-    currentUser.tasks = [];
-  }
-  currentUser.tasks.push({
-    id: taskID,
-    title: titleInput,
-    description: textareaInput,
-    date: dateInput,
-    category: categoryInput,
-    columnId: columnId,
-    prio: priority,
-    assignedTo: assignedContacts
+function getAssignedContacts() {
+  const selectedContacts = [];
+  const contactElements = document.querySelectorAll('.assigned-contact.selected');
+  contactElements.forEach(contactElement => {
+      const contactName = contactElement.querySelector('.contact-name').textContent;
+      const contactColor = contactElement.querySelector('.circle-style').style.backgroundColor;
+      selectedContacts.push({ name: contactName, color: contactColor });
   });
+  return selectedContacts;
 }
 
+function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo) {
+  if (!Array.isArray(currentUser.tasks)) {
+      currentUser.tasks = [];
+  }
+  currentUser.tasks.push({
+      id: taskID,
+      title: titleInput,
+      description: textareaInput,
+      date: dateInput,
+      category: categoryInput,
+      columnId: columnId,
+      prio: priority,
+      assignedTo: assignedTo
+  });
+  saveTasksToLocalStorage();
+}
+
+// Diese Funktion wird nich aufgerufen
 function getSelectedContacts() {
   const selectedContacts = [];
-  const contactElements = document.querySelectorAll('#assignedto-container-id .selected-contact');
+  const contactElements = document.querySelectorAll('#added-contacts-id .added-contact');
   contactElements.forEach(contactElement => {
-    const contactName = contactElement.querySelector('.contact-name').textContent;
-    const contactColor = contactElement.querySelector('.circle-style').style.backgroundColor;
-    selectedContacts.push({ name: contactName, color: contactColor });
+      const contactName = contactElement.querySelector('.contact-name').textContent;
+      const contactColor = contactElement.querySelector('.circle-style').style.backgroundColor;
+      selectedContacts.push({ name: contactName, color: contactColor });
   });
   return selectedContacts;
 }
