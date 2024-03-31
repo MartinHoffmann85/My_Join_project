@@ -10,6 +10,7 @@ let userIndex;
 let prio = ['urgent', 'medium', 'low'];
 let prioIndex = 1;
 let isFilterActive = false;
+let contactsSelected;
 
 function initAddTask() {
   currentUser = JSON.parse(localStorage.getItem('currentUser'));  
@@ -129,7 +130,8 @@ function selectedAssignedToUser(event, index) {
   const spanElement = document.getElementById(`contact-id${index}`);
   const contact = currentUser.contacts.find(contact => contact.name === spanElement.innerHTML);
   event.currentTarget.classList.toggle('selected-contact');
-  console.log("function selectedAssignedToUser(contact)", contact);  
+  console.log("function selectedAssignedToUser(contact)", contact);
+  
   const contactIndex = assignedTo.userNames.indexOf(contact.name);
   if (event.currentTarget.classList.contains('selected-contact')) {
     svgElement.innerHTML = templateSvgCheckboxConfirmedHTML();
@@ -150,7 +152,7 @@ function selectedAssignedToUser(event, index) {
       assignedTo.userNames.splice(contactIndex, 1);
     }
   }
-  // Aktualisieren der Daten im localStorage
+  console.log("function selectedAssignedToUser(assignedTo)" , assignedTo);
   updateAssignedToLocalStorage();
   renderAddedContacts(); 
 }
@@ -158,6 +160,8 @@ function selectedAssignedToUser(event, index) {
 function updateAssignedToLocalStorage() {
   // Speichern der Daten im localStorage
   localStorage.setItem('currentUser.tasks.assignedTo', JSON.stringify(assignedTo));
+  console.log("function updateAssignedToLocalStorage()" , assignedTo);
+  contactsSelected = assignedTo;
 }
 
 function getUserInfo(event) {
@@ -321,49 +325,24 @@ function deleteSubtask(index) {
   renderSubtasks();
 }
 
-async function createTask() {
+function createTask() {
   const titleInput = document.getElementById('title-input-id').value;
   const textareaInput = document.getElementById('textarea-input-id').value;
   const dateInput = document.getElementById('date-input-id').value;
   const categoryInput = document.getElementById('category-input-id').value;
   const columnId = 'todo';
   const priority = prio[prioIndex];
-  const assignedContacts = getAssignedContacts();
-  const atBoolArr = [false, false, false, false, false, false];
-  validateInput(titleInput, atBoolArr, 0, 3);
-  validateInput(dateInput, atBoolArr, 1, 4);
-  validateInput(categoryInput, atBoolArr, 2, 5);
-  if (handlerAddTaskValidation(atBoolArr)) {
-      handlerAddTaskValidation(atBoolArr);
-      return;
-  }
   const taskID = generateTaskID();
-  const assignedTo = assignedContacts.map(contact => {
-      return { name: contact.name, color: contact.color }; // Assuming you need to store color too
-  });
-  console.log("async function createTask()", assignedTo);
   updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  await updateCurrentUserInBackend(currentUser);
   redirectToAddBoard();
-}
-
-function getAssignedContacts() {
-  const selectedContacts = [];
-  const contactElements = document.querySelectorAll('.assigned-contact.selected');
-  contactElements.forEach(contactElement => {
-      const contactName = contactElement.querySelector('.contact-name').textContent;
-      const contactColor = contactElement.querySelector('.circle-style').style.backgroundColor;
-      selectedContacts.push({ name: contactName, color: contactColor });
-  });
-  return selectedContacts;
 }
 
 function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo) {
   if (!Array.isArray(currentUser.tasks)) {
       currentUser.tasks = [];
   }
-  currentUser.tasks.push({
+  const task = {
       id: taskID,
       title: titleInput,
       description: textareaInput,
@@ -371,21 +350,11 @@ function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categor
       category: categoryInput,
       columnId: columnId,
       prio: priority,
-      assignedTo: assignedTo
-  });
-  saveTasksToLocalStorage();
-}
-
-// Diese Funktion wird nich aufgerufen
-function getSelectedContacts() {
-  const selectedContacts = [];
-  const contactElements = document.querySelectorAll('#added-contacts-id .added-contact');
-  contactElements.forEach(contactElement => {
-      const contactName = contactElement.querySelector('.contact-name').textContent;
-      const contactColor = contactElement.querySelector('.circle-style').style.backgroundColor;
-      selectedContacts.push({ name: contactName, color: contactColor });
-  });
-  return selectedContacts;
+      assignedTo: assignedTo // Hier weisen wir den ausgewählten Kontakten direkt zu
+  };
+  currentUser.tasks.push(task);
+  // Speichern der Daten im localStorage
+  saveTasksToLocalStorage(currentUser);
 }
 
 function validateInput(input, atBoolArr, index1, index2) {
