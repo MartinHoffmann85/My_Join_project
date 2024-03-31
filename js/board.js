@@ -71,10 +71,23 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         <div ><strong>${title}</strong></div>
         <div>${description}</div>
         <div>Subtasks</div>       
-        ${assignedToHTML}
+        ${renderUserDetails(assignedTo)}
         <div>${prio}</div>        
     `;
-    return taskCard;
+    console.log("function renderTaskCard assignedTo" , assignedTo);
+    return taskCard;    
+}
+
+
+function renderUserDetails(user) {
+    const colorCode = user.colorCodes && user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
+    const initials = user.userNames && user.userNames.length > 0 ? user.userNames[0].split(' ').map(word => word[0]).join('') : '';
+    const textColor = isColorLight(colorCode) ? "black" : "white";
+    return `
+      <div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
+        ${initials}
+      </div>
+    `;
 }
 
 
