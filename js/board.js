@@ -50,23 +50,23 @@ function renderTask(taskData) {
 }
 
 
-function renderTaskCard(id, title, description, category, prio, date) {
+function renderTaskCard(id, title, description, category, assignedTo, prio, date) {
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
     taskCard.setAttribute('id', id);
     // Laden der zugewiesenen Kontakte aus dem localStorage
     const assignedToData = JSON.parse(localStorage.getItem('currentUser.tasks.assignedTo'));
-    let assignedToHTML = '';
+        
     if (assignedToData && assignedToData.userNames.length > 0) {
-        assignedToHTML = `<div><strong>Assigned to:</strong> ${assignedToData.userNames.join(', ')}</div>`;
+            assignedTo = `<div><strong>Assigned to:</strong> ${assignedToData.userNames.join(', ')}</div>`;
     } else {
-        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
+            assignedTo = '<div><strong>Assigned to:</strong> No one assigned</div>';
     }
     taskCard.innerHTML = `
         <div><strong>Title:</strong> ${title}</div>
         <div><strong>Description:</strong> ${description}</div>
         <div><strong>Category:</strong> ${category}</div>
-        ${assignedToHTML} <!-- Hier wird das zugewiesene HTML eingefügt -->
+        ${assignedTo} <!-- Hier wird das zugewiesene HTML eingefügt -->
         <div><strong>Prio:</strong> ${prio}</div>
         <div><strong>Due Date:</strong> ${date}</div>
     `;
