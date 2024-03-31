@@ -62,14 +62,15 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     }    
     let backgroundColor = '';
     if (category === 'Technical Task') {
-        backgroundColor = 'var(--technical-task-turquoise)'; // or any other color value you prefer
+        backgroundColor = 'var(--technical-task-turquoise)';
     } else if (category === 'User Story') {
-        backgroundColor = 'var(--user-story-blue)'; // or any other color value you prefer
+        backgroundColor = 'var(--user-story-blue)';
     }
     taskCard.innerHTML = `
         <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
-        <div>${title}</div>
-        <div>${description}</div>        
+        <div ><strong>${title}</strong></div>
+        <div>${description}</div>
+        <div>Subtasks</div>       
         ${assignedToHTML}
         <div>${prio}</div>        
     `;

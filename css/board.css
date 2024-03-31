@@ -81,7 +81,7 @@ body {
     padding: 5px;
     border: 1px solid #ccc;
     margin-bottom: 5px;
-    border-radius: 3px;
+    border-radius: 12px;
     cursor: pointer;
 }
 
@@ -97,6 +97,10 @@ body {
     font-weight: 400;
     padding: 4px 16px 4px 16px;
     border-radius: 8px;
+}
+
+.boardTodoH2GreyColor {
+    color: var(--board-todo-h2-grey);
 }
 
 @media only screen and (max-width: 949px) and (min-width: 320px) {
