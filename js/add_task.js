@@ -53,8 +53,7 @@ function iterateOverContacts(contacts) {
     textColor = isColorLight(contact.colorCode) ? 'white' : 'black'; 
     const isSelected = contacts[index].selected;
     assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, index, contact.colorCode, initials, textColor, isSelected);
-  });
-  // Deselect all contacts
+  });  
   const contactElements = assignedToContainer.querySelectorAll('.assigned-to-box');
   contactElements.forEach(contactElement => {
     contactElement.classList.remove('selected-contact');

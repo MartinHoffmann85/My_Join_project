@@ -56,17 +56,16 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     taskCard.setAttribute('id', id);
     let assignedToHTML = '';
     if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
-        assignedToHTML = `<div><strong>Assigned to:</strong> ${assignedTo.userNames.join(', ')}</div>`;
+        assignedToHTML = `<div>${assignedTo.userNames.join(', ')}</div>`;
     } else {
         assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
     }
     taskCard.innerHTML = `
-        <div><strong>Title:</strong> ${title}</div>
-        <div><strong>Description:</strong> ${description}</div>
-        <div><strong>Category:</strong> ${category}</div>
+        <div><strong>${category}
+        <div>${title}</div>
+        <div>${description}</div>        
         ${assignedToHTML}
-        <div><strong>Prio:</strong> ${prio}</div>
-        <div><strong>Due Date:</strong> ${date}</div>
+        <div>${prio}</div>        
     `;
     return taskCard;
 }
