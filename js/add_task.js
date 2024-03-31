@@ -383,6 +383,7 @@ function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categor
   };
   currentUser.tasks.push(task);  
   saveTasksToLocalStorage(currentUser);
+  updateCurrentUserInBackend(currentUser);
 }
 
 
