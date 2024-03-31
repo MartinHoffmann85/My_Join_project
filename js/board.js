@@ -59,9 +59,15 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         assignedToHTML = `<div>${assignedTo.userNames.join(', ')}</div>`;
     } else {
         assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
+    }    
+    let backgroundColor = '';
+    if (category === 'Technical Task') {
+        backgroundColor = 'var(--technical-task-turquoise)'; // or any other color value you prefer
+    } else if (category === 'User Story') {
+        backgroundColor = 'var(--user-story-blue)'; // or any other color value you prefer
     }
     taskCard.innerHTML = `
-        <div><strong>${category}
+        <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
         <div>${title}</div>
         <div>${description}</div>        
         ${assignedToHTML}

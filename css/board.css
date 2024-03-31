@@ -90,6 +90,15 @@ body {
     flex-direction: column;
 }
 
+.renderTaskCardCategoryDiv {
+    background-color: var(--user-story-blue);
+    color: var(--white-color);
+    font-size: 16px;
+    font-weight: 400;
+    padding: 4px 16px 4px 16px;
+    border-radius: 8px;
+}
+
 @media only screen and (max-width: 949px) and (min-width: 320px) {
     .boardContentContainer {
         height: 80dvh;
