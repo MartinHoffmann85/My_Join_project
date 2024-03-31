@@ -217,11 +217,11 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     }    
     let prioContent = prio;
     if (prio === 'urgent') {
-        prioContent = `<img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
     } else if (prio === 'medium') {
-        prioContent = `<img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Medium</strong></p><img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
     } else if (prio === 'low') {
-        prioContent = `<img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
     }    
     // const subtasksHTML = boardRenderSubtasks(taskCard, id);
     card.innerHTML = `
@@ -236,7 +236,7 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
         <div class="overlayAssignetToHTMLAndPrioContentContainer">
             <div class="boardPriorityContainer">
                 <div>Priority:</div>
-                <div class="boardPrioIcon">${prioContent}</div>
+                <div class="boardPrioIcon displayFlex">${prioContent}</div>
             </div>  
             <div class="displayFlex">${assignedToHTML}</div>            
         </div>
