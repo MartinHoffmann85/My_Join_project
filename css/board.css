@@ -141,19 +141,30 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.5); /* Hintergrundfarbe mit Transparenz */
-    width: 80%; /* Breite des Overlays */
-    max-width: 600px; /* Maximale Breite des Overlays */
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 80%;
+    max-width: 600px;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Schatten-Effekt */
-    z-index: 1000; /* Z-Index, um das Overlay über anderen Inhalten zu positionieren */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
 
 .boardoverlay .card {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
+}
+
+.boardTaskOverlayCloseX {
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+}
+
+.boardOverlayCategoryAndCloseXContainer {
+    display: flex;    
+    justify-content: space-between;
 }
 
 @media only screen and (max-width: 949px) and (min-width: 320px) {

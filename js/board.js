@@ -225,7 +225,10 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     }    
     // const subtasksHTML = boardRenderSubtasks(taskCard, id);
     card.innerHTML = `
-        <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
+        <div class="boardOverlayCategoryAndCloseXContainer">            
+            <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
+            <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
+        </div>        
         <div class="renderTaskTitle"><strong>${title}</strong></div>
         <div class="renderTaskDescription">${description}</div>
                
@@ -237,26 +240,32 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     overlay.appendChild(card);
     document.body.appendChild(overlay);
 }
+
+
 // <div class="renderTasksubtaskHTML">${subtasksHTML}</div>
 
 function addTaskClickListener() {
     const taskCards = document.querySelectorAll('.task');
-    taskCards.forEach(taskCard => {
-      taskCard.addEventListener('click', function(event) {
-        const taskId = event.currentTarget.id;
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const task = currentUser.tasks.find(task => task.id === taskId);
-        if (task) {
-            renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId);
-        } else {
-          console.error('Task not found');
-        }
-      });
+    taskCards.forEach(taskCard => {        
+        taskCard.removeEventListener('click', renderTaskCardOverlay);        
+        taskCard.addEventListener('click', renderTaskCardOverlay);
     });
 }
 
 
-function closeOverlay() {
+function renderTaskCardOverlay(event) {
+    const taskId = event.currentTarget.id;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const task = currentUser.tasks.find(task => task.id === taskId);
+    if (task) {
+        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId);
+    } else {
+        console.error('Task not found');
+    }
+}
+
+
+function closeOverlayBoard() {
     const overlay = document.querySelector('.boardoverlay');
     if (overlay) {
         overlay.remove();
