@@ -53,25 +53,25 @@ function renderTask(taskData) {
 function renderTaskCard(id, title, description, category, assignedTo, prio, date, columnId) {
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
-    taskCard.setAttribute('id', id);    
-    let assignedToHTML = document.createElement('div');
+    taskCard.setAttribute('id', id);
+    let assignedToHTML = '';
     if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
         assignedTo.userNames.forEach((userName, index) => {
             const user = {
                 userNames: [userName],
                 colorCodes: [assignedTo.colorCodes[index]],
             };
-            assignedToHTML.innerHTML += renderUserDetails(user);
+            assignedToHTML += renderUserDetails(user);
         });
     } else {
-        assignedToHTML.innerHTML = '<strong>Assigned to:</strong> No one assigned';
+        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
     }
     let backgroundColor = '';
     if (category === 'Technical Task') {
         backgroundColor = 'var(--technical-task-turquoise)';
     } else if (category === 'User Story') {
         backgroundColor = 'var(--user-story-blue)';
-    }    
+    }
     let prioContent = prio;
     if (prio === 'urgent') {
         prioContent = `<img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
@@ -79,18 +79,35 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         prioContent = `<img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
     } else if (prio === 'low') {
         prioContent = `<img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
-    }
+    }    
+    const subtasksHTML = boardRenderSubtasks(taskCard, id);    
     taskCard.innerHTML = `
         <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
-        <div ><strong>${title}</strong></div>
+        <div><strong>${title}</strong></div>
         <div>${description}</div>
-        <div>Subtasks</div>       
+        <div>${subtasksHTML}</div>       
         <div class="assignetToHTMLAndPrioContentContainer">   
-            <div class="displayFlex">${assignedToHTML.innerHTML}</div>
+            <div class="displayFlex">${assignedToHTML}</div>
             <div>${prioContent}</div>
         </div>
     `;    
     return taskCard;    
+}
+
+
+function boardRenderSubtasks(taskCard, taskId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const task = currentUser.tasks.find(task => task.id === taskId);
+    if (!task || !task.subtasks || task.subtasks.length === 0) {
+        return '';
+    }
+    
+    let subtasksHTML = '<div><strong>Subtasks:</strong></div>';
+    task.subtasks.forEach(subtask => {
+        subtasksHTML += `<div>${subtask.title}</div>`;
+    });
+    
+    return subtasksHTML;
 }
 
 
