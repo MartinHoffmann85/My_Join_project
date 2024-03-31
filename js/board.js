@@ -53,30 +53,36 @@ function renderTask(taskData) {
 function renderTaskCard(id, title, description, category, assignedTo, prio, date, columnId) {
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
-    taskCard.setAttribute('id', id);
+    taskCard.setAttribute('id', id);    
     let assignedToHTML = '';
     if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
-        assignedToHTML = `<div>${assignedTo.userNames.join(', ')}</div>`;
+        assignedTo.userNames.forEach((userName, index) => {
+            const user = {
+                userNames: [userName],
+                colorCodes: [assignedTo.colorCodes[index]],
+            };
+            assignedToHTML += renderUserDetails(user);
+        });
     } else {
         assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
-    }    
+    }
     let backgroundColor = '';
     if (category === 'Technical Task') {
         backgroundColor = 'var(--technical-task-turquoise)';
     } else if (category === 'User Story') {
         backgroundColor = 'var(--user-story-blue)';
-    }
+    }    
     taskCard.innerHTML = `
         <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
         <div ><strong>${title}</strong></div>
         <div>${description}</div>
         <div>Subtasks</div>       
-        ${renderUserDetails(assignedTo)}
+        <div class="displayFlex">${assignedToHTML}</div>
         <div>${prio}</div>        
-    `;
-    console.log("function renderTaskCard assignedTo" , assignedTo);
+    `;    
     return taskCard;    
 }
+
 
 
 function renderUserDetails(user) {
