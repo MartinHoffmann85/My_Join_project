@@ -100,13 +100,11 @@ function boardRenderSubtasks(taskCard, taskId) {
     const task = currentUser.tasks.find(task => task.id === taskId);
     if (!task || !task.subtasks || task.subtasks.length === 0) {
         return '';
-    }
-    
+    }    
     let subtasksHTML = '<div></div>';
     task.subtasks.forEach(subtask => {
         subtasksHTML += `<div>${subtask.title}</div>`;
-    });
-    
+    });    
     return subtasksHTML;
 }
 
