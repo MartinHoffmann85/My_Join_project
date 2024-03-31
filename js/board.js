@@ -231,10 +231,14 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
         </div>        
         <div class="renderTaskTitle"><strong>${title}</strong></div>
         <div class="renderTaskDescription">${description}</div>
+        <div class="renderTaskDate">${date}</div>
                
-        <div class="assignetToHTMLAndPrioContentContainer">   
-            <div class="displayFlex">${assignedToHTML}</div>
-            <div>${prioContent}</div>
+        <div class="overlayAssignetToHTMLAndPrioContentContainer">
+            <div class="boardPriorityContainer">
+                <div>Priority:</div>
+                <div class="boardPrioIcon">${prioContent}</div>
+            </div>  
+            <div class="displayFlex">${assignedToHTML}</div>            
         </div>
     `;    
     overlay.appendChild(card);
