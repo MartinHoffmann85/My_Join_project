@@ -47,13 +47,18 @@ function iterateOverContacts(contacts) {
   const assignedToContainer = document.getElementById('assigned-to-contacts-id');
   assignedToContainer.innerHTML = '';
   contacts.forEach((contact, index) => {
-      if (contact.name === currentUser.userName) 
-        contact.name = contact.name + ' (you)'
-      const initials =  getFirstLettersOfName(contact.name);
-      textColor = isColorLight(contact.colorCode) ? 'white' : 'black'; 
-      const isSelected  =  contacts[index].selected
-      assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, index, contact.colorCode, initials, textColor, isSelected);
-    }); 
+    if (contact.name === currentUser.userName) 
+      contact.name = contact.name + ' (you)'
+    const initials = getFirstLettersOfName(contact.name);
+    textColor = isColorLight(contact.colorCode) ? 'white' : 'black'; 
+    const isSelected = contacts[index].selected;
+    assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, index, contact.colorCode, initials, textColor, isSelected);
+  });
+  // Deselect all contacts
+  const contactElements = assignedToContainer.querySelectorAll('.assigned-to-box');
+  contactElements.forEach(contactElement => {
+    contactElement.classList.remove('selected-contact');
+  });
 }
 
 
