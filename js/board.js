@@ -135,13 +135,14 @@ function drop(event) {
 }
 
 
-function updateTaskColumnId(taskId, newColumnId) {
+async function updateTaskColumnId(taskId, newColumnId) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
         const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
         if (taskIndex !== -1) {
             currentUser.tasks[taskIndex].columnId = newColumnId;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));        
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            await updateCurrentUserInBackend(currentUser);        
         }
     }
 }
@@ -168,4 +169,5 @@ function clearAllTasksFromLocalStorage2() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {}; // Laden des aktuellen Benutzers oder eines leeren Objekts, wenn kein Benutzer vorhanden ist
     currentUser.tasks = []; // Leeres Array für Tasks erstellen
     localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Aktualisieren des Benutzers im localStorage
+    updateCurrentUserInBackend(currentUser);
 }

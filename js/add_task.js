@@ -10,7 +10,6 @@ let userIndex;
 let prio = ['urgent', 'medium', 'low'];
 let prioIndex = 1;
 let isFilterActive = false;
-let contactsSelected;
 
 
 function initAddTask() {
@@ -173,8 +172,7 @@ function selectedAssignedToUser(event, index) {
 
 
 function updateAssignedToLocalStorage() {  
-  localStorage.setItem('currentUser.tasks.assignedTo', JSON.stringify(assignedTo));  
-  contactsSelected = assignedTo;
+  localStorage.setItem('currentUser.tasks.assignedTo', JSON.stringify(assignedTo));
 }
 
 
@@ -357,7 +355,7 @@ function deleteSubtask(index) {
 }
 
 
-function createTask() {
+async function createTask() {
   const titleInput = document.getElementById('title-input-id').value;
   const textareaInput = document.getElementById('textarea-input-id').value;
   const dateInput = document.getElementById('date-input-id').value;
@@ -365,13 +363,13 @@ function createTask() {
   const columnId = 'todo';
   const priority = prio[prioIndex];
   const taskID = generateTaskID();
-  updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo);
+  await updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
   redirectToAddBoard();
 }
 
 
-function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo) {
+async function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo) {
   if (!Array.isArray(currentUser.tasks)) {
       currentUser.tasks = [];
   }
@@ -387,7 +385,7 @@ function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categor
   };
   currentUser.tasks.push(task);  
   saveTasksToLocalStorage(currentUser);
-  updateCurrentUserInBackend(currentUser);
+  await updateCurrentUserInBackend(currentUser);
 }
 
 
