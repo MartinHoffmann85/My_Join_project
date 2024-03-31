@@ -18,6 +18,7 @@ function renderAllTasks() {
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
             renderTask(task, task.columnId);
+            addTaskClickListener();
         });
     } else {
         console.error('Invalid tasks data in localStorage');
@@ -187,6 +188,78 @@ async function updateTaskColumnId(taskId, newColumnId) {
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             await updateCurrentUserInBackend(currentUser);        
         }
+    }
+}
+
+
+function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('boardoverlay');    
+    const card = document.createElement('div');
+    card.classList.add('card');    
+    let assignedToHTML = '';
+    if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
+        assignedTo.userNames.forEach((userName, index) => {
+            const user = {
+                userNames: [userName],
+                colorCodes: [assignedTo.colorCodes[index]],
+            };
+            assignedToHTML += renderUserDetails(user);
+        });
+    } else {
+        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
+    }    
+    let backgroundColor = '';
+    if (category === 'Technical Task') {
+        backgroundColor = 'var(--technical-task-turquoise)';
+    } else if (category === 'User Story') {
+        backgroundColor = 'var(--user-story-blue)';
+    }    
+    let prioContent = prio;
+    if (prio === 'urgent') {
+        prioContent = `<img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+    } else if (prio === 'medium') {
+        prioContent = `<img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+    } else if (prio === 'low') {
+        prioContent = `<img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
+    }    
+    // const subtasksHTML = boardRenderSubtasks(taskCard, id);
+    card.innerHTML = `
+        <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
+        <div class="renderTaskTitle"><strong>${title}</strong></div>
+        <div class="renderTaskDescription">${description}</div>
+               
+        <div class="assignetToHTMLAndPrioContentContainer">   
+            <div class="displayFlex">${assignedToHTML}</div>
+            <div>${prioContent}</div>
+        </div>
+    `;    
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+}
+// <div class="renderTasksubtaskHTML">${subtasksHTML}</div>
+
+function addTaskClickListener() {
+    const taskCards = document.querySelectorAll('.task');
+    taskCards.forEach(taskCard => {
+      taskCard.addEventListener('click', function(event) {
+        const taskId = event.currentTarget.id;
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const task = currentUser.tasks.find(task => task.id === taskId);
+        if (task) {
+            renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId);
+        } else {
+          console.error('Task not found');
+        }
+      });
+    });
+}
+
+
+function closeOverlay() {
+    const overlay = document.querySelector('.boardoverlay');
+    if (overlay) {
+        overlay.remove();
     }
 }
 
