@@ -97,6 +97,7 @@ body {
     font-weight: 400;
     padding: 4px 16px 4px 16px;
     border-radius: 8px;
+    margin-bottom: 24px;
 }
 
 .boardTodoH2GreyColor {
@@ -120,6 +121,18 @@ body {
 .assignetToHTMLAndPrioContentContainer {
     display: flex;
     justify-content: space-between;
+}
+
+.renderTaskTitle {
+    margin-bottom: 12px;
+}
+
+.renderTaskDescription {
+    margin-bottom: 24px;
+}
+
+.renderTasksubtaskHTML {
+    margin-bottom: 24px;
 }
 
 @media only screen and (max-width: 949px) and (min-width: 320px) {
