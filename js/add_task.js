@@ -12,6 +12,7 @@ let prioIndex = 1;
 let isFilterActive = false;
 let contactsSelected;
 
+
 function initAddTask() {
   currentUser = JSON.parse(localStorage.getItem('currentUser'));  
   renderAssignedToContacts();
@@ -22,6 +23,7 @@ function initAddTask() {
   filterAssignedToContacts();
   setTimeout(showHeaderUserInitials, 500);
 }
+
 
 function filterAssignedToContacts() {
   document.getElementById('assignedto-input-id').addEventListener('input', function (event) {
@@ -34,10 +36,12 @@ function filterAssignedToContacts() {
   });
 }
 
+
 function renderAssignedToContacts(contacts = currentUser.contacts) {
   contacts.sort(sortContactsBySurname);
   iterateOverContacts(contacts);
 }
+
 
 function iterateOverContacts(contacts) {
   const assignedToContainer = document.getElementById('assigned-to-contacts-id');
@@ -52,9 +56,11 @@ function iterateOverContacts(contacts) {
     }); 
 }
 
+
 function formatWithLeadingZero(value) {
   return value < 10 ? `0${value}` : value;
 }
+
 
 function setCurrentDate() {
   const now = new Date();
@@ -64,6 +70,7 @@ function setCurrentDate() {
   let element =  document.getElementById('date-input-id');
   element.min = `${year}-${month}-${day}`;
 }
+
 
 function sortContactsBySurname(a, b) {
   const nameA = a.name.toLowerCase();
@@ -76,6 +83,7 @@ function sortContactsBySurname(a, b) {
   if (emailA > emailB) return 1;
   return 0;
 }
+
 
 function closeAssignedToMenu() {
   document.addEventListener('click', function (event) {
@@ -93,12 +101,14 @@ function closeAssignedToMenu() {
   });
 }
 
+
 function toggleAssignedToSection(bool) {
   document.getElementById('assignedto-input-id').placeholder = 'An: ';
   toggleVisibility('assigned-to-contacts-id', bool, 'active');
   toggleVisibility('rotate-arrow-id', bool, 'upsidedown');
   toggleVisibility('at-label-id', bool,'shrink-font-size');
 }
+
 
 function openAssignedbyArrow() {
   renderAssignedToContacts();
@@ -109,10 +119,12 @@ function openAssignedbyArrow() {
   document.getElementById('assignedto-input-id').value = '';
 }
 
+
 function toggleSection(elementID, toggleClass) {
   const element = document.getElementById(elementID);
   element.classList.toggle(toggleClass)
 }
+
 
 function renderAddedContacts() {
   let addedContactsElement =  document.getElementById('added-contacts-id');
@@ -124,18 +136,17 @@ function renderAddedContacts() {
     });
 }
 
+
 function selectedAssignedToUser(event, index) {
   userIndex = index;
   const svgElement = event.currentTarget.querySelector('svg'); 
   const spanElement = document.getElementById(`contact-id${index}`);
   const contact = currentUser.contacts.find(contact => contact.name === spanElement.innerHTML);
   event.currentTarget.classList.toggle('selected-contact');
-  console.log("function selectedAssignedToUser(contact)", contact);
-  
+  console.log("function selectedAssignedToUser(contact)", contact);  
   const contactIndex = assignedTo.userNames.indexOf(contact.name);
   if (event.currentTarget.classList.contains('selected-contact')) {
-    svgElement.innerHTML = templateSvgCheckboxConfirmedHTML();
-    // Wenn der Kontakt noch nicht in assignedTo ist, füge ihn hinzu
+    svgElement.innerHTML = templateSvgCheckboxConfirmedHTML();    
     if (contactIndex === -1) {
       assignedTo.initials.push(getFirstLettersOfName(contact.name));
       assignedTo.colorCodes.push(contact.colorCode);
@@ -143,8 +154,7 @@ function selectedAssignedToUser(event, index) {
       assignedTo.userNames.push(contact.name);
     }
   } else { 
-    svgElement.innerHTML = templateSvgDefaultCheckboxHTML();
-    // Wenn der Kontakt in assignedTo ist, entferne ihn
+    svgElement.innerHTML = templateSvgDefaultCheckboxHTML();    
     if (contactIndex !== -1) {
       assignedTo.initials.splice(contactIndex, 1);
       assignedTo.colorCodes.splice(contactIndex, 1);
@@ -157,12 +167,12 @@ function selectedAssignedToUser(event, index) {
   renderAddedContacts(); 
 }
 
-function updateAssignedToLocalStorage() {
-  // Speichern der Daten im localStorage
-  localStorage.setItem('currentUser.tasks.assignedTo', JSON.stringify(assignedTo));
-  console.log("function updateAssignedToLocalStorage()" , assignedTo);
+
+function updateAssignedToLocalStorage() {  
+  localStorage.setItem('currentUser.tasks.assignedTo', JSON.stringify(assignedTo));  
   contactsSelected = assignedTo;
 }
+
 
 function getUserInfo(event) {
   const circleStyleElement = event.currentTarget.querySelector('.circle-style');
@@ -172,6 +182,7 @@ function getUserInfo(event) {
   const textColor = window.getComputedStyle(circleStyleElement).color;
   return { assignedContact, backgroundColorValue, textColor, userName };
 }
+
 
 function pushSelectedUser(event) {
   const { assignedContact, backgroundColorValue, textColor, userName } = getUserInfo(event);
@@ -184,6 +195,7 @@ function pushSelectedUser(event) {
   assignedTo.userNames.push(userName);
 }
 
+
 function deleteSelectedUser(event) {
   const circleStyleElement = event.currentTarget.querySelector('.circle-style');
   const backgroundColorValue = window.getComputedStyle(circleStyleElement).backgroundColor;
@@ -193,6 +205,7 @@ function deleteSelectedUser(event) {
   assignedTo.textColor.splice(removeColorCode, 1);
   assignedTo.userNames.splice(removeColorCode, 1);
 }
+
 
 function togglePrioImg(clickedId) {
   const imageIds = ['urgent-default-id', 'medium-default-id', 'low-default-id'];
@@ -206,6 +219,7 @@ function togglePrioImg(clickedId) {
   });
 }
 
+
 function closeCategoryMenu() {
   document.addEventListener('click', function (event) {
     const clickInsideInput = event.target.closest('#category-container-id');
@@ -216,10 +230,12 @@ function closeCategoryMenu() {
   });
 }
 
+
 function toggleCategoryContainer() {
   toggleSection('rotate-arrow-category-id', 'upsidedown');
   toggleSection('category-id','active');
 }
+
 
 function selectCategory(clickedElement){
   const element = document.getElementById('category-input-id');
@@ -229,6 +245,7 @@ function selectCategory(clickedElement){
   clickedElement.classList.add('selected-contact');
   toggleCategoryContainer(true);
 }
+
 
 function addSubtaskVisibilityListener() {
   const inputElement = document.getElementById('subtask-input-id');
@@ -241,11 +258,13 @@ function addSubtaskVisibilityListener() {
   });
 }
 
+
 function toggleAddNewTaskMenu() {
   addSubtaskVisibilityListener();
   const inputElement = document.getElementById('subtask-input-id');
   inputElement.focus(); 
 }
+
 
 function deleteOrAddTaskMenu(isDelete) {
   const inputElement = document.getElementById('subtask-input-id');
@@ -257,12 +276,14 @@ function deleteOrAddTaskMenu(isDelete) {
   toggleVisibility('subtast-add-button-id', true);
 }
 
+
 function addNewTaskMenu() {
   const inputElement = document.getElementById('subtask-input-id');
   subtaskList.push(inputElement.value);
   inputElement.value = '';
   renderSubtasks();
 }
+
 
 function renderSubtasks() {
   let element = document.getElementById('add-task-list-id');
@@ -271,6 +292,7 @@ function renderSubtasks() {
     element.innerHTML  += templateSubtaskHTML(index, subtask);
   });
 }
+
 
 function editSubtask(index) {
   const ListElement = document.getElementById(`substask-content-id${index}`);
@@ -285,6 +307,7 @@ function editSubtask(index) {
   });
 }
 
+
 function handleFirstSubtaskEdit(index, ListElement) {
   disableAllSubtasksExcept(index);
   const element = document.getElementById(`editable-span-id${index}`);
@@ -293,6 +316,7 @@ function handleFirstSubtaskEdit(index, ListElement) {
   makeElementEditableWithMaxLength(element, 30);
   ListElement.classList.toggle('blue-line-highlight');
 }
+
 
 function disableAllSubtasksExcept(index) {
   const totalNumberOfSubtasks = document.querySelectorAll('[id^="substask-content-id"]').length;
@@ -304,6 +328,7 @@ function disableAllSubtasksExcept(index) {
   }
 }
 
+
 function makeElementEditableWithMaxLength(element, maxLength) {
   element.setAttribute('contentEditable', 'true');
   element.focus();
@@ -314,16 +339,19 @@ function makeElementEditableWithMaxLength(element, maxLength) {
   });
 }
 
+
 function saveEditSubtask(index) {
   const element = document.getElementById(`editable-span-id${index}`);
   subtaskList[index] = element.innerText;
   renderSubtasks();
 }
 
+
 function deleteSubtask(index) {
   subtaskList.splice(index, 1);
   renderSubtasks();
 }
+
 
 function createTask() {
   const titleInput = document.getElementById('title-input-id').value;
@@ -338,6 +366,7 @@ function createTask() {
   redirectToAddBoard();
 }
 
+
 function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo) {
   if (!Array.isArray(currentUser.tasks)) {
       currentUser.tasks = [];
@@ -350,17 +379,18 @@ function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categor
       category: categoryInput,
       columnId: columnId,
       prio: priority,
-      assignedTo: assignedTo // Hier weisen wir den ausgewählten Kontakten direkt zu
+      assignedTo: assignedTo
   };
-  currentUser.tasks.push(task);
-  // Speichern der Daten im localStorage
+  currentUser.tasks.push(task);  
   saveTasksToLocalStorage(currentUser);
 }
+
 
 function validateInput(input, atBoolArr, index1, index2) {
   if (input.trim() === "")
     atBoolArr[index1] = atBoolArr[index2] = true;
 }
+
 
 function handlerAddTaskValidation(atBoolArr) {
     toggleVisibility('empty-title-id', atBoolArr[0]);
@@ -372,6 +402,7 @@ function handlerAddTaskValidation(atBoolArr) {
     return atBoolArr.some(Boolean);
 }
 
+
 function clearAll() {
   clearAllInputs();
   clearAllLists();
@@ -382,12 +413,14 @@ function clearAll() {
   
 }
 
+
 function clearAllInputs() {
   document.getElementById('title-input-id').value = '';
   document.getElementById('textarea-input-id').value = '';
   document.getElementById('date-input-id').value = '';
   document.getElementById('category-input-id').value = '';
 }
+
 
 function clearAllLists() {
   subtaskList.splice(0, subtaskList.length);
@@ -396,6 +429,7 @@ function clearAllLists() {
   assignedTo.initials.splice(0, assignedTo.initials.length);
   assignedTo.textColor.splice(0, assignedTo.textColor.length);
 }
+
 
 function clearAllErrMsg() {
   toggleVisibility('empty-title-id', false);
@@ -406,9 +440,11 @@ function clearAllErrMsg() {
   toggleVisibility('category-container-id', !false,'error-border')
 }
 
+
 function generateTaskID() {  
   return Math.random().toString(36).substr(2, 9);
 }
+
 
 function redirectToAddBoard() {
   window.location.assign("../board.html");

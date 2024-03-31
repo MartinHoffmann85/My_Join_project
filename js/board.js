@@ -55,13 +55,11 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     taskCard.classList.add('task');
     taskCard.setAttribute('id', id);
     let assignedToHTML = '';
-
     if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
         assignedToHTML = `<div><strong>Assigned to:</strong> ${assignedTo.userNames.join(', ')}</div>`;
     } else {
         assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
     }
-
     taskCard.innerHTML = `
         <div><strong>Title:</strong> ${title}</div>
         <div><strong>Description:</strong> ${description}</div>
@@ -72,7 +70,6 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     `;
     return taskCard;
 }
-
 
 
 function saveTasksToLocalStorage() {
