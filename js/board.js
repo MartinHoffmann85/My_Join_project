@@ -54,17 +54,17 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
     taskCard.setAttribute('id', id);    
-    let assignedToHTML = '';
+    let assignedToHTML = document.createElement('div');
     if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
         assignedTo.userNames.forEach((userName, index) => {
             const user = {
                 userNames: [userName],
                 colorCodes: [assignedTo.colorCodes[index]],
             };
-            assignedToHTML += renderUserDetails(user);
+            assignedToHTML.innerHTML += renderUserDetails(user);
         });
     } else {
-        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
+        assignedToHTML.innerHTML = '<strong>Assigned to:</strong> No one assigned';
     }
     let backgroundColor = '';
     if (category === 'Technical Task') {
@@ -72,17 +72,26 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     } else if (category === 'User Story') {
         backgroundColor = 'var(--user-story-blue)';
     }    
+    let prioContent = prio;
+    if (prio === 'urgent') {
+        prioContent = `<img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+    } else if (prio === 'medium') {
+        prioContent = `<img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+    } else if (prio === 'low') {
+        prioContent = `<img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
+    }
     taskCard.innerHTML = `
         <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
         <div ><strong>${title}</strong></div>
         <div>${description}</div>
         <div>Subtasks</div>       
-        <div class="displayFlex">${assignedToHTML}</div>
-        <div>${prio}</div>        
+        <div class="assignetToHTMLAndPrioContentContainer">   
+            <div class="displayFlex">${assignedToHTML.innerHTML}</div>
+            <div>${prioContent}</div>
+        </div>
     `;    
     return taskCard;    
 }
-
 
 
 function renderUserDetails(user) {
