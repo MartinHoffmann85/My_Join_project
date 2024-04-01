@@ -3,5 +3,5 @@ function helpInit() {
 }
 
 function backToSummary() {
-    window.location.assign("../summary.html");
+    window.location.assign("./summary.html");
 }

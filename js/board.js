@@ -244,8 +244,8 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
             </div>            
         </div>
         <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-            <img class="contactsContentRightSideEditButton" src="../../assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="">
-            <img class="contactsContentRightSideDeleteButton" src="../../assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="">
+            <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="">
+            <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="">
         </div>
     `;    
     overlay.appendChild(card);

@@ -3,6 +3,7 @@
 
 let lastClickedContactId;
 
+
 function renderContactsDesktop() {
     const content = document.getElementById("all-contacts-id");
     content.innerHTML = "";
@@ -10,6 +11,7 @@ function renderContactsDesktop() {
     const contactsByFirstLetter = groupContactsByFirstLetter();
     renderContactsByFirstLetterDesktop(content, contactsByFirstLetter);
 }
+
 
 /**
  * Create add contact button for desktop view
@@ -20,7 +22,7 @@ function renderAddContactButtonDesktop() {
     addContactButtonContainerDesktop.classList.add("addContactButtonContainerDesktop");
     addContactButtonContainerDesktop.innerHTML = /*html*/ `
       <button class="addContactButtonDesktop" onclick="addContactShowOverlayDesktop()">Add new contact
-        <span><img class="addContactButtonDesktopImg" src="../assets/img/contacts/addNewContactDesktopButtonImg.svg" alt=""></span></button>    
+        <span><img class="addContactButtonDesktopImg" src="./assets/img/contacts/addNewContactDesktopButtonImg.svg" alt=""></span></button>    
       `;    
     contentDesktop.appendChild(addContactButtonContainerDesktop);  
     addContactButtonContainerDesktop.addEventListener("click", function () { 
@@ -163,7 +165,7 @@ function openContactScreenDesktopHTML(content, selectedContact) {
           <h1 class="contactsContentRightSideH1">
             Contacts
           </h1>
-          <img class="contactsContentRightSideBlueStribeSvg" src="../../assets/img/contacts/contactsContentRightSideBlueStripe.svg" alt="">        
+          <img class="contactsContentRightSideBlueStribeSvg" src="./assets/img/contacts/contactsContentRightSideBlueStripe.svg" alt="">        
           <p class="contactsContentRightSideHeadLinePElement">Better with a team</p>
       </div>  
       <div id="contactsContentRightSideContactDataContainerID">
@@ -172,8 +174,8 @@ function openContactScreenDesktopHTML(content, selectedContact) {
         <div>
             <h2 class="contactsContentRightSideUserNameH2">${selectedContact.name}</h2>
               <div class="contactsContentRightSideEditAndDeleteButtonContainer">
-                <img class="contactsContentRightSideEditButton" src="../../assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="editContactDestop(lastClickedContactId)">
-                <img class="contactsContentRightSideDeleteButton" src="../../assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteContactDesktop(lastClickedContactId)">
+                <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="editContactDestop(lastClickedContactId)">
+                <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteContactDesktop(lastClickedContactId)">
               </div>
           </div> 
         </div>
@@ -269,10 +271,10 @@ function generateHTMLAddContactShowOverlayDesktop(overlayContent) {
       <div class="overlay-card">
         <div class="addContactDesktopLeftSideContainer">
           <div class="flexDirectionColumn">
-            <img class="joinLogoGreyBackgroundImg" src="../../assets/img/contacts/joinLogoGreyBackground.png" alt="">
+            <img class="joinLogoGreyBackgroundImg" src="./assets/img/contacts/joinLogoGreyBackground.png" alt="">
             <h1 class="addContactDesktopLeftSideContainerH1">Add contact</h1>
             <p class="addContactDesktopLeftSideContainerPElement">Tasks are better with a team!</p>
-            <img class="addContactBlueStroked" src="../../assets/img/contacts/addContactBlueStroked.svg" alt="">
+            <img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">
           </div>
         </div>
         <div class="addContactDesktopRightSideContent">
@@ -372,9 +374,9 @@ function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
       <div class="overlay-card">
         <div class="addContactDesktopLeftSideContainer">
           <div class="flexDirectionColumn">
-            <img class="joinLogoGreyBackgroundImg" src="../../assets/img/contacts/joinLogoGreyBackground.png" alt="">
+            <img class="joinLogoGreyBackgroundImg" src="./assets/img/contacts/joinLogoGreyBackground.png" alt="">
             <h1 class="addContactDesktopLeftSideContainerH1">Edit contact</h1>          
-            <img class="addContactBlueStroked" src="../../assets/img/contacts/addContactBlueStroked.svg" alt="">
+            <img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">
           </div>
         </div>
         <div class="addContactDesktopRightSideContainer">

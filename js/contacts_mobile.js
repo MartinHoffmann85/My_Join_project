@@ -1,7 +1,7 @@
 // Render contacts mobile view
 
-if (window.location.pathname === '/contacts.html') {
-    window.addEventListener('resize', contactsInit);
+if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
+  window.addEventListener('resize', contactsInit);
 } else {
   window.removeEventListener('resize', contactsInit);
 }
@@ -113,7 +113,7 @@ function renderAddContactButtonMobile() {
     const addContactButtonMobile = document.createElement('div');
     addContactButtonMobile.classList.add("addContactButtonContainerMobile");
     addContactButtonMobile.innerHTML = `
-      <img class="addContactButtonImgMobile" src="../assets/img/contacts/addContactButtonMobile.svg" alt="createContactButton" onclick="addContactScreenMobile()"></img>
+      <img class="addContactButtonImgMobile" src="./assets/img/contacts/addContactButtonMobile.svg" alt="createContactButton" onclick="addContactScreenMobile()"></img>
     `;
     content.appendChild(addContactButtonMobile);
 }
@@ -216,10 +216,10 @@ function addContactFormMobileHTML() {
       <div class="addContactBlockHeaderMobile">
         <p class="addContactH1Mobile">Add contact</p>
         <p class="addContactTextMobile">Tasks are better with a team!</p>
-        <img class="addContactBlueStrokedMobile" src="../assets/img/contacts/addContactBlueStroked.svg" alt="addContactBlueStroked">
+        <img class="addContactBlueStrokedMobile" src="./assets/img/contacts/addContactBlueStroked.svg" alt="addContactBlueStroked">
       </div>
       <div>
-        <img class="addContactBlankUserImgMobile" src="../assets/img/contacts/addContactBlankUserImg.svg" alt="addContactBlankUserImg">
+        <img class="addContactBlankUserImgMobile" src="./assets/img/contacts/addContactBlankUserImg.svg" alt="addContactBlankUserImg">
       </div>
     </div>
     <form id="add-contact-form-mobile-id" onsubmit="createContactMobile(); return false;">
@@ -235,7 +235,7 @@ function addContactFormMobileHTML() {
 
 
 function redirectToContacts() {
-    window.location.assign("../contacts.html");
+    window.location.assign("./contacts.html");
 }
 
 
@@ -358,11 +358,11 @@ function createContactOverlayContent(selectedContact) {
             <div>
                 <p class="openContactH1">Contacts</p>
                 <p class="openContactText">Better with a team!</p>                              
-                <img class="addContactBlueStroked" src="../assets/img/contacts/addContactBlueStroked.svg" alt="">                                                                        
+                <img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">                                                                        
             </div>
             <div class="arrorLeftContainer">
                 <div onclick="contactsInit()">
-                    <img src="../assets/img/contacts/arrow-left-line.svg" alt="">
+                    <img src="./assets/img/contacts/arrow-left-line.svg" alt="">
                 </div>
             </div>                                                                
         </div>                    
@@ -381,15 +381,15 @@ function createContactOverlayContent(selectedContact) {
     <div class="dropdown-container" id="contactOptionsDropdownContainer">
         <div class="dropdown-triggerContainer">
           <div class="dropdown-trigger" onclick="toggleDropdownMenu()">
-              <img id="menuContactOptionsButton" src="../assets/img/contacts/menuContactOptionsButtonImg.svg" alt="">
+              <img id="menuContactOptionsButton" src="./assets/img/contacts/menuContactOptionsButtonImg.svg" alt="">
           </div>
         </div>
         <div class="dropdown-menu" id="contactOptionsDropdown">
             <div class="dropdown-option" data-value="edit" onclick="editContactOverlayMobile('${selectedContact.id}')">
-                <img src="../assets/img/contacts/editContactsDropDownIcon.svg" alt="Edit Contact">
+                <img src="./assets/img/contacts/editContactsDropDownIcon.svg" alt="Edit Contact">
             </div>            
             <div class="dropdown-option" data-value="delete" onclick="deleteContactMobile('${selectedContact.id}')">
-                <img src="../assets/img/contacts/DeleteContactDropwDownIcon.svg" alt="Delete Contact">
+                <img src="./assets/img/contacts/DeleteContactDropwDownIcon.svg" alt="Delete Contact">
             </div>
         </div>
     </div>
@@ -597,7 +597,7 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
         </div>
         <div class="addContactBlockHeader">
           <p class="addContactH1">Edit contact</p>
-          <img class="addContactBlueStroked" src="../assets/img/contacts/addContactBlueStroked.svg" alt="">          
+          <img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">          
         </div>
       </div>
       <div class="addContactBlankUserImg">        
@@ -609,8 +609,8 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
           <input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
           <input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
           <div>
-            <img class="createContactButtonImg" src="../assets/img/contacts/editContactDeleteButtonImg.svg" alt="" onclick="deleteContactMobile('${selectedContact.id}')">
-            <img class="createContactButtonImg" src="../assets/img/contacts/editContactSaveButtonImg.svg" alt="" onclick="updateContactMobile('${selectedContact.id}')">
+            <img class="createContactButtonImg" src="./assets/img/contacts/editContactDeleteButtonImg.svg" alt="" onclick="deleteContactMobile('${selectedContact.id}')">
+            <img class="createContactButtonImg" src="./assets/img/contacts/editContactSaveButtonImg.svg" alt="" onclick="updateContactMobile('${selectedContact.id}')">
           </div>
         </div>
       </form>

@@ -272,7 +272,7 @@ async function login() {
         const loggedInUser = await authenticateUser();
         if (loggedInUser) {
             localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
-            window.location.assign("../summary.html");
+            window.location.assign('./summary.html');
             setTimeout(showHeaderUserInitials, 500);
         } else {
             console.error('Error: Unable to log in user.');
