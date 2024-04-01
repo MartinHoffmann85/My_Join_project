@@ -99,6 +99,7 @@ body {
     padding: 4px 16px 4px 16px;
     border-radius: 8px;
     margin-bottom: 24px;
+    margin-left: 12px;
 }
 
 .boardTodoH2GreyColor {
@@ -119,42 +120,67 @@ body {
     display: flex;    
 }
 
+.renderTaskCardAssignetToContainer {
+    display: flex;
+    margin-left: 12px;
+}
+
 .assignetToHTMLAndPrioContentContainer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .renderTaskTitle {
     margin-bottom: 12px;
+    margin-left: 20px;    
 }
 
 .renderTaskDescription {
     margin-bottom: 24px;
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: 400;
 }
 
 .renderTasksubtaskHTML {
     margin-bottom: 24px;
+    margin-left: 20px;
+}
+
+.renderTaskDate {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 24px;
+}
+
+.renderTaskDatePElement {
+    display: flex;
+    color: var(--mockup-color);
+    font-size: 20px;
+    font-weight: 400;
+    margin-left: 20px;
 }
 
 .boardoverlay {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%);    
     width: 80%;
     max-width: 600px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;    
     z-index: 1000;
 }
 
 .boardoverlay .card {
     height: 871px;
     width: 525px;
-    background-color: white;
-    padding: 20px;
+    background-color: var(--white-color);
+    border: 1px solid;    
     border-radius: 10px;
 }
 
@@ -164,9 +190,15 @@ body {
     cursor: pointer;
 }
 
+.boardTaskOverlayCloseX:hover {
+    background-color: var(--white-grey2);
+}
+
 .boardOverlayCategoryAndCloseXContainer {
     display: flex;    
     justify-content: space-between;
+    margin-top: 20px;
+    margin-left: 20px;
 }
 
 .overlayAssignetToHTMLAndPrioContentContainer {
@@ -175,7 +207,9 @@ body {
 }
 
 .boardPriorityContainer {
-    display: flex;    
+    display: flex;
+    margin-left: 20px;
+    margin-bottom: 24px;
 }
 
 .boardPrioIcon {
@@ -184,6 +218,41 @@ body {
 
 .boardOverlayUrgentPElement {
     margin-right: 20px;
+}
+
+.renderTaskTitleOverlay {
+    font-size: 61px;
+    font-weight: 700;
+    margin-left: 20px;    
+}
+
+.renderTaskDescriptionOverlay {
+    font-size: 20px;
+    font-weight: 400;
+    margin-left: 20px;
+    margin-bottom: 24px;
+}
+
+.renderTaskOverlayDate {
+    margin-left: 20px;
+}
+
+.renderTaskOverlayPrio {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--mockup-color);
+}
+
+.renderTaskCardOverlayAssignetToContainer {
+    margin-left: 20px;
+    margin-bottom: 24px;
+}
+
+.renderTaskCardOverlayAssignetToPElement {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--mockup-color);
+    margin-bottom: 12px;
 }
 
 @media only screen and (max-width: 949px) and (min-width: 320px) {

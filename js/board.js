@@ -88,7 +88,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         <div class="renderTaskDescription">${description}</div>
         <div class="renderTasksubtaskHTML">${subtasksHTML}</div>       
         <div class="assignetToHTMLAndPrioContentContainer">   
-            <div class="displayFlex">${assignedToHTML}</div>
+            <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
             <div>${prioContent}</div>
         </div>
     `;    
@@ -229,16 +229,19 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
             <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
             <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
         </div>        
-        <div class="renderTaskTitle"><strong>${title}</strong></div>
-        <div class="renderTaskDescription">${description}</div>
-        <div class="renderTaskDate">${date}</div>
+        <div class="renderTaskTitleOverlay"><strong>${title}</strong></div>
+        <div class="renderTaskDescriptionOverlay">${description}</div>
+        <div class="renderTaskDate"><p class="renderTaskDatePElement">Due date:</p><p class="renderTaskOverlayDate">${date}</p></div>
                
         <div class="overlayAssignetToHTMLAndPrioContentContainer">
             <div class="boardPriorityContainer">
-                <div>Priority:</div>
+                <div class="renderTaskOverlayPrio">Priority:</div>
                 <div class="boardPrioIcon displayFlex">${prioContent}</div>
             </div>  
-            <div class="displayFlex">${assignedToHTML}</div>            
+            <div class="renderTaskCardOverlayAssignetToContainer">
+                <p class="renderTaskCardOverlayAssignetToPElement">Assignet To:</p>
+                <p class="">${assignedToHTML}</p>
+            </div>            
         </div>
     `;    
     overlay.appendChild(card);
