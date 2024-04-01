@@ -90,7 +90,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         <div class="assignetToHTMLAndPrioContentContainer">   
             <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
             <div class="renderTaskToHTMLPrioContainer">${prioContent}</div>
-        </div>
+        </div>        
     `;    
     return taskCard;    
 }
@@ -242,6 +242,10 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
                 <p class="renderTaskCardOverlayAssignetToPElement">Assignet To:</p>
                 <p class="">${assignedToHTML}</p>
             </div>            
+        </div>
+        <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
+            <img class="contactsContentRightSideEditButton" src="../../assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="">
+            <img class="contactsContentRightSideDeleteButton" src="../../assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="">
         </div>
     `;    
     overlay.appendChild(card);

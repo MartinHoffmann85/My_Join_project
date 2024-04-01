@@ -267,6 +267,12 @@ body {
     margin-bottom: 12px;
 }
 
+.contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 24px;
+}
+
 @media only screen and (max-width: 949px) and (min-width: 320px) {
     .boardContentContainer {
         height: 80dvh;
