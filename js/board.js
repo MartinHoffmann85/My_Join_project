@@ -89,7 +89,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         <div class="renderTasksubtaskHTML">${subtasksHTML}</div>       
         <div class="assignetToHTMLAndPrioContentContainer">   
             <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
-            <div>${prioContent}</div>
+            <div class="renderTaskToHTMLPrioContainer">${prioContent}</div>
         </div>
     `;    
     return taskCard;    
