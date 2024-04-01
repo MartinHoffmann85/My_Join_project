@@ -143,10 +143,15 @@ body {
     margin-left: 20px;    
 }
 
+.renderTaskTitlePElement {
+    font-size: 16px;
+    font-weight: 700;
+}
+
 .renderTaskDescription {
     margin-bottom: 24px;
     margin-left: 20px;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
     color: var(--mockup-color);
 }

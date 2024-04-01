@@ -84,7 +84,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     const subtasksHTML = boardRenderSubtasks(taskCard, id);    
     taskCard.innerHTML = `
         <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
-        <div class="renderTaskTitle"><strong>${title}</strong></div>
+        <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
         <div class="renderTaskDescription">${description}</div>
         <div class="renderTasksubtaskHTML">${subtasksHTML}</div>       
         <div class="assignetToHTMLAndPrioContentContainer">   
