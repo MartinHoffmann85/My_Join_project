@@ -272,6 +272,17 @@ body {
     margin-bottom: 12px;
 }
 
+.renderTaskCardOverlaySubtaskTitle {
+    margin-left: 24px;
+}
+
+.renderTaskCardOverlaySubtasks {
+    color: var(--mockup-color);
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 24px;
+}
+
 .contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay {
     display: flex;
     justify-content: flex-end;

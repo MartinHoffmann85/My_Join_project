@@ -104,7 +104,11 @@ function boardRenderSubtasks(taskCard, taskId) {
     }    
     let subtasksHTML = '';
     task.subtasks.forEach(subtask => {
-        subtasksHTML += `<div>${subtask.title} <input type="checkbox"></div>`;
+        subtasksHTML += `<div class="renderTaskCardOverlaySubtasks">Subtasks</div>
+                        <div class="displayFlex">
+                            <div><input type="checkbox"></div>
+                            <div class="renderTaskCardOverlaySubtaskTitle">${subtask.title}</div>                            
+                        </div>`;
     });    
     return subtasksHTML;
 }
@@ -258,7 +262,10 @@ function renderSubtasksCheckbox(subtasks) {
     let subtasksHTML = '';
     if (subtasks && subtasks.length > 0) {
         subtasks.forEach(subtask => {
-            subtasksHTML += `<div>${subtask.title} <input type="checkbox"></div>`;
+            subtasksHTML += `<div>
+                                <div>${subtask.title}</div>
+                                <div class="renderTaskCardOverlayCheckbox"><input type="checkbox"></div>
+                            </div>`;
         });
     }
     return subtasksHTML;
