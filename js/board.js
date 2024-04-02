@@ -207,7 +207,7 @@ async function updateTaskColumnId(taskId, newColumnId) {
 
 
 function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {
-    console.log("function renderTaskCardAsOverlay(subtasks)" , subtasks);
+    console.log("function renderTaskCardAsOverlay(id)" , id);
     const overlay = document.createElement('div');
     overlay.classList.add('boardoverlay');    
     const card = document.createElement('div');
@@ -260,7 +260,7 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
         <div class="renderTasksubtaskHTML"><p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks</p>${subtasksHTML}</div>
         <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
             <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="">
-            <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="">
+            <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${id}')">
         </div>
     `;    
     overlay.appendChild(card);
@@ -296,6 +296,32 @@ function closeOverlayBoard() {
         overlay.remove();
     }
 }
+
+
+function deleteTask(id) {
+    console.log("function deleteTask(id)" , id);
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+    const stringId = id.toString();
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const taskIndex = currentUser.tasks.findIndex(task => task.id === stringId);
+        if (taskIndex !== -1) {
+            currentUser.tasks.splice(taskIndex, 1);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));            
+            updateCurrentUserInBackend(currentUser);
+            closeOverlayBoard()
+            renderAllTasks();
+        } else {
+            console.error('Task not found');
+        }
+    } else {
+        console.error('Invalid tasks data in localStorage');
+    }
+}
+
+
+
+
+
 
 
 

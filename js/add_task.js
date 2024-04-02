@@ -387,7 +387,7 @@ async function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, c
       columnId: columnId,
       prio: priority,
       assignedTo: assignedTo,
-      subtasks: subtasks // Hier werden die Subtasks dem Task hinzugefügt
+      subtasks: subtasks
   };
   currentUser.tasks.push(task);
   saveTasksToLocalStorage(currentUser);
