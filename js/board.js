@@ -244,6 +244,10 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
             </div>            
         </div>
         <div class="renderTasksubtaskHTML">${subtasksHTML}</div>
+        <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
+            <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="">
+            <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="">
+        </div>
     `;    
     overlay.appendChild(card);
     document.body.appendChild(overlay);
