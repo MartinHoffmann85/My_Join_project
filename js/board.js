@@ -103,13 +103,23 @@ function boardRenderSubtasks(taskCard, taskId) {
         return '';
     }    
     let subtasksHTML = '';
+    let checkedCount = 0;
     task.subtasks.forEach(subtask => {
+        const isChecked = subtask.checked ? 'checked' : '';
+        if (subtask.checked) {
+            checkedCount++;
+        }
         subtasksHTML += `
-                        <div class="displayFlex">
-                            <div><input type="checkbox"></div>
-                            <div class="renderTaskCardOverlaySubtaskTitle">${subtask.title}</div>                            
-                        </div>`;
-    });    
+            <div class="displayFlex">
+                <div><input type="checkbox" ${isChecked}></div>
+                <div class="renderTaskCardOverlaySubtaskTitle">${subtask.title}</div>                            
+            </div>`;
+    });
+    const totalCount = task.subtasks.length;
+    const countDisplay = `${checkedCount}/${totalCount}`;
+    const countElement = document.createElement('div');
+    countElement.innerHTML = countDisplay;
+    taskCard.appendChild(countElement);    
     return subtasksHTML;
 }
 
