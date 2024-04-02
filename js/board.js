@@ -86,7 +86,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
         <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
         <div class="renderTaskDescription">${description}</div>
-        <div class="renderTasksubtaskHTML">${subtasksHTML}</div>       
+        
         <div class="assignetToHTMLAndPrioContentContainer">   
             <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
             <div class="renderTaskToHTMLPrioContainer">${prioContent}</div>
@@ -94,7 +94,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     `;    
     return taskCard;    
 }
-
+// <div class="renderTasksubtaskHTML">${subtasksHTML}</div>       
 
 function boardRenderSubtasks(taskCard, taskId) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -102,9 +102,9 @@ function boardRenderSubtasks(taskCard, taskId) {
     if (!task || !task.subtasks || task.subtasks.length === 0) {
         return '';
     }    
-    let subtasksHTML = '<div></div>';
+    let subtasksHTML = '';
     task.subtasks.forEach(subtask => {
-        subtasksHTML += `<div>${subtask.title}</div>`;
+        subtasksHTML += `<div>${subtask.title} <input type="checkbox"></div>`;
     });    
     return subtasksHTML;
 }
@@ -192,7 +192,8 @@ async function updateTaskColumnId(taskId, newColumnId) {
 }
 
 
-function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId) {
+function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {
+    console.log("function renderTaskCardAsOverlay(subtasks)" , subtasks);
     const overlay = document.createElement('div');
     overlay.classList.add('boardoverlay');    
     const card = document.createElement('div');
@@ -223,7 +224,7 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     } else if (prio === 'low') {
         prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
     }    
-    // const subtasksHTML = boardRenderSubtasks(taskCard, id);
+    const subtasksHTML = boardRenderSubtasks(card, id); // Hier rufen wir boardRenderSubtasks auf und übergeben die Subtasks    
     card.innerHTML = `
         <div class="boardOverlayCategoryAndCloseXContainer">            
             <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
@@ -231,25 +232,32 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
         </div>        
         <div class="renderTaskTitleOverlay"><strong>${title}</strong></div>
         <div class="renderTaskDescriptionOverlay">${description}</div>
-        <div class="renderTaskDate"><p class="renderTaskDatePElement">Due date:</p><p class="renderTaskOverlayDate">${date}</p></div>
-               
+        <div class="renderTaskDate"><p class="renderTaskDatePElement">Due date:</p><p class="renderTaskOverlayDate">${date}</p></div>               
         <div class="overlayAssignetToHTMLAndPrioContentContainer">
             <div class="boardPriorityContainer">
                 <div class="renderTaskOverlayPrio">Priority:</div>
                 <div class="boardPrioIcon displayFlex">${prioContent}</div>
             </div>  
             <div class="renderTaskCardOverlayAssignetToContainer">
-                <p class="renderTaskCardOverlayAssignetToPElement">Assignet To:</p>
+                <p class="renderTaskCardOverlayAssignetToPElement">Assigned To:</p>
                 <p class="">${assignedToHTML}</p>
             </div>            
         </div>
-        <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-            <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="">
-            <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="">
-        </div>
+        <div class="renderTasksubtaskHTML">${subtasksHTML}</div>
     `;    
     overlay.appendChild(card);
     document.body.appendChild(overlay);
+}
+
+
+function renderSubtasksCheckbox(subtasks) {
+    let subtasksHTML = '';
+    if (subtasks && subtasks.length > 0) {
+        subtasks.forEach(subtask => {
+            subtasksHTML += `<div>${subtask.title} <input type="checkbox"></div>`;
+        });
+    }
+    return subtasksHTML;
 }
 
 
@@ -269,7 +277,10 @@ function renderTaskCardOverlay(event) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const task = currentUser.tasks.find(task => task.id === taskId);
     if (task) {
-        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId);
+        // Lesen Sie die Subtasks aus dem localStorage
+        const subtasks = JSON.parse(localStorage.getItem('currentUser.tasks.subtasks'));
+        // Übergeben Sie die Subtasks an die renderTaskCardAsOverlay-Funktion
+        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, subtasks);
     } else {
         console.error('Task not found');
     }

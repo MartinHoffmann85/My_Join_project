@@ -374,10 +374,10 @@ async function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, c
       currentUser.tasks = [];
   }  
   const subtasks = subtaskList.map(subtask => ({
-    id: generateTaskID(),
-    title: subtask,
-    completed: false
-  }));  
+      id: generateTaskID(),
+      title: subtask,
+      completed: false
+  }));
   const task = {
       id: taskID,
       title: titleInput,
@@ -387,12 +387,13 @@ async function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, c
       columnId: columnId,
       prio: priority,
       assignedTo: assignedTo,
-      subtasks: subtasks
+      subtasks: subtasks // Hier werden die Subtasks dem Task hinzugefügt
   };
-  currentUser.tasks.push(task);  
+  currentUser.tasks.push(task);
   saveTasksToLocalStorage(currentUser);
   await updateCurrentUserInBackend(currentUser);
 }
+
 
 
 
