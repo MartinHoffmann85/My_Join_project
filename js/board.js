@@ -94,7 +94,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     `;    
     return taskCard;    
 }
-// <div class="renderTasksubtaskHTML">${subtasksHTML}</div>       
+
 
 function boardRenderSubtasks(taskCard, taskId) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -228,7 +228,7 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     } else if (prio === 'low') {
         prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
     }    
-    const subtasksHTML = boardRenderSubtasks(card, id); // Hier rufen wir boardRenderSubtasks auf und übergeben die Subtasks    
+    const subtasksHTML = boardRenderSubtasks(card, id);
     card.innerHTML = `
         <div class="boardOverlayCategoryAndCloseXContainer">            
             <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
@@ -258,8 +258,6 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
 }
 
 
-// <div class="renderTasksubtaskHTML">${subtasksHTML}</div>
-
 function addTaskClickListener() {
     const taskCards = document.querySelectorAll('.task');
     taskCards.forEach(taskCard => {        
@@ -273,10 +271,8 @@ function renderTaskCardOverlay(event) {
     const taskId = event.currentTarget.id;
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const task = currentUser.tasks.find(task => task.id === taskId);
-    if (task) {
-        // Lesen Sie die Subtasks aus dem localStorage
-        const subtasks = JSON.parse(localStorage.getItem('currentUser.tasks.subtasks'));
-        // Übergeben Sie die Subtasks an die renderTaskCardAsOverlay-Funktion
+    if (task) {        
+        const subtasks = JSON.parse(localStorage.getItem('currentUser.tasks.subtasks'));        
         renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, subtasks);
     } else {
         console.error('Task not found');
@@ -292,26 +288,11 @@ function closeOverlayBoard() {
 }
 
 
-// Clear function for task dummys only for developers
-function clearTasksFromLocalStorage() {
-    localStorage.removeItem('currentUser.BoardTasks');    
-    const taskContainers = document.querySelectorAll('.task-container');
-    taskContainers.forEach(container => {
-        container.innerHTML = '';
-    });
-}
-
-
-// Clear function for task dummys only for developers
-function clearAllTasksFromLocalStorage() {
-    localStorage.removeItem('currentUser.BoardTasks');
-}
-
 
 // Clear function for task dummys only for developers
 function clearAllTasksFromLocalStorage2() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {}; // Laden des aktuellen Benutzers oder eines leeren Objekts, wenn kein Benutzer vorhanden ist
-    currentUser.tasks = []; // Leeres Array für Tasks erstellen
-    localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Aktualisieren des Benutzers im localStorage
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+    currentUser.tasks = [];
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
     updateCurrentUserInBackend(currentUser);
 }

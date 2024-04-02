@@ -82,6 +82,7 @@ body {
     padding: 5px;
     border: 1px solid #ccc;
     margin-bottom: 5px;
+    margin-top: 24px;
     border-radius: 12px;
     cursor: pointer;
 }
@@ -110,6 +111,8 @@ body {
 
 .boardTodoH2GreyColor {
     color: var(--board-todo-h2-grey);
+    font-size: 20px;
+    font-weight: 700;
 }
 
 .boardContactInitialsandColor {
