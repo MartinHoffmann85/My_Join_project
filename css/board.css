@@ -276,6 +276,13 @@ body {
     margin-left: 24px;
 }
 
+.renderTasksubtaskHTMLSubtaskPElement {
+    color: var(--mockup-color);
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 24px;
+}
+
 .renderTaskCardOverlaySubtasks {
     color: var(--mockup-color);
     font-size: 20px;
