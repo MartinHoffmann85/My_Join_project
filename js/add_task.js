@@ -145,8 +145,7 @@ function selectedAssignedToUser(event, index) {
   const svgElement = event.currentTarget.querySelector('svg'); 
   const spanElement = document.getElementById(`contact-id${index}`);
   const contact = currentUser.contacts.find(contact => contact.name === spanElement.innerHTML);
-  event.currentTarget.classList.toggle('selected-contact');
-  console.log("function selectedAssignedToUser(contact)", contact);  
+  event.currentTarget.classList.toggle('selected-contact');    
   const contactIndex = assignedTo.userNames.indexOf(contact.name);
   if (event.currentTarget.classList.contains('selected-contact')) {
     svgElement.innerHTML = templateSvgCheckboxConfirmedHTML();    
@@ -164,8 +163,7 @@ function selectedAssignedToUser(event, index) {
       assignedTo.textColor.splice(contactIndex, 1);
       assignedTo.userNames.splice(contactIndex, 1);
     }
-  }
-  console.log("function selectedAssignedToUser(assignedTo)" , assignedTo);
+  }  
   updateAssignedToLocalStorage();
   renderAddedContacts(); 
 }

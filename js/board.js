@@ -13,8 +13,7 @@ function redirectToAddTask() {
 
 function renderAllTasks() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-        console.log("function renderAllTasks(currentUser.tasks)" , currentUser.tasks);        
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {                
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
             renderTask(task, task.columnId);
@@ -206,8 +205,7 @@ async function updateTaskColumnId(taskId, newColumnId) {
 }
 
 
-function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {
-    console.log("function renderTaskCardAsOverlay(id)" , id);
+function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {    
     const overlay = document.createElement('div');
     overlay.classList.add('boardoverlay');    
     const card = document.createElement('div');
@@ -298,8 +296,7 @@ function closeOverlayBoard() {
 }
 
 
-function deleteTask(id) {
-    console.log("function deleteTask(id)" , id);
+function deleteTask(id) {    
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
     const stringId = id.toString();
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
@@ -310,11 +307,7 @@ function deleteTask(id) {
             updateCurrentUserInBackend(currentUser);
             closeOverlayBoard()
             renderAllTasks();
-        } else {
-            console.error('Task not found');
         }
-    } else {
-        console.error('Invalid tasks data in localStorage');
     }
 }
 
