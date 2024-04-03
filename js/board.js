@@ -1,5 +1,3 @@
-let subtaskCheckboxListener = null;
-
 async function initBoard() {
     const currentUser = await JSON.parse(localStorage.getItem('currentUser'));
     loadTasksFromLocalStorage(currentUser);
@@ -98,7 +96,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
 
 
 function boardRenderSubtasks(taskCard, taskId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
     const task = currentUser.tasks.find(task => task.id === taskId);
     if (!task || !task.subtasks || task.subtasks.length === 0) {
         return '';
@@ -117,12 +115,13 @@ function boardRenderSubtasks(taskCard, taskId) {
                 <div><input type="checkbox" id="${checkboxId}" ${isChecked}></div>
                 <div class="renderTaskCardOverlaySubtaskTitle">${subtask.title}</div>                            
             </div>`;
+            console.log("function boardRenderSubtasks(task)" , task);            
         // Eventlistener hinzufügen, um Checkbox-Zustände zu speichern
         const checkboxElement = taskCard.querySelector(`#${checkboxId}`);
         if (checkboxElement) {
             checkboxElement.addEventListener('change', function(event) {
                 const isChecked = event.target.checked;
-                updateSubtaskStatus(taskId, subtask.id, isChecked);
+                updateSubtaskStatus(taskId, subtask.id, isChecked);                
             });
         }
     });
@@ -136,16 +135,15 @@ function boardRenderSubtasks(taskCard, taskId) {
 
 
 function updateSubtaskStatus(taskId, subtaskId, isChecked) {
-    console.log("function updateSubtaskStatus(isChecked)" , isChecked);
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
         const task = currentUser.tasks.find(task => task.id === taskId);
         if (task && task.subtasks && Array.isArray(task.subtasks)) {
             const subtask = task.subtasks.find(subtask => subtask.id === subtaskId);
             if (subtask) {
-                subtask.checked = isChecked;
-                // Nur den aktualisierten Task im Local Storage speichern
-                localStorage.setItem('currentUser.tasks', JSON.stringify(currentUser.tasks));
+                subtask.completed = isChecked; // Setzt den Wert completed entsprechend isChecked
+                saveTasksToLocalStorage(currentUser); // Speichert die aktualisierten Tasks im Local Storage
+                console.log("function updateSubtaskStatus(taskId, subtaskId, isChecked)" , isChecked);
             }
         }
     }
@@ -164,10 +162,9 @@ function renderUserDetails(user) {
 }
 
 
-function saveTasksToLocalStorage() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+function saveTasksToLocalStorage(currentUser) {
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-        localStorage.setItem('currentUser.tasks', JSON.stringify(currentUser.tasks));
+        localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Hier sollte nur 'currentUser' verwendet werden
     } else {
         console.error('Invalid currentUser data in localStorage');
     }
@@ -234,8 +231,7 @@ async function updateTaskColumnId(taskId, newColumnId) {
 }
 
 
-function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {
-    console.log("renderTaskCardAsOverlay(subtasks)" , subtasks);    
+function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {    
     const overlay = document.createElement('div');
     overlay.classList.add('boardoverlay');    
     const card = document.createElement('div');
@@ -266,7 +262,7 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     } else if (prio === 'low') {
         prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
     }    
-    const subtasksHTML = boardRenderSubtasksOverlay(id, subtasks); // Änderung hier
+    const subtasksHTML = boardRenderSubtasks(card, id);
     card.innerHTML = `
         <div class="boardOverlayCategoryAndCloseXContainer">            
             <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
@@ -293,58 +289,6 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     `;    
     overlay.appendChild(card);
     document.body.appendChild(overlay);
-    activateSubtaskCheckboxListener(id, subtasks);
-}
-
-
-function boardRenderSubtasksOverlay(taskId, subtasks) {
-    console.log("function boardRenderSubtasksOverlay(subtasks)", subtasks);
-    if (!subtasks || subtasks.length === 0) {
-        return '';
-    }
-    let subtasksHTML = '';
-    subtasks.forEach((subtask, index) => {
-        const isChecked = subtask.checked ? 'checked' : '';
-        // Eindeutige ID für jede Checkbox erstellen
-        const checkboxId = `${taskId}-subtask-${index}`;
-        subtasksHTML += `
-            <div class="displayFlex">
-                <div><input type="checkbox" id="${checkboxId}" ${isChecked}></div>
-                <div class="renderTaskCardOverlaySubtaskTitle">${subtask.title}</div>                            
-            </div>`;
-    });
-    return subtasksHTML;
-}
-
-function activateSubtaskCheckboxListener(taskId, subtasks) {
-    if (subtaskCheckboxListener !== null) {
-        // Eventlistener entfernen, falls vorhanden
-        document.removeEventListener('change', subtaskCheckboxListener);
-    }
-    subtaskCheckboxListener = function(event) {
-        const targetId = event.target.id;
-        // Überprüfen, ob das geänderte Element eine Subtask-Checkbox ist
-        if (targetId.startsWith(taskId + "-subtask-")) {
-            const index = parseInt(targetId.split("-").pop()); // Index der Subtask extrahieren
-            const isChecked = event.target.checked;
-            const subtask = subtasks[index];
-            if (subtask) {
-                // Aktualisieren Sie den Subtask-Status und speichern Sie ihn
-                updateSubtaskStatus(taskId, subtask.id, isChecked);
-            }
-        }
-    };
-    // Eventlistener hinzufügen
-    document.addEventListener('change', subtaskCheckboxListener);
-}
-
-
-function deactivateSubtaskCheckboxListener() {
-    if (subtaskCheckboxListener !== null) {
-        // Eventlistener entfernen
-        document.removeEventListener('change', subtaskCheckboxListener);
-        subtaskCheckboxListener = null;
-    }
 }
 
 
@@ -360,10 +304,11 @@ function addTaskClickListener() {
 function renderTaskCardOverlay(event) {
     const taskId = event.currentTarget.id;
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    console.log("currentUser" , currentUser);
     const task = currentUser.tasks.find(task => task.id === taskId);
     if (task) {        
         const subtasks = JSON.parse(localStorage.getItem('currentUser.tasks.subtasks'));        
-        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, task.subtasks);
+        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, subtasks);
     } else {
         console.error('Task not found');
     }
