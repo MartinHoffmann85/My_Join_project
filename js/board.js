@@ -79,8 +79,7 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         prioContent = `<img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
     } else if (prio === 'low') {
         prioContent = `<img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
-    }    
-    // const subtasksHTML = boardRenderSubtasks(taskCard, id);    
+    }
     taskCard.innerHTML = `
         <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
         <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
@@ -96,7 +95,8 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
 
 
 function boardRenderSubtasks(taskCard, taskId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    console.log("currentUser", currentUser);
     const task = currentUser.tasks.find(task => task.id === taskId);
     if (!task || !task.subtasks || task.subtasks.length === 0) {
         return '';
@@ -104,26 +104,16 @@ function boardRenderSubtasks(taskCard, taskId) {
     let subtasksHTML = '';
     let checkedCount = 0;
     task.subtasks.forEach((subtask, index) => {
-        const isChecked = subtask.checked ? 'checked' : '';
-        if (subtask.checked) {
+        const isChecked = subtask.completed ? 'checked' : '';
+        if (subtask.completed) {
             checkedCount++;
         }
-        // Eindeutige ID für jede Checkbox erstellen
-        const checkboxId = `${taskId}-subtask-${index}`;
+        const checkboxId = subtask.id;
         subtasksHTML += `
             <div class="displayFlex">
-                <div><input type="checkbox" id="${checkboxId}" ${isChecked}></div>
+                <div><input type="checkbox" id="${checkboxId}" ${isChecked} onclick="updateSubtaskStatus('${taskId}', '${subtask.id}', this.checked)"></div>
                 <div class="renderTaskCardOverlaySubtaskTitle">${subtask.title}</div>                            
             </div>`;
-            console.log("function boardRenderSubtasks(task)" , task);            
-        // Eventlistener hinzufügen, um Checkbox-Zustände zu speichern
-        const checkboxElement = taskCard.querySelector(`#${checkboxId}`);
-        if (checkboxElement) {
-            checkboxElement.addEventListener('change', function(event) {
-                const isChecked = event.target.checked;
-                updateSubtaskStatus(taskId, subtask.id, isChecked);                
-            });
-        }
     });
     const totalCount = task.subtasks.length;
     const countDisplay = `${checkedCount}/${totalCount}`;
@@ -135,20 +125,22 @@ function boardRenderSubtasks(taskCard, taskId) {
 
 
 function updateSubtaskStatus(taskId, subtaskId, isChecked) {
+    console.log("function updateSubtaskStatus(isChecked)", isChecked);
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
         const task = currentUser.tasks.find(task => task.id === taskId);
         if (task && task.subtasks && Array.isArray(task.subtasks)) {
             const subtask = task.subtasks.find(subtask => subtask.id === subtaskId);
             if (subtask) {
-                subtask.completed = isChecked; // Setzt den Wert completed entsprechend isChecked
-                saveTasksToLocalStorage(currentUser); // Speichert die aktualisierten Tasks im Local Storage
-                console.log("function updateSubtaskStatus(taskId, subtaskId, isChecked)" , isChecked);
+                subtask.completed = isChecked;
+                saveTasksToLocalStorage(currentUser);
+                console.log("function updateSubtaskStatus(subtask.completed) after save", subtask.completed);
+            } else {
+                console.error("Subtask not found with ID:", subtaskId);
             }
         }
     }
 }
-
 
 function renderUserDetails(user) {
     const colorCode = user.colorCodes && user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
@@ -164,7 +156,7 @@ function renderUserDetails(user) {
 
 function saveTasksToLocalStorage(currentUser) {
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-        localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Hier sollte nur 'currentUser' verwendet werden
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
     } else {
         console.error('Invalid currentUser data in localStorage');
     }
