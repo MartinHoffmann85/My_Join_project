@@ -402,7 +402,7 @@ function boardEditTask(taskId) {
         <div class="overlayAssignetToHTMLAndPrioContentContainer">
             <div class="boardPriorityContainer">
                 <label for="editPriority">Priority:</label>
-                <select id="editPriority">
+                <select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
                     <option value="low" ${task.prio === 'low' ? 'selected' : ''}>Low</option>
                     <option value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium</option>
                     <option value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent</option>
