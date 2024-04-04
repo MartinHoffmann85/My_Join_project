@@ -301,24 +301,25 @@ body {
 
 .subtaskCountContainer {
     display: flex;
-    align-items: center;    
+    align-items: center;
     margin-left: 20px;
     margin-bottom: 24px;    
 }
 
 .progress {
     height: 100%;
-    background-color: #007bff;
+    background-color: #4589FF;
     width: 0;
     transition: width 0.3s ease;
 }
 
 .progress-bar {
     height: 8px;
-    background-color: #ccc;
-    position: relative;
-    width: 100px;
+    width: 70px;
     border-radius: 16px;
+    margin-right: 10px;
+    background-color: #F4F4F4;
+    position: relative;    
     overflow: hidden;
 }
 
@@ -341,7 +342,9 @@ body {
 
 .boardRenderSubtasksCountPElement {
     font-size: 12px;
-    font-weight: 400;    
+    font-weight: 400;
+    white-space: nowrap;
+    color: black;
 }
 
 @media only screen and (max-width: 949px) and (min-width: 320px) {
