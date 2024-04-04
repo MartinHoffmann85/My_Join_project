@@ -411,6 +411,21 @@ body {
     height: 20px;
 }
 
+.boardDropDownMenu {
+    display: none;
+    border-radius: 15px;
+    background-color: var(--white-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
+    animation: slide-in-menu 0.3s ease forwards;
+    width: 200px;
+    padding: 20px;
+}
+
+.editDropDownToggle {
+    display: block;
+}
+
 @media only screen and (max-width: 949px) and (min-width: 320px) {
     .boardContentContainer {
         height: 80dvh;

@@ -410,7 +410,12 @@ function boardEditTask(taskId) {
             </div>  
             <div class="renderTaskCardOverlayAssignetToContainer">
                 <label for="editAssignedTo">Assigned To:</label>
-                <input type="text" id="editAssignedTo" value="${task.assignedTo ? task.assignedTo.userNames.join(', ') : ''}">
+                <div class="dropdown">
+                    <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
+                    <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
+                        ${generateAssignedToOptions(task.assignedTo)}
+                    </ul>
+                </div>
             </div>            
         </div>
         <div class="renderTasksubtaskHTML"><p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks</p>${boardRenderSubtasks(card, taskId)}</div>
@@ -420,16 +425,100 @@ function boardEditTask(taskId) {
         </div>
     `;    
     overlay.appendChild(card);
-    document.body.appendChild(overlay);
+    document.body.appendChild(overlay);    
 }
 
+
+function generateAssignedToOptions(assignedTo) {    
+    const currentUserContacts = JSON.parse(localStorage.getItem('currentUser')).contacts;
+    if (!currentUserContacts || currentUserContacts.length === 0) {
+        return '<li>No contacts available</li>';
+    }
+    return currentUserContacts.map(contact => {
+        const selected = assignedTo && assignedTo.userNames && assignedTo.userNames.includes(contact.name) ? 'selected' : '';
+        return `<li class="contact-option ${selected}" onclick="selectContact(this)">${contact.name}</li>`;
+    }).join('');    
+}
+
+function boardToggleDropdownMenu() {
+    const dropdown = document.getElementById('boardContactDropDownmenuID');
+    dropdown.classList.toggle('show');
+    if (dropdown.classList.contains('show')) {
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+
+
+function showBoardDropDownMenu() {
+    const dropdown = document.getElementById('boardContactDropDownmenuID');
+    dropdown.classList.toggle('show');
+    if (dropdown.classList.contains('show')) {
+        dropdown.style.display = 'block';
+    }
+}
+
+function selectContact(contactElement) {
+    contactElement.classList.toggle('selected');
+    editUpdateAssignedTo();
+}
 
 
 function getTaskFromLocalStorage(taskId) {
-    // Task-Informationen aus dem lokalen Speicher anhand der ID abrufen
     const tasks = JSON.parse(localStorage.getItem('currentUser')).tasks;
     return tasks.find(task => task.id === taskId);
 }
+
+
+function updateAssignedTo(selectElement) {
+    const selectedContacts = Array.from(selectElement.selectedOptions).map(option => option.value);
+    const assignedToContainer = document.querySelector('.renderTaskCardOverlayAssignetToContainer');
+    assignedToContainer.innerHTML = `
+        <label for="editAssignedTo">Assigned To:</label>
+        <div>${selectedContacts.join(', ')}</div>
+    `;
+}
+
+
+function editUpdateAssignedTo() {
+    const selectedContacts = document.querySelectorAll('.contact-option.selected');
+    const assignedToContainer = document.querySelector('.renderTaskCardOverlayAssignetToContainer');
+    const selectedContactNames = Array.from(selectedContacts).map(contact => contact.textContent.trim());
+    assignedToContainer.innerHTML = `
+        <label for="editAssignedTo">Assigned To:</label>
+        <div>${selectedContactNames.join(', ')}</div>
+    `;
+}
+
+
+function boardEditAssignedTo() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    boardEditRenderAssignedToContacts(currentUser.contacts);
+    document.getElementById('assignedto-input-id').addEventListener('input', function (event) {
+      const searchTerm = event.target.value;
+      const filteredContacts = currentUser.contacts.filter(contact =>
+        contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      boardEditRenderAssignedToContacts(filteredContacts);
+    });
+}
+
+
+function boardEditRenderAssignedToContacts(contacts) {
+    const assignedToContainer = document.getElementById('assigned-to-contacts-id');
+    assignedToContainer.innerHTML = '';
+    contacts.forEach(contact => {
+      if (contact.name === currentUser.userName) 
+        contact.name = contact.name + ' (you)';
+      const initials = getFirstLettersOfName(contact.name);
+      const textColor = isColorLight(contact.colorCode) ? 'white' : 'black';
+      const isSelected = contact.selected;
+      assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, contact.colorCode, initials, textColor, isSelected);
+    });  
+}
+
+
 
 
 // Clear function for task dummys only for developers
