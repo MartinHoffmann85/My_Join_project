@@ -300,8 +300,48 @@ body {
 }
 
 .subtaskCountContainer {
+    display: flex;
+    align-items: center;    
     margin-left: 20px;
-    margin-bottom: 24px;
+    margin-bottom: 24px;    
+}
+
+.progress {
+    height: 100%;
+    background-color: #007bff;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: #ccc;
+    position: relative;
+    width: 100px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: #007bff;
+    transition: width 0.3s ease;
+}
+
+.boardRenderSubtaskContainer {
+    display: flex;
+    justify-content: center;
+    
+}
+
+.boardRenderSubtasksCountPElement {
+    font-size: 12px;
+    font-weight: 400;    
 }
 
 @media only screen and (max-width: 949px) and (min-width: 320px) {

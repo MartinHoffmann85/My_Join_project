@@ -86,7 +86,8 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         <div class="renderTaskDescription">${description}</div>
         
         <div class="subtaskCountContainer">
-            ${boardRenderSubtasksCount(id)}
+            <div class="boardRenderSubtaskContainer"></div>
+            <p class="boardRenderSubtasksCountPElement">${boardRenderSubtasksCount(id)}</p>
         </div>
 
         <div class="assignetToHTMLAndPrioContentContainer">   
@@ -100,17 +101,24 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
 
 function boardRenderSubtasksCount(taskId) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const task = currentUser.tasks.find(task => task.id === taskId);
+    const task = currentUser.tasks.find(task => task.id === taskId);    
     if (!task || !task.subtasks || task.subtasks.length === 0) {
         return 'No subtasks';
-    }
+    }    
     let checkedCount = 0;
     task.subtasks.forEach(subtask => {
         if (subtask.completed) {
             checkedCount++;
         }
-    });
-    return `${checkedCount}/${task.subtasks.length} Subtasks`;
+    });    
+    const progress = (checkedCount / task.subtasks.length) * 100;    
+    const progressBarContainer = `
+        <div class="progress-bar">
+            <div class="progress" style="width: ${progress}%;"></div>
+        </div>
+        <p class="boardRenderSubtasksCountPElement">${checkedCount}/${task.subtasks.length} Subtasks</p>
+    `;    
+    return progressBarContainer;
 }
 
 
@@ -155,12 +163,14 @@ function updateSubtaskStatus(taskId, subtaskId, isChecked) {
                 subtask.completed = isChecked;
                 saveTasksToLocalStorage(currentUser);
                 console.log("function updateSubtaskStatus(subtask.completed) after save", subtask.completed);
+                initBoard();
             } else {
                 console.error("Subtask not found with ID:", subtaskId);
             }
         }
     }
 }
+
 
 function renderUserDetails(user) {
     const colorCode = user.colorCodes && user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
