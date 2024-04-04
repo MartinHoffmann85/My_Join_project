@@ -70,7 +70,7 @@ body {
 }
 
 .boardColumn {
-    width: 200px;
+    width: 180px;
     padding: 10px;
     background-color: #f0f0f0;
     border-radius: 5px;
@@ -396,5 +396,11 @@ body {
 
     .boardoverlay {
         padding: 0;
+    }
+}
+
+@media only screen and (max-width: 1025px) and (min-width: 949px) {
+    .boardColumn {
+        margin: 0;
     }
 }
