@@ -389,15 +389,15 @@ function boardEditTask(taskId) {
         </div>        
         <div class="renderTaskTitleOverlay">
             <label for="editTitle">Title:</label>
-            <input type="text" id="editTitle" value="${task.title}">
+            <input class="boardEditTaskOverlayTitleInput" type="text" id="editTitle" value="${task.title}">
         </div>
         <div class="renderTaskDescriptionOverlay">
             <label for="editDescription">Description:</label>
-            <textarea id="editDescription">${task.description}</textarea>
+            <textarea class="textarea-style" id="editDescription">${task.description}</textarea>
         </div>
         <div class="renderTaskDate">
             <label for="editDate">Due date:</label>
-            <input type="date" id="editDate" value="${task.date}">
+            <input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
         </div>
         <div class="overlayAssignetToHTMLAndPrioContentContainer">
             <div class="boardPriorityContainer">

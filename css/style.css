@@ -156,7 +156,7 @@ h2 {
 }
 
 .textarea-style:focus-within{
-    border-color: var(--mockup-highlight); 
+    border-color: var(--mockup-highlight);
 }
 
 .error-border { 
