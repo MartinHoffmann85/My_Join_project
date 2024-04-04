@@ -299,6 +299,11 @@ body {
     margin-right: 24px;
 }
 
+.subtaskCountContainer {
+    margin-left: 20px;
+    margin-bottom: 24px;
+}
+
 @media only screen and (max-width: 949px) and (min-width: 320px) {
     .boardContentContainer {
         height: 80dvh;

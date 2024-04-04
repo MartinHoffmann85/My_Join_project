@@ -85,12 +85,32 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
         <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
         <div class="renderTaskDescription">${description}</div>
         
+        <div class="subtaskCountContainer">
+            ${boardRenderSubtasksCount(id)}
+        </div>
+
         <div class="assignetToHTMLAndPrioContentContainer">   
             <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
             <div class="renderTaskToHTMLPrioContainer">${prioContent}</div>
         </div>        
-    `;    
-    return taskCard;    
+    `;
+    return taskCard;
+}
+
+
+function boardRenderSubtasksCount(taskId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const task = currentUser.tasks.find(task => task.id === taskId);
+    if (!task || !task.subtasks || task.subtasks.length === 0) {
+        return 'No subtasks';
+    }
+    let checkedCount = 0;
+    task.subtasks.forEach(subtask => {
+        if (subtask.completed) {
+            checkedCount++;
+        }
+    });
+    return `${checkedCount}/${task.subtasks.length} Subtasks`;
 }
 
 
