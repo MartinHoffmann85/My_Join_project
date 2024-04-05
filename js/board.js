@@ -1,6 +1,3 @@
-let taskIDSaved;
-let selectedContactNamesGlobal = [];
-
 async function initBoard() {
     const currentUser = await JSON.parse(localStorage.getItem('currentUser'));
     loadTasksFromLocalStorage(currentUser);
@@ -421,9 +418,9 @@ function boardEditTask(taskId) {
                 <div class="renderTaskCardOverlayAssignetToContainer">
                     <label for="editAssignedTo">Assigned To:</label>
                     <div class="dropdown">
-                        <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
+                    <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
                         <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
-                        ${generateAssignedToOptions(task.assignedTo)}
+                        ${generateAssignedToOptions(task.assignedTo, taskId)}
                     </ul>
                 </div>
                     <div>${assignedToContacts}</div>
@@ -443,14 +440,15 @@ function boardEditTask(taskId) {
     }
 }
 
-function generateAssignedToOptions(assignedTo) {    
+function generateAssignedToOptions(assignedTo, taskId) {
+    console.log("function generateAssignedToOptions(taskId)" , taskId);    
     const currentUserContacts = JSON.parse(localStorage.getItem('currentUser')).contacts;
     if (!currentUserContacts || currentUserContacts.length === 0) {
         return '<li>No contacts available</li>';
     }
     return currentUserContacts.map(contact => {
         const selected = assignedTo && assignedTo.userNames && assignedTo.userNames.includes(contact.name) ? 'selected' : '';
-        return `<li class="contact-option ${selected}" onclick="selectContact(this)">${contact.name}</li>`;
+        return `<li class="contact-option ${selected}" onclick="selectContact(this, '${contact.name}', '${taskId}')">${contact.name}</li>`;
     }).join('');    
 }
 
@@ -475,11 +473,10 @@ function showBoardDropDownMenu() {
 }
 
 
-function selectContact(contactElement) {
-    console.log("function selectContact(contactElement)" , "after klicking contact");
-    console.log("function selectContact(contactElement)" , contactElement);
+function selectContact(contactElement, taskId) {    
+    console.log("Selected contact with taskId:", taskId);
     contactElement.classList.toggle('selected');
-    editUpdateAssignedTo(); // Aufruf der Funktion zur Aktualisierung der ausgewählten Kontakte
+    editUpdateAssignedTo(taskId);
 }
 
 
@@ -489,21 +486,9 @@ function getTaskFromLocalStorage(taskId) {
 }
 
 
-function updateAssignedTo(selectElement) {
-    const selectedContacts = Array.from(selectElement.selectedOptions).map(option => option.value);
-    const assignedToContainer = document.querySelector('.renderTaskCardOverlayAssignetToContainer');
-    assignedToContainer.innerHTML = `
-        <label for="editAssignedTo">Assigned To:</label>
-        <div>${selectedContacts.join(', ')}</div>
-    `;
-}
-
-
-function editUpdateAssignedTo() {
+function editUpdateAssignedTo(taskId) {
     const selectedContacts = document.querySelectorAll('.contact-option.selected');
-    const selectedContactNames = Array.from(selectedContacts).map(contact => contact.textContent.trim());
-    const taskId = taskIDSaved;
-    console.log("function editUpdateAssignedTo()" , taskIDSaved);
+    const selectedContactNames = Array.from(selectedContacts).map(contact => contact.textContent.trim());    
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
     if (taskIndex !== -1) {
@@ -521,8 +506,7 @@ function editUpdateAssignedTo() {
             }
         });
         saveTasksToLocalStorage(currentUser);
-        boardEditTask(taskIDSaved); // Update overlay with new data
-        console.log("function editUpdateAssignedTo(taskId)" , taskId);
+        initBoard();        
     }
 }
 
