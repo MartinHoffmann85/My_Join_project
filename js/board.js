@@ -392,7 +392,7 @@ function boardEditTask(taskId) {
         card.innerHTML = `
             <div class="boardOverlayCategoryAndCloseXContainer">
                 <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}</div>
-                <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
+                <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard(); initBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
             </div>
             <div class="renderTaskTitleOverlay">
                 <label for="editTitle">Title:</label>
