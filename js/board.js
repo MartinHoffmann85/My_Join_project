@@ -35,8 +35,7 @@ function clearTaskContainers() {
 
 
 function renderTask(taskData) {
-    const { id, title, description, category, assignedTo, prio, date, columnId } = taskData;
-    console.log("function renderTask(assignedTo)" , assignedTo);   
+    const { id, title, description, category, assignedTo, prio, date, columnId } = taskData;       
     const validColumnIds = ["todo", "inprogress", "awaitfeedback", "done"];
     const actualColumnId = validColumnIds.includes(columnId) ? columnId : "todo";
     const taskCard = renderTaskCard(id, title, description, category, assignedTo, prio, date);    
@@ -124,8 +123,7 @@ function boardRenderSubtasksCount(taskId) {
 
 
 function boardRenderSubtasks(taskCard, taskId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    console.log("currentUser", currentUser);
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
     const task = currentUser.tasks.find(task => task.id === taskId);
     if (!task || !task.subtasks || task.subtasks.length === 0) {
         return '';
@@ -153,8 +151,7 @@ function boardRenderSubtasks(taskCard, taskId) {
 }
 
 
-function updateSubtaskStatus(taskId, subtaskId, isChecked) {
-    console.log("function updateSubtaskStatus(isChecked)", isChecked);
+function updateSubtaskStatus(taskId, subtaskId, isChecked) {    
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
         const task = currentUser.tasks.find(task => task.id === taskId);
@@ -162,8 +159,7 @@ function updateSubtaskStatus(taskId, subtaskId, isChecked) {
             const subtask = task.subtasks.find(subtask => subtask.id === subtaskId);
             if (subtask) {
                 subtask.completed = isChecked;
-                saveTasksToLocalStorage(currentUser);
-                console.log("function updateSubtaskStatus(subtask.completed) after save", subtask.completed);
+                saveTasksToLocalStorage(currentUser);                
                 initBoard();
             } else {
                 console.error("Subtask not found with ID:", subtaskId);
@@ -326,8 +322,7 @@ function addTaskClickListener() {
 
 function renderTaskCardOverlay(event) {
     const taskId = event.currentTarget.id;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    console.log("currentUser" , currentUser);
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
     const task = currentUser.tasks.find(task => task.id === taskId);
     if (task) {        
         const subtasks = JSON.parse(localStorage.getItem('currentUser.tasks.subtasks'));        
@@ -369,15 +364,13 @@ function boardEditTask(taskId) {
         const overlay = document.createElement('div');
         overlay.classList.add('boardoverlay');
         const card = document.createElement('div');
-        card.classList.add('card');
-        
+        card.classList.add('card');        
         let backgroundColor = '';
         if (task.category === 'Technical Task') {
             backgroundColor = 'var(--technical-task-turquoise)';
         } else if (task.category === 'User Story') {
             backgroundColor = 'var(--user-story-blue)';
         }
-
         let prioContent = task.prio;
         if (task.prio === 'urgent') {
             prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
@@ -386,9 +379,7 @@ function boardEditTask(taskId) {
         } else if (task.prio === 'low') {
             prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
         }
-
-        const assignedToContacts = task.assignedTo && task.assignedTo.userNames ? task.assignedTo.userNames.join(', ') : 'No one assigned';
-        
+        const assignedToContacts = task.assignedTo && task.assignedTo.userNames ? task.assignedTo.userNames.join(', ') : 'No one assigned';        
         card.innerHTML = `
             <div class="boardOverlayCategoryAndCloseXContainer">
                 <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}</div>
@@ -440,8 +431,8 @@ function boardEditTask(taskId) {
     }
 }
 
-function generateAssignedToOptions(assignedTo, taskId) {
-    console.log("function generateAssignedToOptions(taskId)" , taskId);    
+
+function generateAssignedToOptions(assignedTo, taskId) {        
     const currentUserContacts = JSON.parse(localStorage.getItem('currentUser')).contacts;
     if (!currentUserContacts || currentUserContacts.length === 0) {
         return '<li>No contacts available</li>';
@@ -473,8 +464,7 @@ function showBoardDropDownMenu() {
 }
 
 
-function selectContact(contactElement, taskId) {    
-    console.log("Selected contact with taskId:", taskId);
+function selectContact(contactElement, taskId) {
     contactElement.classList.toggle('selected');
     editUpdateAssignedTo(taskId);
 }
@@ -487,7 +477,6 @@ function getTaskFromLocalStorage(taskId) {
 
 
 function editUpdateAssignedTo(taskId) {
-    console.log("function editUpdateAssignedTo(taskId)" , "got called");
     const selectedContacts = document.querySelectorAll('.contact-option.selected');
     const selectedContactNames = Array.from(selectedContacts).map(contact => contact.textContent.trim());    
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -507,8 +496,7 @@ function editUpdateAssignedTo(taskId) {
             }
         });
         saveTasksToLocalStorage(currentUser);
-        boardEditTask(taskId);
-        console.log("function editUpdateAssignedTo(taskId)" , "contact saved");        
+        boardEditTask(taskId);                
     }
 }
 
@@ -544,9 +532,6 @@ function getColorCodeForContact(contacts, contactName) {
     const contact = contacts.find(contact => contact.name === contactName);
     if (contact) {
         return contact.colorCode;
-    } else {
-        // Wenn der Kontakt nicht gefunden wurde, gib eine Standardfarbe zurück
-        return '#000000'; // Hier kann eine Standardfarbe definiert werden
     }
 }
 
