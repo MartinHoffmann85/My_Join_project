@@ -1,3 +1,6 @@
+let taskIDSaved;
+let selectedContactNamesGlobal = [];
+
 async function initBoard() {
     const currentUser = await JSON.parse(localStorage.getItem('currentUser'));
     loadTasksFromLocalStorage(currentUser);
@@ -35,7 +38,8 @@ function clearTaskContainers() {
 
 
 function renderTask(taskData) {
-    const { id, title, description, category, assignedTo, prio, date, columnId } = taskData;    
+    const { id, title, description, category, assignedTo, prio, date, columnId } = taskData;
+    console.log("function renderTask(assignedTo)" , assignedTo);   
     const validColumnIds = ["todo", "inprogress", "awaitfeedback", "done"];
     const actualColumnId = validColumnIds.includes(columnId) ? columnId : "todo";
     const taskCard = renderTaskCard(id, title, description, category, assignedTo, prio, date);    
@@ -362,72 +366,82 @@ function deleteTask(id) {
 
 
 function boardEditTask(taskId) {
-    closeOverlayBoard();    
+    closeOverlayBoard();
     const task = getTaskFromLocalStorage(taskId);
-    const overlay = document.createElement('div');
-    overlay.classList.add('boardoverlay');    
-    const card = document.createElement('div');
-    card.classList.add('card');
-    let backgroundColor = '';
-    if (task.category === 'Technical Task') {
-        backgroundColor = 'var(--technical-task-turquoise)';
-    } else if (task.category === 'User Story') {
-        backgroundColor = 'var(--user-story-blue)';
-    }    
-    let prioContent = task.prio;
-    if (task.prio === 'urgent') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
-    } else if (task.prio === 'medium') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Medium</strong></p><img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
-    } else if (task.prio === 'low') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
-    }
-    card.innerHTML = `
-        <div class="boardOverlayCategoryAndCloseXContainer">            
-            <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}</div>
-            <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
-        </div>        
-        <div class="renderTaskTitleOverlay">
-            <label for="editTitle">Title:</label>
-            <input class="boardEditTaskOverlayTitleInput" type="text" id="editTitle" value="${task.title}">
-        </div>
-        <div class="renderTaskDescriptionOverlay">
-            <label for="editDescription">Description:</label>
-            <textarea class="textarea-style" id="editDescription">${task.description}</textarea>
-        </div>
-        <div class="renderTaskDate">
-            <label for="editDate">Due date:</label>
-            <input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
-        </div>
-        <div class="overlayAssignetToHTMLAndPrioContentContainer">
-            <div class="boardPriorityContainer">
-                <label for="editPriority">Priority:</label>
-                <select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
-                    <option value="low" ${task.prio === 'low' ? 'selected' : ''}>Low</option>
-                    <option value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium</option>
-                    <option value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent</option>
-                </select>
-            </div>  
-            <div class="renderTaskCardOverlayAssignetToContainer">
-                <label for="editAssignedTo">Assigned To:</label>
-                <div class="dropdown">
-                    <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
-                    <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
+    if (task) {
+        const overlay = document.createElement('div');
+        overlay.classList.add('boardoverlay');
+        const card = document.createElement('div');
+        card.classList.add('card');
+        
+        let backgroundColor = '';
+        if (task.category === 'Technical Task') {
+            backgroundColor = 'var(--technical-task-turquoise)';
+        } else if (task.category === 'User Story') {
+            backgroundColor = 'var(--user-story-blue)';
+        }
+
+        let prioContent = task.prio;
+        if (task.prio === 'urgent') {
+            prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+        } else if (task.prio === 'medium') {
+            prioContent = `<p class="boardOverlayUrgentPElement"><strong>Medium</strong></p><img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+        } else if (task.prio === 'low') {
+            prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
+        }
+
+        const assignedToContacts = task.assignedTo && task.assignedTo.userNames ? task.assignedTo.userNames.join(', ') : 'No one assigned';
+        
+        card.innerHTML = `
+            <div class="boardOverlayCategoryAndCloseXContainer">
+                <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}</div>
+                <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
+            </div>
+            <div class="renderTaskTitleOverlay">
+                <label for="editTitle">Title:</label>
+                <input class="boardEditTaskOverlayTitleInput" type="text" id="editTitle" value="${task.title}">
+            </div>
+            <div class="renderTaskDescriptionOverlay">
+                <label for="editDescription">Description:</label>
+                <textarea class="textarea-style" id="editDescription">${task.description}</textarea>
+            </div>
+            <div class="renderTaskDate">
+                <label for="editDate">Due date:</label>
+                <input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
+            </div>
+            <div class="overlayAssignetToHTMLAndPrioContentContainer">
+                <div class="boardPriorityContainer">
+                    <label for="editPriority">Priority:</label>
+                    <select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
+                        <option value="low" ${task.prio === 'low' ? 'selected' : ''}>Low</option>
+                        <option value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium</option>
+                        <option value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent</option>
+                    </select>
+                </div>
+                <div class="renderTaskCardOverlayAssignetToContainer">
+                    <label for="editAssignedTo">Assigned To:</label>
+                    <div class="dropdown">
+                        <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
+                        <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
                         ${generateAssignedToOptions(task.assignedTo)}
                     </ul>
                 </div>
-            </div>            
-        </div>
-        <div class="renderTasksubtaskHTML"><p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks</p>${boardRenderSubtasks(card, taskId)}</div>
-        <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-            <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTask('${taskId}')">
-            <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
-        </div>
-    `;    
-    overlay.appendChild(card);
-    document.body.appendChild(overlay);    
+                    <div>${assignedToContacts}</div>
+                </div>
+            </div>
+            <div class="renderTasksubtaskHTML">
+                <p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks</p>
+                ${boardRenderSubtasks(card, taskId)}
+            </div>
+            <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
+                <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTask('${taskId}')">
+                <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
+            </div>
+        `;        
+        overlay.appendChild(card);
+        document.body.appendChild(overlay);
+    }
 }
-
 
 function generateAssignedToOptions(assignedTo) {    
     const currentUserContacts = JSON.parse(localStorage.getItem('currentUser')).contacts;
@@ -439,6 +453,7 @@ function generateAssignedToOptions(assignedTo) {
         return `<li class="contact-option ${selected}" onclick="selectContact(this)">${contact.name}</li>`;
     }).join('');    
 }
+
 
 function boardToggleDropdownMenu() {
     const dropdown = document.getElementById('boardContactDropDownmenuID');
@@ -459,9 +474,10 @@ function showBoardDropDownMenu() {
     }
 }
 
+
 function selectContact(contactElement) {
     contactElement.classList.toggle('selected');
-    editUpdateAssignedTo();
+    editUpdateAssignedTo(); // Aufruf der Funktion zur Aktualisierung der ausgewählten Kontakte
 }
 
 
@@ -483,12 +499,27 @@ function updateAssignedTo(selectElement) {
 
 function editUpdateAssignedTo() {
     const selectedContacts = document.querySelectorAll('.contact-option.selected');
-    const assignedToContainer = document.querySelector('.renderTaskCardOverlayAssignetToContainer');
     const selectedContactNames = Array.from(selectedContacts).map(contact => contact.textContent.trim());
-    assignedToContainer.innerHTML = `
-        <label for="editAssignedTo">Assigned To:</label>
-        <div>${selectedContactNames.join(', ')}</div>
-    `;
+    const taskId = taskIDSaved;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
+    if (taskIndex !== -1) {
+        if (!currentUser.tasks[taskIndex].assignedTo) {
+            currentUser.tasks[taskIndex].assignedTo = {
+                userNames: [],
+                colorCodes: []
+            };
+        }
+        const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo;
+        selectedContactNames.forEach(contactName => {
+            if (!userNames.includes(contactName)) {
+                userNames.push(contactName);
+                colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
+            }
+        });
+        saveTasksToLocalStorage(currentUser);
+        boardEditTask(taskId); // Update overlay with new data
+    }
 }
 
 
