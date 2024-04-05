@@ -447,8 +447,8 @@ function generateAssignedToOptions(assignedTo, taskId) {
         return '<li>No contacts available</li>';
     }
     return currentUserContacts.map(contact => {
-        const selected = assignedTo && assignedTo.userNames && assignedTo.userNames.includes(contact.name) ? 'selected' : '';
-        return `<li class="contact-option ${selected}" onclick="selectContact(this, '${contact.name}', '${taskId}')">${contact.name}</li>`;
+        const selected = assignedTo && assignedTo.userNames && assignedTo.userNames.includes(contact.name) ? 'selected' : '';        
+        return `<li class="contact-option ${selected}" onclick="selectContact(this, '${taskId}')">${contact.name}</li>`;
     }).join('');    
 }
 
@@ -487,6 +487,7 @@ function getTaskFromLocalStorage(taskId) {
 
 
 function editUpdateAssignedTo(taskId) {
+    console.log("function editUpdateAssignedTo(taskId)" , "got called");
     const selectedContacts = document.querySelectorAll('.contact-option.selected');
     const selectedContactNames = Array.from(selectedContacts).map(contact => contact.textContent.trim());    
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -506,7 +507,8 @@ function editUpdateAssignedTo(taskId) {
             }
         });
         saveTasksToLocalStorage(currentUser);
-        initBoard();        
+        boardEditTask(taskId);
+        console.log("function editUpdateAssignedTo(taskId)" , "contact saved");        
     }
 }
 
@@ -536,6 +538,23 @@ function boardEditRenderAssignedToContacts(contacts) {
       assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, contact.colorCode, initials, textColor, isSelected);
     });  
 }
+
+
+function getColorCodeForContact(contacts, contactName) {
+    const contact = contacts.find(contact => contact.name === contactName);
+    if (contact) {
+        return contact.colorCode;
+    } else {
+        // Wenn der Kontakt nicht gefunden wurde, gib eine Standardfarbe zurück
+        return '#000000'; // Hier kann eine Standardfarbe definiert werden
+    }
+}
+
+
+
+
+
+
 
 
 
