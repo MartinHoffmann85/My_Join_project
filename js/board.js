@@ -412,7 +412,7 @@ function boardEditTask(taskId) {
                     <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
                         <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
                         ${generateAssignedToOptions(task.assignedTo, taskId)}
-                    </ul>
+                        </ul>                        
                 </div>
                     <div>${assignedToContacts}</div>
                 </div>
@@ -455,15 +455,6 @@ function boardToggleDropdownMenu() {
 }
 
 
-function showBoardDropDownMenu() {
-    const dropdown = document.getElementById('boardContactDropDownmenuID');
-    dropdown.classList.toggle('show');
-    if (dropdown.classList.contains('show')) {
-        dropdown.style.display = 'block';
-    }
-}
-
-
 function selectContact(contactElement, taskId) {
     contactElement.classList.toggle('selected');
     editUpdateAssignedTo(taskId);
@@ -488,15 +479,15 @@ function editUpdateAssignedTo(taskId) {
                 colorCodes: []
             };
         }
-        const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo;
+        const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo;        
+        userNames.length = 0;
+        colorCodes.length = 0;
         selectedContactNames.forEach(contactName => {
-            if (!userNames.includes(contactName)) {
-                userNames.push(contactName);
-                colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
-            }
+            userNames.push(contactName);
+            colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
         });
         saveTasksToLocalStorage(currentUser);
-        boardEditTask(taskId);                
+        boardEditTask(taskId);
     }
 }
 
