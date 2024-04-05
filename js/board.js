@@ -476,6 +476,8 @@ function showBoardDropDownMenu() {
 
 
 function selectContact(contactElement) {
+    console.log("function selectContact(contactElement)" , "after klicking contact");
+    console.log("function selectContact(contactElement)" , contactElement);
     contactElement.classList.toggle('selected');
     editUpdateAssignedTo(); // Aufruf der Funktion zur Aktualisierung der ausgewählten Kontakte
 }
@@ -501,6 +503,7 @@ function editUpdateAssignedTo() {
     const selectedContacts = document.querySelectorAll('.contact-option.selected');
     const selectedContactNames = Array.from(selectedContacts).map(contact => contact.textContent.trim());
     const taskId = taskIDSaved;
+    console.log("function editUpdateAssignedTo()" , taskIDSaved);
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
     if (taskIndex !== -1) {
@@ -518,7 +521,8 @@ function editUpdateAssignedTo() {
             }
         });
         saveTasksToLocalStorage(currentUser);
-        boardEditTask(taskId); // Update overlay with new data
+        boardEditTask(taskIDSaved); // Update overlay with new data
+        console.log("function editUpdateAssignedTo(taskId)" , taskId);
     }
 }
 
