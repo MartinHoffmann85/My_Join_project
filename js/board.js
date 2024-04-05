@@ -297,7 +297,7 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
             </div>  
             <div class="renderTaskCardOverlayAssignetToContainer">
                 <p class="renderTaskCardOverlayAssignetToPElement">Assigned To:</p>
-                <p class="">${assignedToHTML}</p>
+                <p>${assignedToHTML}</p>
             </div>            
         </div>
         <div class="renderTasksubtaskHTML"><p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks</p>${subtasksHTML}</div>
@@ -379,7 +379,18 @@ function boardEditTask(taskId) {
         } else if (task.prio === 'low') {
             prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
         }
-        const assignedToContacts = task.assignedTo && task.assignedTo.userNames ? task.assignedTo.userNames.join(', ') : 'No one assigned';        
+        const assignedToContacts = task.assignedTo && task.assignedTo.userNames ? task.assignedTo.userNames : [];
+        const assignedToColors = task.assignedTo && task.assignedTo.colorCodes ? task.assignedTo.colorCodes : [];
+        const assignedToHTML = assignedToContacts.map((userName, index) => {
+            const user = {
+                userNames: [userName],
+                colorCodes: [assignedToColors[index]],
+            };
+            const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
+            const backgroundColor = assignedToColors[index];
+            const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
+            return `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
+        }).join('');
         card.innerHTML = `
             <div class="boardOverlayCategoryAndCloseXContainer">
                 <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}</div>
@@ -401,20 +412,22 @@ function boardEditTask(taskId) {
                 <div class="boardPriorityContainer">
                 <p>Priority:</p>
                     <select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
-                        <option value="low" ${task.prio === 'low' ? 'selected' : ''}>Low</option>
-                        <option value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium</option>
-                        <option value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent</option>
+                        <option class="editTaskCardoverlayPriorityDropDownMenuOption" value="low" ${task.prio === 'low' ? 'selected' : ''}>Low</option>
+                        <option class="editTaskCardoverlayPriorityDropDownMenuOption" value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium</option>
+                        <option class="editTaskCardoverlayPriorityDropDownMenuOption" value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent</option>
                     </select>
                 </div>
                 <div class="renderTaskCardOverlayAssignetToContainer">
-                    <p>Assigned To:</p>
-                    <div class="dropdown">
-                    <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
-                        <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
-                        ${generateAssignedToOptions(task.assignedTo, taskId)}
-                        </ul>                        
-                </div>
-                    <div>${assignedToContacts}</div>
+                    <div class="editAssigntToPElementAndSelectContactsButton">
+                        <p class="renderTaskCardOverlayAssignetToPElement">Assigned To:</p>
+                        <div class="dropdown">
+                            <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
+                                <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
+                                ${generateAssignedToOptions(task.assignedTo, taskId)}
+                                </ul>                        
+                        </div>
+                    </div>
+                    ${assignedToHTML.length > 0 ? assignedToHTML : '<p>No one assigned</p>'}
                 </div>
             </div>
             <div class="renderTasksubtaskHTML">
@@ -430,6 +443,7 @@ function boardEditTask(taskId) {
         document.body.appendChild(overlay);
     }
 }
+
 
 
 function generateAssignedToOptions(assignedTo, taskId) {        
@@ -525,7 +539,6 @@ function getColorCodeForContact(contacts, contactName) {
         return contact.colorCode;
     }
 }
-
 
 
 
