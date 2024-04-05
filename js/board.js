@@ -386,20 +386,20 @@ function boardEditTask(taskId) {
                 <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard(); initBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
             </div>
             <div class="renderTaskTitleOverlay">
-                <label for="editTitle">Title:</label>
+                <p>Title:</p>
                 <input class="boardEditTaskOverlayTitleInput" type="text" id="editTitle" value="${task.title}">
             </div>
             <div class="renderTaskDescriptionOverlay">
-                <label for="editDescription">Description:</label>
+                <p>Description:</p>
                 <textarea class="textarea-style" id="editDescription">${task.description}</textarea>
             </div>
             <div class="renderTaskDate">
-                <label for="editDate">Due date:</label>
+                <p>Due date:</p>
                 <input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
             </div>
             <div class="overlayAssignetToHTMLAndPrioContentContainer">
                 <div class="boardPriorityContainer">
-                    <label for="editPriority">Priority:</label>
+                <p>Priority:</p>
                     <select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
                         <option value="low" ${task.prio === 'low' ? 'selected' : ''}>Low</option>
                         <option value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium</option>
@@ -407,7 +407,7 @@ function boardEditTask(taskId) {
                     </select>
                 </div>
                 <div class="renderTaskCardOverlayAssignetToContainer">
-                    <label for="editAssignedTo">Assigned To:</label>
+                    <p>Assigned To:</p>
                     <div class="dropdown">
                     <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
                         <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
