@@ -4,6 +4,7 @@ function summaryInit() {
     getSummaryToDosCount();
     getDoneTasksCount();
     summaryGetUrgentPriorityCount();
+    summaryGetNextDateTask();
     summaryGetAllTasksCount();
     getInProgressTasksCount();
     summaryGetAwaitingFeedbackCount();
@@ -51,6 +52,30 @@ function summaryGetUrgentPriorityCount() {
           summaryPriorityID.textContent = urgentPriorityCount.toString();
       } else {
           console.error('Summary Priority ID element not found');
+      }
+  } else {
+      console.error('Invalid tasks data in localStorage');
+  }
+}
+
+
+function summaryGetNextDateTask() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {      
+      const tasksWithDueDate = currentUser.tasks.filter(task => task.date !== "");
+      tasksWithDueDate.sort((a, b) => new Date(a.date) - new Date(b.date));
+      if (tasksWithDueDate.length > 0) {
+          const nextDueDate = new Date(tasksWithDueDate[0].date);
+          const options = { month: 'long', day: 'numeric', year: 'numeric' };
+          const formattedDate = nextDueDate.toLocaleDateString('en-US', options);
+          const summaryDateID = document.getElementById('summaryDateID');
+          if (summaryDateID) {
+              summaryDateID.textContent = formattedDate;
+          } else {
+              console.error('Summary Date ID element not found');
+          }
+      } else {
+          console.error('No tasks with due dates found');
       }
   } else {
       console.error('Invalid tasks data in localStorage');
