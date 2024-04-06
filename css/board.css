@@ -67,7 +67,7 @@ body {
 }
 
 .boardContent {
-    display: flex;
+    display: flex;    
 }
 
 .boardColumn {
@@ -523,8 +523,7 @@ body {
 
     .boardContent {
         display: flex;
-        flex-direction: column;
-        align-items: center;
+        flex-wrap: wrap;
     }
 
     .boardH1AndSearchAndAddTaskButton {
