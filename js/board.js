@@ -544,19 +544,36 @@ function getColorCodeForContact(contacts, contactName) {
 }
 
 
-function boardEditTaskUpdate() {
-
+function boardEditTaskUpdate(taskId) {
+    const editTitleInput = document.getElementById('editTitle');
+    const editDescriptionTextarea = document.getElementById('editDescription');
+    const editDateInput = document.getElementById('editDate');
+    const editPrioritySelect = document.getElementById('editPriority');    
+    const updatedTitle = editTitleInput.value;
+    const updatedDescription = editDescriptionTextarea.value;
+    const updatedDate = editDateInput.value;
+    const updatedPriority = editPrioritySelect.value;    
+    const task = getTaskFromLocalStorage(taskId);    
+    if (task) {        
+        task.title = updatedTitle;
+        task.description = updatedDescription;
+        task.date = updatedDate;
+        task.prio = updatedPriority;        
+        updateTaskInLocalStorage(taskId, task);        
+        closeOverlayBoard();
+        initBoard();
+    }
 }
 
 
-
-
-
-
-// Clear function for task dummys only for developers
-function clearAllTasksFromLocalStorage2() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
-    currentUser.tasks = [];
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    updateCurrentUserInBackend(currentUser);
+function updateTaskInLocalStorage(taskId, updatedTask) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
+        if (taskIndex !== -1) {
+            currentUser.tasks[taskIndex] = updatedTask;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateCurrentUserInBackend(currentUser);
+        }
+    }
 }
