@@ -54,6 +54,7 @@ body {
     font-size: 21px;
     font-weight: 700;
     margin-top: 115px;
+    margin-right: 25px;
     cursor: pointer;
 }
 
@@ -547,10 +548,6 @@ body {
         top: 120px;
     }
 
-    .editAssigntToPElementAndSelectContactsButton {
-        flex-direction: column;
-    }
-
     .editRenderTaskCardoverlyDate{
         padding: 0;
     }
@@ -568,6 +565,14 @@ body {
     .boardoverlay {
         padding: 0;
     }
+
+    .renderTaskDate {
+        flex-direction: column;
+    }
+
+    .editAssigntToPElementAndSelectContactsButton {
+        flex-direction: column;
+    }    
 }
 
 @media only screen and (max-width: 1025px) and (min-width: 949px) {
