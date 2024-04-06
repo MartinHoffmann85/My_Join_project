@@ -550,3 +550,18 @@ function updateTaskInLocalStorageAndBackend(taskId, updatedTask) {
         }
     }
 }
+
+
+function searchTasks() {
+    const searchInput = document.getElementById('boardSearchInputID').value.toLowerCase();
+    const taskCards = document.querySelectorAll('.task');    
+    taskCards.forEach(taskCard => {
+        const taskTitle = taskCard.querySelector('.renderTaskTitlePElement').textContent.toLowerCase();
+        const taskDescription = taskCard.querySelector('.renderTaskDescription').textContent.toLowerCase();        
+        if (taskTitle.includes(searchInput) || taskDescription.includes(searchInput)) {
+            taskCard.style.display = 'block';
+        } else {
+            taskCard.style.display = 'none';
+        }
+    });
+}

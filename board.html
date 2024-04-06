@@ -45,7 +45,7 @@
     <div class="boardContentContainer">
         <div class="boardH1AndSearchAndAddTaskButton">
             <h1 class="boardH1">Board</h1>
-            <input class="boardSearchInput" name="boardSearchInput" id="boardSearchInputID" type="text" placeholder="Find Task">
+            <input class="boardSearchInput" name="boardSearchInput" id="boardSearchInputID" type="text" placeholder="Find Task" oninput="searchTasks()">
             <button onclick="redirectToAddTask()" class="boardAddTaskButton">Add task +</button>
             <img onclick="redirectToAddTask()" class="plusAddTaskMobile" src="./assets/svg/plusAddTaskMobile.svg" alt="">
         </div>
