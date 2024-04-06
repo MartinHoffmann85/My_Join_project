@@ -419,6 +419,12 @@ li:active .hidden-Edit_menu {
     }
 }
 
+@media only screen and (max-width: 949px) and (min-width: 761px) {
+    .content-container {
+        margin-left: 0;
+    }
+}
+
 @media (min-width: 1343px) {
     .at-prio-img {
         justify-content: space-between;
