@@ -16,7 +16,7 @@ function renderAllTasks() {
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {                
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
-            renderTask(task, task.columnId);
+            renderTask(task);
             addTaskClickListener();
         });
     } else {
@@ -83,13 +83,11 @@ function renderTaskCard(id, title, description, category, assignedTo, prio, date
     taskCard.innerHTML = `
         <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
         <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
-        <div class="renderTaskDescription">${description}</div>
-        
+        <div class="renderTaskDescription">${description}</div>        
         <div class="subtaskCountContainer">
             <div class="boardRenderSubtaskContainer"></div>
             <p class="boardRenderSubtasksCountPElement">${boardRenderSubtasksCount(id)}</p>
         </div>
-
         <div class="assignetToHTMLAndPrioContentContainer">   
             <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
             <div class="renderTaskToHTMLPrioContainer">${prioContent}</div>
@@ -159,7 +157,8 @@ function updateSubtaskStatus(taskId, subtaskId, isChecked) {
             const subtask = task.subtasks.find(subtask => subtask.id === subtaskId);
             if (subtask) {
                 subtask.completed = isChecked;
-                saveTasksToLocalStorage(currentUser);                
+                saveTasksToLocalStorage(currentUser);
+                updateCurrentUserInBackend(currentUser);                
                 initBoard();
             } else {
                 console.error("Subtask not found with ID:", subtaskId);
@@ -503,36 +502,10 @@ function editUpdateAssignedTo(taskId) {
             userNames.push(contactName);
             colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
         });
-        saveTasksToLocalStorage(currentUser);
+        saveTasksToLocalStorage(currentUser);        
+        updateCurrentUserInBackend(currentUser);
         boardEditTask(taskId);
     }
-}
-
-
-function boardEditAssignedTo() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    boardEditRenderAssignedToContacts(currentUser.contacts);
-    document.getElementById('assignedto-input-id').addEventListener('input', function (event) {
-      const searchTerm = event.target.value;
-      const filteredContacts = currentUser.contacts.filter(contact =>
-        contact.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      boardEditRenderAssignedToContacts(filteredContacts);
-    });
-}
-
-
-function boardEditRenderAssignedToContacts(contacts) {
-    const assignedToContainer = document.getElementById('assigned-to-contacts-id');
-    assignedToContainer.innerHTML = '';
-    contacts.forEach(contact => {
-      if (contact.name === currentUser.userName) 
-        contact.name = contact.name + ' (you)';
-      const initials = getFirstLettersOfName(contact.name);
-      const textColor = isColorLight(contact.colorCode) ? 'white' : 'black';
-      const isSelected = contact.selected;
-      assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, contact.colorCode, initials, textColor, isSelected);
-    });  
 }
 
 
@@ -559,14 +532,14 @@ function boardEditTaskUpdate(taskId) {
         task.description = updatedDescription;
         task.date = updatedDate;
         task.prio = updatedPriority;        
-        updateTaskInLocalStorage(taskId, task);        
+        updateTaskInLocalStorageAndBackend(taskId, task);        
         closeOverlayBoard();
         initBoard();
     }
 }
 
 
-function updateTaskInLocalStorage(taskId, updatedTask) {
+function updateTaskInLocalStorageAndBackend(taskId, updatedTask) {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
         const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
