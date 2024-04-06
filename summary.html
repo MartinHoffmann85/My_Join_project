@@ -42,11 +42,7 @@
 <body onload="includeHTML(); summaryInit()">
 
     <div w3-include-html="./assets/templates/header.html"></div>
-    
-   <div class="summary-secondery">
-        <div class="summary-greeting" id="greeting-id"></div>
-   </div>
-
+   
    <div class="summary-content">
         <div class="summary-title">
             <h1>Join 360</h1>
@@ -54,73 +50,70 @@
             <div class="separator"></div>
         </div>
  
-        <div class="summary-rows">
-            <div class="summary-row"> 
-                
-                <a class="box-1">
-                    <img class="summary-icon" src="./assets/img/to_do.png" alt="to-do">
-                    <div>
-                        <div class="summary-change-content" id="summaryToDoID">1</div>
-                        To-do
-                    </div>  
-                </a>
-
-                <div class="box-1">
-                    <img class="summary-icon" src="./assets/img/done.png" alt="done">
-                    <div>
-                        <div class="summary-change-content" id="summaryDoneID">1</div>
-                        Done
-                    </div>
-                </div>
-
-            </div>
-            <div class="summary-row">
-                <div class="box-2">
+        <div class="summaryContentAndGreetingContainer">
+            <div class="summary-rows">
+                <div class="summary-row">
+                    <a class="box-1">
+                        <img class="summary-icon" src="./assets/img/to_do.png" alt="to-do">
+                        <div>
+                            <div class="summary-change-content" id="summaryToDoID">1</div>
+                            To-do
+                        </div>  
+                    </a>
                     <div class="box-1">
-                    <img class="summary-icon" src="./assets/img/urgent.png" alt="urgent">
-                    <div>
-                        <div class="summary-change-content" id="summaryPriorityID">1</div>
-                        Urgent
-                    </div>
-                    </div>
-                    <div class="separator2"></div>
-                    <div class="box-2-2">
-                        <div class="summary-change-content2" id="summaryDateID">February 29,2022</div>
-                        Upcomming deadline
-                    </div>
-                </div>
-            </div>
-            
-            <div class="summary-row">
-                
-                <div class="box-3">
-                    <div class="box-2-2">
-                        <div class="summary-change-content" id="summaryAllTasksID">1</div>
-                        Tasks in
-                        <br>
-                        Board 
-                    </div>
-                </div>
-
-                <div class="box-3">
-                    <div class="box-2-2">
-                        <div class="summary-change-content" id="summaryProgressID">1</div>
-                        Tasks In
-                        <br>
-                        Progress 
-                    </div>
-                </div> 
-        
-                    <div class="box-3">
-                        <div class="box-2-2">
-                            <div class="summary-change-content" id="summaryFeedbackID">1</div>
-                            Awaiting 
-                            <br>
-                            feedback 
+                        <img class="summary-icon" src="./assets/img/done.png" alt="done">
+                        <div>
+                            <div class="summary-change-content" id="summaryDoneID">1</div>
+                            Done
                         </div>
                     </div>
-
+                </div>
+                <div class="summary-row">
+                    <div class="box-2">
+                        <div class="box-1">
+                        <img class="summary-icon" src="./assets/img/urgent.png" alt="urgent">
+                        <div>
+                            <div class="summary-change-content" id="summaryPriorityID">1</div>
+                            Urgent
+                        </div>
+                        </div>
+                        <div class="separator2"></div>
+                        <div class="box-2-2">
+                            <div class="summary-change-content2" id="summaryDateID">February 29,2022</div>
+                            Upcomming deadline
+                        </div>
+                    </div>
+                </div>            
+                <div class="summary-row">                
+                    <div class="box-3">
+                        <div class="box-2-2">
+                            <div class="summary-change-content" id="summaryAllTasksID">1</div>
+                            Tasks in
+                            <br>
+                            Board 
+                        </div>
+                    </div>
+                    <div class="box-3">
+                        <div class="box-2-2">
+                            <div class="summary-change-content" id="summaryProgressID">1</div>
+                            Tasks In
+                            <br>
+                            Progress 
+                        </div>
+                    </div>
+                        <div class="box-3">
+                            <div class="box-2-2">
+                                <div class="summary-change-content" id="summaryFeedbackID">1</div>
+                                Awaiting 
+                                <br>
+                                feedback 
+                            </div>
+                        </div>
+                </div>
             </div>
+            <div class="summary-secondery">
+                <div class="summary-greeting" id="greeting-id"></div>
+           </div>
         </div>
    </div>
    
