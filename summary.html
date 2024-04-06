@@ -39,7 +39,7 @@
     />
 </head>
 
-<body onload="includeHTML(); updateGreeting()">
+<body onload="includeHTML(); summaryInit()">
 
     <div w3-include-html="./assets/templates/header.html"></div>
     
@@ -60,7 +60,7 @@
                 <a class="box-1">
                     <img class="summary-icon" src="./assets/img/to_do.png" alt="to-do">
                     <div>
-                        <div class="summary-change-content">1</div>
+                        <div class="summary-change-content" id="summaryToDoID">1</div>
                         To-do
                     </div>  
                 </a>
@@ -68,7 +68,7 @@
                 <div class="box-1">
                     <img class="summary-icon" src="./assets/img/done.png" alt="done">
                     <div>
-                        <div class="summary-change-content">1</div>
+                        <div class="summary-change-content" id="summaryDoneID">1</div>
                         Done
                     </div>
                 </div>
@@ -79,13 +79,13 @@
                     <div class="box-1">
                     <img class="summary-icon" src="./assets/img/urgent.png" alt="urgent">
                     <div>
-                        <div class="summary-change-content">1</div>
+                        <div class="summary-change-content" id="summaryPriorityID">1</div>
                         Urgent
                     </div>
                     </div>
                     <div class="separator2"></div>
                     <div class="box-2-2">
-                        <div class="summary-change-content2">February 29,2022</div>
+                        <div class="summary-change-content2" id="summaryDateID">February 29,2022</div>
                         Upcomming deadline
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                 
                 <div class="box-3">
                     <div class="box-2-2">
-                        <div class="summary-change-content">1</div>
+                        <div class="summary-change-content" id="summaryAllTasksID">1</div>
                         Tasks in
                         <br>
                         Board 
@@ -104,7 +104,7 @@
 
                 <div class="box-3">
                     <div class="box-2-2">
-                        <div class="summary-change-content">1</div>
+                        <div class="summary-change-content" id="summaryProgressID">1</div>
                         Tasks In
                         <br>
                         Progress 
@@ -113,7 +113,7 @@
         
                     <div class="box-3">
                         <div class="box-2-2">
-                            <div class="summary-change-content">1</div>
+                            <div class="summary-change-content" id="summaryFeedbackID">1</div>
                             Awaiting 
                             <br>
                             feedback 
