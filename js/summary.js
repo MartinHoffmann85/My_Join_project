@@ -1,4 +1,4 @@
-setTimeout(showHeaderUserInitials, 500);
+setTimeout(showHeaderUserInitials, 200);
 
 
 async function updateGreeting() {

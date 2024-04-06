@@ -11,7 +11,7 @@ window.onload = contactsInit;
 function contactsInit() {
     const maxWidth = 949;    
     if (window.innerWidth <= maxWidth) {
-        setTimeout(showHeaderAndFooter, 250);
+        setTimeout(showHeaderAndFooter, 200);
         renderContacts();
         renderAddContactButtonMobile();
         setTimeout(showHeaderUserInitials, 500);
@@ -22,10 +22,10 @@ function contactsInit() {
         content.style.paddingBottom = '60px';
         content.style.overflow= 'auto';
     } else {
-        setTimeout(showHeaderAndFooter, 250);
+        setTimeout(showHeaderAndFooter, 200);
         renderContactsDesktop();        
         document.body.style.overflow = 'hidden';
-        setTimeout(showHeaderUserInitials, 500);
+        setTimeout(showHeaderUserInitials, 200);
     }
 }
 
