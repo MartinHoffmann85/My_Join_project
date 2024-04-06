@@ -50,3 +50,47 @@
 .helpSVG {
     height: 20px;
 }
+
+#dropdown {
+    position: absolute;
+    top: 60px;
+    right: 30px;
+    background-color: var(--white-color);
+    border: 1px solid #ccc;
+    border-radius: 20px 0px 20px 20px;
+    padding: 10px;
+    background-color: var(--mockup-color);
+    color: var(--white-color);    
+}
+  
+#dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;    
+}
+  
+#dropdown ul li {
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--header-font-color);
+}
+  
+#dropdown ul li:hover {
+    background-color: var(--focus-color-btn);
+}
+
+.headerDropDownMenuLinks {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--header-font-color);
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.headerDropDownMenuLinks:hover {
+    background-color: var(--focus-color-btn);
+    border-radius: 10px;
+    padding-left: 3px;
+    padding-right: 3px;
+}

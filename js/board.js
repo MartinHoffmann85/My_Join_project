@@ -3,6 +3,7 @@ async function initBoard() {
     loadTasksFromLocalStorage(currentUser);
     renderAllTasks();
     setTimeout(showHeaderUserInitials, 500);
+    
 }
 
 
@@ -563,5 +564,43 @@ function searchTasks() {
         } else {
             taskCard.style.display = 'none';
         }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function headerInit() {
+    setTimeout(addEventListenerHeaderDropDownMenu(), 600);
+}
+
+function addEventListenerHeaderDropDownMenu() {
+    document.addEventListener("DOMContentLoaded", function() {
+        let dropdownContainer = document.querySelector('.helpAndInitialsContainer');
+        let dropdownContent = document.querySelector('.HeaderDropDownContent');
+
+        document.addEventListener('click', function(event) {
+            // Überprüfen, ob das geklickte Element im Dropdown-Menü oder im Container ist
+            let isClickInsideDropdown = dropdownContent.contains(event.target);
+            let isClickInsideContainer = dropdownContainer.contains(event.target);
+
+            // Wenn das geklickte Element weder im Dropdown-Menü noch im Container ist, Dropdown-Menü schließen
+            if (!isClickInsideDropdown && !isClickInsideContainer) {
+                dropdownContent.classList.remove('open');
+            }
+        });
+
+        dropdownContainer.addEventListener('click', function(event) {
+            // Öffnen oder Schließen des Dropdown-Menüs beim Klicken auf den Container
+            dropdownContent.classList.toggle('open');
+        });
     });
 }
