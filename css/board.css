@@ -102,6 +102,7 @@ body {
     margin-bottom: 24px;    
     margin-right: 12px;
     margin-top: 12px;
+    margin-left: 12px;
 }
 
 .renderTaskToHTMLPrioContainer {
@@ -198,6 +199,8 @@ body {
     background-color: var(--white-color);
     border: 1px solid;    
     border-radius: 10px;
+    overflow-y: auto;
+    padding-bottom: 20px;
 }
 
 .boardTaskOverlayCloseX {
@@ -218,6 +221,18 @@ body {
     align-items: center;
     margin-top: 20px;
     margin-left: 20px;
+}
+
+.renderTaskCardOverlayCategoryDiv {
+    background-color: var(--user-story-blue);
+    color: var(--white-color);
+    font-size: 16px;
+    font-weight: 400;
+    padding: 4px 16px 4px 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;    
+    margin-right: 12px;
+    margin-top: 12px;
 }
 
 .overlayAssignetToHTMLAndPrioContentContainer {
@@ -478,11 +493,12 @@ body {
 }
 
 .editAssignetToUserPElement {
-    margin-left: 12px;
+    margin-left: 12px;    
 }
 
 .assignedToUser {
     display: flex;
+    margin-bottom: 5px;
 }
 
 .userIcon {
@@ -490,8 +506,8 @@ body {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    height: 25px;
-    width: 25px;
+    height: 30px;
+    width: 30px;
 }
 
 @media only screen and (max-width: 949px) and (min-width: 320px) {
@@ -529,6 +545,14 @@ body {
         position: absolute;
         right: 20px;
         top: 120px;
+    }
+
+    .editAssigntToPElementAndSelectContactsButton {
+        flex-direction: column;
+    }
+
+    .editRenderTaskCardoverlyDate{
+        padding: 0;
     }
 }
 

@@ -554,6 +554,10 @@
     position: relative;
 }
 
+.contactsContentRightSideEditButton {
+    margin-right: 20px;
+}
+
 
 /* Desktop view */
 /*-----------------------------------------------------------------------------------------------------------------------*/
@@ -720,18 +724,16 @@
         display: flex;
     }
 
-    .contactsContentRightSideEditButton {
-        height: 2vw;
+    .contactsContentRightSideEditButton {        
         cursor: pointer;
         transition: background-color 0.3s ease;
-      }
+    }
     
     .contactsContentRightSideEditButton:hover {
         filter: saturate(400%) brightness(550%);
     }
     
-    .contactsContentRightSideDeleteButton {
-        height: 2vw;    
+    .contactsContentRightSideDeleteButton {        
         cursor: pointer;
         margin-left: 30px;
         transition: background-color 0.3s ease;

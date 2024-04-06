@@ -262,7 +262,10 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
                 userNames: [userName],
                 colorCodes: [assignedTo.colorCodes[index]],
             };
-            assignedToHTML += renderUserDetails(user);
+            const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
+            const backgroundColor = assignedTo.colorCodes[index];
+            const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
+            assignedToHTML += `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
         });
     } else {
         assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
@@ -284,7 +287,7 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     const subtasksHTML = boardRenderSubtasks(card, id);
     card.innerHTML = `
         <div class="boardOverlayCategoryAndCloseXContainer">            
-            <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
+            <div class="renderTaskCardOverlayCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
             <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
         </div>        
         <div class="renderTaskTitleOverlay"><strong>${title}</strong></div>
@@ -404,7 +407,7 @@ function boardEditTask(taskId) {
                 <p>Description:</p>
                 <textarea class="textarea-style" id="editDescription">${task.description}</textarea>
             </div>
-            <div class="renderTaskDate">
+            <div class="renderTaskDate" type="date">
                 <p>Due date:</p>
                 <input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
             </div>
@@ -435,7 +438,7 @@ function boardEditTask(taskId) {
                 ${boardRenderSubtasks(card, taskId)}
             </div>
             <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-                <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTask('${taskId}')">
+                <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTaskUpdate('${taskId}')">
                 <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
             </div>
         `;        
@@ -541,7 +544,9 @@ function getColorCodeForContact(contacts, contactName) {
 }
 
 
+function boardEditTaskUpdate() {
 
+}
 
 
 
