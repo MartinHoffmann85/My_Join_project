@@ -113,6 +113,11 @@
     cursor: pointer;
 }
 
+.addContactInputNameMobile:focus {
+    outline: none;
+    border-color: var(--mockup-highlight);
+}
+
 .addContactInputMailAddresssMobile {
     border: 1px solid var(--placeholder-color);
     border-radius: 5px;
@@ -129,6 +134,11 @@
     cursor: pointer;
 }
 
+.addContactInputMailAddresssMobile:focus {
+    outline: none;
+    border-color: var(--mockup-highlight);
+}
+
 .addContactInputPhoneMobile {
     border: 1px solid var(--placeholder-color);
     border-radius: 5px;
@@ -143,6 +153,11 @@
     font-size: 20px;
     font-weight: 400;
     cursor: pointer;
+}
+
+.addContactInputPhoneMobile:focus {
+    outline: none;
+    border-color: var(--mockup-highlight);
 }
 
 .createContactButtonImg {
@@ -271,6 +286,11 @@
     cursor: pointer;
 }
 
+.openContactInputNameMobile:focus {
+    outline: none;
+    border-color: var(--mockup-highlight);
+}
+
 .openContactInputMailAddresssMobile {
     border: 1px solid var(--placeholder-color);
     border-radius: 5px;
@@ -285,6 +305,11 @@
     font-size: 20px;
     font-weight: 400;
     cursor: pointer;
+}
+
+.openContactInputMailAddresssMobile:focus {
+    outline: none;
+    border-color: var(--mockup-highlight);
 }
 
 .openContactInputPhoneMobile {
@@ -1075,5 +1100,36 @@
 
     .oneContactContainerAElementDesktop {
         font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 400px) and (min-width: 320px) {
+    .openContactInputNameMobile {
+        width: 300px;
+    }
+
+    .openContactInputMailAddresssMobile {
+        width: 300px;
+    }
+
+    .openContactInputPhoneMobile {
+        width: 300px;
+    }
+
+    .addContactInputNameMobile {
+        width: 300px;
+    }
+
+    .addContactInputMailAddresssMobile {
+        width: 300px;
+    }
+
+    .addContactInputPhoneMobile {
+        width: 300px;
+    }
+
+    .menu-content {
+        justify-content: left;
+        margin-right: 40px;
     }
 }

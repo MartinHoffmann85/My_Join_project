@@ -42,8 +42,7 @@
 }
 
 .helpButtonContainer {
-    display: flex;
-    margin-left: 300px;    
+    display: flex;    
     cursor: pointer;
 }
 
