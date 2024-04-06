@@ -133,27 +133,26 @@ function summaryGetAwaitingFeedbackCount() {
 
 async function updateGreeting() {
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  console.log("async function updateGreeting()" , currentUser);
-  const userName = currentUser ? currentUser.userName : ''; // Annahme: Der Benutzername ist im "name"-Feld gespeichert
+  console.log("async function updateGreeting()" , currentUser);  
   const now = new Date();
   const h = now.getHours();
   const m = now.getMinutes();
   const e = document.getElementById("greeting-id");
   let addHours = 0;
   let addMinutes = m;
-  if (h <= 4) { // bis 05:00 Uhr
+  if (h <= 4) {
     e.textContent = `Good night, ${userName}`;
     addHours = 4 - h;
-  } else if (h <= 10) { // bis 11:00 Uhr     
+  } else if (h <= 10) {
     e.textContent = `Good morning, ${userName}`;
     addHours = 10 - h;
-  } else if (h <= 12) { // bis 13:00 Uhr
+  } else if (h <= 12) {
     e.textContent = `Good noon, ${userName}`;
     addHours = 12 - h;
-  } else if (h <= 17) { // bis 18:00 Uhr
+  } else if (h <= 17) {
       e.textContent = `Good afternoon, ${userName}`;
       addHours = 17 - h;
-  } else { // bis 04:00 Uhr
+  } else {
     e.innerHTML = `Good evening,<br> ${userName}`;
     addHours = 23 - h;
   }  
