@@ -31,7 +31,8 @@
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    color: var(--mockup-highlight);    
+    color: var(--mockup-highlight);
+    cursor: pointer;  
 }
 
 .helpAndInitialsContainer {
