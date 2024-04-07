@@ -47,7 +47,11 @@
 
 .toDoAndDoneCountContainer {
     display: flex;
-    align-items: center;
+    align-items: center;    
+}
+
+.toDoAndDoneCountContainer a{
+    color: black;
 }
 
 .toDoContainer {
@@ -101,6 +105,10 @@
     align-items: center;
 }
 
+.priorityAndNextDateContainer a {
+    color: black;
+}
+
 .priorityContainer {
     display: flex;    
     align-items: center;    
@@ -142,6 +150,10 @@
 .allTasksAndProgressAndFeedbackContainer {
     display: flex;
     align-items: center;
+}
+
+.allTasksAndProgressAndFeedbackContainer a {
+    color: black;
 }
 
 .allTasksContainer {
