@@ -133,7 +133,6 @@ function summaryGetAwaitingFeedbackCount() {
 
 async function updateGreeting() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    console.log("async function updateGreeting()", currentUser);  
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes();
