@@ -438,8 +438,8 @@ function boardEditTask(taskId) {
                 <p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks</p>
                 ${boardRenderSubtasks(card, taskId)}
                 <div class="subtaskInput">
-                    <input type="text" id="newSubtaskInput" placeholder="Enter subtask">
-                    <button onclick="addSubtask('${taskId}')">Add subtask</button>
+                    <input class="boardEditSubtaskInput" type="text" id="newSubtaskInput" placeholder="Enter subtask">
+                    <button class="boardEditSubtaskButton" onclick="addSubtask('${taskId}')">Add subtask</button>
                 </div>
             </div>
             <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
