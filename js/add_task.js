@@ -393,8 +393,6 @@ async function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, c
 }
 
 
-
-
 function validateInput(input, atBoolArr, index1, index2) {
   if (input.trim() === "")
     atBoolArr[index1] = atBoolArr[index2] = true;
@@ -418,8 +416,7 @@ function clearAll() {
   clearAllErrMsg();
   renderAddedContacts();
   renderSubtasks();
-  togglePrioImg('medium-default-id');
-  
+  togglePrioImg('medium-default-id');  
 }
 
 

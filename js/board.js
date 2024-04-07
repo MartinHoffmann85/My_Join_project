@@ -13,7 +13,8 @@ function redirectToAddTask() {
 
 
 function renderAllTasks() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    console.log("function renderAllTasks(currentUser)", currentUser);    
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {                
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
@@ -122,7 +123,7 @@ function boardRenderSubtasksCount(taskId) {
 
 
 function boardRenderSubtasks(taskCard, taskId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const task = currentUser.tasks.find(task => task.id === taskId);
     if (!task || !task.subtasks || task.subtasks.length === 0) {
         return '';
@@ -436,6 +437,10 @@ function boardEditTask(taskId) {
             <div class="renderTasksubtaskHTML">
                 <p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks</p>
                 ${boardRenderSubtasks(card, taskId)}
+                <div class="subtaskInput">
+                    <input type="text" id="newSubtaskInput" placeholder="Enter subtask">
+                    <button onclick="addSubtask('${taskId}')">Add subtask</button>
+                </div>
             </div>
             <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
                 <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTaskUpdate('${taskId}')">
@@ -446,7 +451,6 @@ function boardEditTask(taskId) {
         document.body.appendChild(overlay);
     }
 }
-
 
 
 function generateAssignedToOptions(assignedTo, taskId) {        
@@ -503,7 +507,7 @@ function editUpdateAssignedTo(taskId) {
             userNames.push(contactName);
             colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
         });
-        saveTasksToLocalStorage(currentUser);        
+        saveTasksToLocalStorage(currentUser);
         updateCurrentUserInBackend(currentUser);
         boardEditTask(taskId);
     }
@@ -565,4 +569,33 @@ function searchTasks() {
             taskCard.style.display = 'none';
         }
     });
+}
+
+
+function addSubtask(taskId) {
+    const newSubtaskInput = document.getElementById('newSubtaskInput');
+    const subtaskTitle = newSubtaskInput.value.trim();
+    if (subtaskTitle !== '') {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
+        if (taskIndex !== -1) {            
+            if (!currentUser.tasks[taskIndex].subtasks) {
+                currentUser.tasks[taskIndex].subtasks = [];
+            }            
+            const newSubtask = {
+                id: boardGenerateRandomID(),                
+                title: subtaskTitle,
+                completed: false
+            };            
+            currentUser.tasks[taskIndex].subtasks.push(newSubtask);            
+            saveTasksToLocalStorage(currentUser);            
+            updateCurrentUserInBackend(currentUser);            
+            boardEditTask(taskId);
+        }
+    }
+}
+
+
+function boardGenerateRandomID() {    
+    return Math.random().toString(36).substring(2, 11);
 }
