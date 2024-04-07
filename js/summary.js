@@ -132,32 +132,30 @@ function summaryGetAwaitingFeedbackCount() {
 
 
 async function updateGreeting() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  console.log("async function updateGreeting()" , currentUser);  
-  const now = new Date();
-  const h = now.getHours();
-  const m = now.getMinutes();
-  const e = document.getElementById("greeting-id");
-  let addHours = 0;
-  let addMinutes = m;
-  if (h <= 4) {
-    e.textContent = `Good night, ${userName}`;
-    addHours = 4 - h;
-  } else if (h <= 10) {
-    e.textContent = `Good morning, ${userName}`;
-    addHours = 10 - h;
-  } else if (h <= 12) {
-    e.textContent = `Good noon, ${userName}`;
-    addHours = 12 - h;
-  } else if (h <= 17) {
-      e.textContent = `Good afternoon, ${userName}`;
-      addHours = 17 - h;
-  } else {
-    e.innerHTML = `Good evening,<br> ${userName}`;
-    addHours = 23 - h;
-  }  
-  const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;    
-  setTimeout(updateGreeting, waitTime)
-}
-
-  
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    console.log("async function updateGreeting()", currentUser);  
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const e = document.getElementById("greeting-id");
+    let addHours = 0;
+    let addMinutes = m;
+    if (h <= 4) {
+      e.textContent = `Good night, ${currentUser.userName}`;
+      addHours = 4 - h;
+    } else if (h <= 10) {
+      e.textContent = `Good morning, ${currentUser.userName}`;
+      addHours = 10 - h;
+    } else if (h <= 12) {
+      e.textContent = `Good noon, ${currentUser.userName}`;
+      addHours = 12 - h;
+    } else if (h <= 17) {
+        e.textContent = `Good afternoon, ${currentUser.userName}`;
+        addHours = 17 - h;
+    } else {
+      e.innerHTML = `Good evening,<br> ${currentUser.userName}`;
+      addHours = 23 - h;
+    }  
+    const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;    
+    setTimeout(updateGreeting, waitTime)
+  }
