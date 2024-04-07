@@ -8,7 +8,7 @@ async function initBoard() {
 
 
 function redirectToAddTask() {
-    window.location.assign("../add_task.html");
+    window.location.assign("./add_task.html");
 }
 
 
