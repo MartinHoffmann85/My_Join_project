@@ -213,6 +213,18 @@
     .summary-greeting {
         font-size: 36px;
     }
+
+    .toDoAndDoneCountContainer {
+        margin-left: 50px;
+    }
+
+    .priorityAndNextDateContainer {
+        margin-left: 50px;
+    }
+
+    .allTasksAndProgressAndFeedbackContainer {
+        margin-left: 50px;
+    }
 }
 
 @media only screen and (max-width: 650px) and (min-width: 320px) {
