@@ -174,39 +174,6 @@ function updateAssignedToLocalStorage() {
 }
 
 
-function getUserInfo(event) {
-  const circleStyleElement = event.currentTarget.querySelector('.circle-style');
-  const userName = document.getElementById(`contact-id${userIndex}`).innerHTML;
-  const assignedContact = circleStyleElement.innerText;
-  const backgroundColorValue = window.getComputedStyle(circleStyleElement).backgroundColor;
-  const textColor = window.getComputedStyle(circleStyleElement).color;
-  return { assignedContact, backgroundColorValue, textColor, userName };
-}
-
-
-function pushSelectedUser(event) {
-  const { assignedContact, backgroundColorValue, textColor, userName } = getUserInfo(event);
-  if (assignedTo.initials.includes(assignedContact) && assignedTo.colorCodes.includes(backgroundColorValue)
-    && assignedTo.textColor.includes(textColor) && assignedTo.userName.includes(userName))
-    return;
-  assignedTo.initials.push(assignedContact);
-  assignedTo.colorCodes.push(backgroundColorValue);
-  assignedTo.textColor.push(textColor);
-  assignedTo.userNames.push(userName);
-}
-
-
-function deleteSelectedUser(event) {
-  const circleStyleElement = event.currentTarget.querySelector('.circle-style');
-  const backgroundColorValue = window.getComputedStyle(circleStyleElement).backgroundColor;
-  const removeColorCode = assignedTo.colorCodes.indexOf(backgroundColorValue);
-  assignedTo.initials.splice(removeColorCode, 1);
-  assignedTo.colorCodes.splice(removeColorCode, 1);
-  assignedTo.textColor.splice(removeColorCode, 1);
-  assignedTo.userNames.splice(removeColorCode, 1);
-}
-
-
 function togglePrioImg(clickedId) {
   const imageIds = ['urgent-default-id', 'medium-default-id', 'low-default-id'];
   imageIds.forEach((id, index) => {
@@ -390,23 +357,6 @@ async function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, c
   currentUser.tasks.push(task);
   saveTasksToLocalStorage(currentUser);
   await updateCurrentUserInBackend(currentUser);
-}
-
-
-function validateInput(input, atBoolArr, index1, index2) {
-  if (input.trim() === "")
-    atBoolArr[index1] = atBoolArr[index2] = true;
-}
-
-
-function handlerAddTaskValidation(atBoolArr) {
-    toggleVisibility('empty-title-id', atBoolArr[0]);
-    toggleVisibility('empty-date-id', atBoolArr[1]);
-    toggleVisibility('empty-category-id', atBoolArr[2]);
-    toggleVisibility('at-title-border-id', !atBoolArr[3],'error-border')
-    toggleVisibility('at-date-border-id', !atBoolArr[4],'error-border')
-    toggleVisibility('category-container-id', !atBoolArr[5],'error-border')
-    return atBoolArr.some(Boolean);
 }
 
 
