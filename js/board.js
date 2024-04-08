@@ -2,8 +2,7 @@ async function initBoard() {
     const currentUser = await JSON.parse(localStorage.getItem('currentUser'));
     loadTasksFromLocalStorage(currentUser);
     renderAllTasks();
-    setTimeout(showHeaderUserInitials, 200);
-    
+    setTimeout(showHeaderUserInitials, 200);    
 }
 
 
@@ -13,8 +12,7 @@ function redirectToAddTask() {
 
 
 function renderAllTasks() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    console.log("function renderAllTasks(currentUser)", currentUser);    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {                
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
@@ -53,101 +51,180 @@ function renderTask(taskData) {
 
 
 function renderTaskCard(id, title, description, category, assignedTo, prio, date, columnId) {
+    const taskCard = createTaskCardElement(id, title, description, category, assignedTo, prio);
+    return taskCard;
+}
+
+
+function createTaskCardElement(id, title, description, category, assignedTo, prio) {
     const taskCard = document.createElement('div');
     taskCard.classList.add('task');
     taskCard.setAttribute('id', id);
-    let assignedToHTML = '';
-    if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
-        assignedTo.userNames.forEach((userName, index) => {
-            const user = {
-                userNames: [userName],
-                colorCodes: [assignedTo.colorCodes[index]],
-            };
-            assignedToHTML += renderUserDetails(user);
-        });
-    } else {
-        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
-    }
-    let backgroundColor = '';
-    if (category === 'Technical Task') {
-        backgroundColor = 'var(--technical-task-turquoise)';
-    } else if (category === 'User Story') {
-        backgroundColor = 'var(--user-story-blue)';
-    }
-    let prioContent = prio;
-    if (prio === 'urgent') {
-        prioContent = `<img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
-    } else if (prio === 'medium') {
-        prioContent = `<img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
-    } else if (prio === 'low') {
-        prioContent = `<img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
-    }
+    const assignedToHTML = generateAssignedToHTML(assignedTo);
+    const backgroundColor = determineBackgroundColor(category);
+    const prioContent = determinePriorityContent(prio);
+    return createTaskCardElementHTML(taskCard, backgroundColor, category, title, description, id, assignedToHTML, prioContent);
+}
+
+
+function createTaskCardElementHTML(taskCard, backgroundColor, category, title, description, id, assignedToHTML, prioContent) {
     taskCard.innerHTML = `
-        <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
-        <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
-        <div class="renderTaskDescription">${description}</div>        
-        <div class="subtaskCountContainer">
-            <div class="boardRenderSubtaskContainer"></div>
-            <p class="boardRenderSubtasksCountPElement">${boardRenderSubtasksCount(id)}</p>
-        </div>
-        <div class="assignetToHTMLAndPrioContentContainer">   
-            <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
-            <div class="renderTaskToHTMLPrioContainer">${prioContent}</div>
-        </div>        
+      <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
+      <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
+      <div class="renderTaskDescription">${description}</div>        
+      <div class="subtaskCountContainer">
+          <div class="boardRenderSubtaskContainer"></div>
+          <p class="boardRenderSubtasksCountPElement">${boardRenderSubtasksCount(id)}</p>
+      </div>
+      <div class="assignetToHTMLAndPrioContentContainer">   
+          <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
+          <div class="renderTaskToHTMLPrioContainer">${prioContent}</div>
+      </div>        
     `;
     return taskCard;
 }
 
 
+function generateAssignedToHTML(assignedTo) {
+    if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
+      let assignedToHTML = '';
+      assignedTo.userNames.forEach((userName, index) => {
+        const user = {
+          userNames: [userName],
+          colorCodes: [assignedTo.colorCodes[index]],
+        };
+        assignedToHTML += renderUserDetails(user);
+      });
+      return assignedToHTML;
+    } else {
+      return '<div><strong>Assigned to:</strong> No one assigned</div>';
+    }
+}
+
+
+function determineBackgroundColor(category) {
+    switch (category) {
+      case 'Technical Task':
+        return 'var(--technical-task-turquoise)';
+      case 'User Story':
+        return 'var(--user-story-blue)';
+      default:
+        return '';
+    }
+}
+
+
+function determinePriorityContent(prio) {
+    switch (prio) {
+      case 'urgent':
+        return `<img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+      case 'medium':
+        return `<img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+      case 'low':
+        return `<img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
+      default:
+        return prio;
+    }
+}
+
+
 function boardRenderSubtasksCount(taskId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const task = currentUser.tasks.find(task => task.id === taskId);    
+    const task = getCurrentUserTask(taskId);
     if (!task || !task.subtasks || task.subtasks.length === 0) {
-        return 'No subtasks';
-    }    
-    let checkedCount = 0;
-    task.subtasks.forEach(subtask => {
-        if (subtask.completed) {
-            checkedCount++;
-        }
-    });    
-    const progress = (checkedCount / task.subtasks.length) * 100;    
-    const progressBarContainer = `
-        <div class="progress-bar">
-            <div class="progress" style="width: ${progress}%;"></div>
-        </div>
-        <p class="boardRenderSubtasksCountPElement">${checkedCount}/${task.subtasks.length} Subtasks</p>
-    `;    
+      return 'No subtasks';
+    }
+    const checkedCount = countCheckedSubtasks(task.subtasks);
+    const progress = calculateProgress(checkedCount, task.subtasks.length);
+    const progressBarContainer = generateProgressBarContainer(checkedCount, task.subtasks.length, progress);
     return progressBarContainer;
+}
+
+  
+function getCurrentUserTask(taskId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return currentUser.tasks.find(task => task.id === taskId);
+}
+
+
+function countCheckedSubtasks(subtasks) {
+    let checkedCount = 0;
+    subtasks.forEach(subtask => {
+      if (subtask.completed) {
+        checkedCount++;
+      }
+    });
+    return checkedCount;
+}
+
+
+function calculateProgress(checkedCount, totalSubtasks) {
+    return (checkedCount / totalSubtasks) * 100;
+}
+
+
+function generateProgressBarContainer(checkedCount, totalSubtasks, progress) {
+    return `
+      <div class="progress-bar">
+          <div class="progress" style="width: ${progress}%;"></div>
+      </div>
+      <p class="boardRenderSubtasksCountPElement">${checkedCount}/${totalSubtasks} Subtasks</p>
+    `;
 }
 
 
 function boardRenderSubtasks(taskCard, taskId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const task = currentUser.tasks.find(task => task.id === taskId);
+    const task = getCurrentUserTask(taskId);
     if (!task || !task.subtasks || task.subtasks.length === 0) {
-        return '';
+      return '';
     }
     let subtasksHTML = '';
     let checkedCount = 0;
-    task.subtasks.forEach((subtask, index) => {
-        const isChecked = subtask.completed ? 'checked' : '';
+    ({ checkedCount, subtasksHTML } = boardRenderSubtaskForEach(task, checkedCount, subtasksHTML, taskId));
+    const totalCount = task.subtasks.length;
+    const countDisplay = `${checkedCount}/${totalCount}`;
+    appendCountElement(taskCard, countDisplay);
+    return subtasksHTML;
+}
+
+
+function boardRenderSubtaskForEach(task, checkedCount, subtasksHTML, taskId) {
+    task.subtasks.forEach(subtask => {
+        const { isChecked, checkboxId } = generateCheckboxAttributes(subtask);
         if (subtask.completed) {
             checkedCount++;
         }
-        const checkboxId = subtask.id;
-        subtasksHTML += `
-            <div class="displayFlex">
-                <div><input type="checkbox" id="${checkboxId}" ${isChecked} onclick="updateSubtaskStatus('${taskId}', '${subtask.id}', this.checked)"></div>
-                <div class="renderTaskCardOverlaySubtaskTitle">${subtask.title}</div>                            
-            </div>`;
+        subtasksHTML += generateSubtaskHTML(subtask, isChecked, checkboxId, taskId);
     });
-    const totalCount = task.subtasks.length;
-    const countDisplay = `${checkedCount}/${totalCount}`;
+    return { checkedCount, subtasksHTML };
+}
+
+
+function getCurrentUserTask(taskId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return currentUser.tasks.find(task => task.id === taskId);
+}
+
+
+function generateCheckboxAttributes(subtask) {
+    const isChecked = subtask.completed ? 'checked' : '';
+    const checkboxId = subtask.id;
+    return { isChecked, checkboxId };
+}
+
+
+function generateSubtaskHTML(subtask, isChecked, checkboxId, taskId) {
+    return `
+      <div class="displayFlex">
+          <div><input type="checkbox" id="${checkboxId}" ${isChecked} onclick="updateSubtaskStatus('${taskId}', '${subtask.id}', this.checked)"></div>
+          <div class="renderTaskCardOverlaySubtaskTitle">${subtask.title}</div>                            
+      </div>`;
+}
+
+
+function appendCountElement(taskCard, countDisplay) {
     const countElement = document.createElement('div');
     countElement.innerHTML = countDisplay;
     taskCard.appendChild(countElement);
-    return subtasksHTML;
 }
 
 
@@ -162,8 +239,6 @@ function updateSubtaskStatus(taskId, subtaskId, isChecked) {
                 saveTasksToLocalStorage(currentUser);
                 updateCurrentUserInBackend(currentUser);                
                 initBoard();
-            } else {
-                console.error("Subtask not found with ID:", subtaskId);
             }
         }
     }
@@ -256,36 +331,19 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     overlay.classList.add('boardoverlay');    
     const card = document.createElement('div');
     card.classList.add('card');    
-    let assignedToHTML = '';
-    if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
-        assignedTo.userNames.forEach((userName, index) => {
-            const user = {
-                userNames: [userName],
-                colorCodes: [assignedTo.colorCodes[index]],
-            };
-            const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
-            const backgroundColor = assignedTo.colorCodes[index];
-            const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
-            assignedToHTML += `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
-        });
-    } else {
-        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
-    }    
+    let assignedToHTML = renderTaskCardAsOverlayAssignetTo(assignedTo);    
     let backgroundColor = '';
-    if (category === 'Technical Task') {
-        backgroundColor = 'var(--technical-task-turquoise)';
-    } else if (category === 'User Story') {
-        backgroundColor = 'var(--user-story-blue)';
-    }    
+    backgroundColor = renderTaskCardAsOverlayCategory(category, backgroundColor);
     let prioContent = prio;
-    if (prio === 'urgent') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
-    } else if (prio === 'medium') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Medium</strong></p><img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
-    } else if (prio === 'low') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
-    }    
+    prioContent = renderTaskCarsAsOverlayPrio(prio, prioContent);
     const subtasksHTML = boardRenderSubtasks(card, id);
+    renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id);
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+}
+
+
+function renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id) {
     card.innerHTML = `
         <div class="boardOverlayCategoryAndCloseXContainer">            
             <div class="renderTaskCardOverlayCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
@@ -309,9 +367,49 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
             <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTask('${id}')">
             <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${id}')">
         </div>
-    `;    
-    overlay.appendChild(card);
-    document.body.appendChild(overlay);
+    `;
+}
+
+
+function renderTaskCarsAsOverlayPrio(prio, prioContent) {
+    if (prio === 'urgent') {
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+    } else if (prio === 'medium') {
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Medium</strong></p><img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+    } else if (prio === 'low') {
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
+    }
+    return prioContent;
+}
+
+
+function renderTaskCardAsOverlayCategory(category, backgroundColor) {
+    if (category === 'Technical Task') {
+        backgroundColor = 'var(--technical-task-turquoise)';
+    } else if (category === 'User Story') {
+        backgroundColor = 'var(--user-story-blue)';
+    }
+    return backgroundColor;
+}
+
+
+function renderTaskCardAsOverlayAssignetTo(assignedTo) {
+    let assignedToHTML = '';
+    if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
+        assignedTo.userNames.forEach((userName, index) => {
+            const user = {
+                userNames: [userName],
+                colorCodes: [assignedTo.colorCodes[index]],
+            };
+            const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
+            const backgroundColor = assignedTo.colorCodes[index];
+            const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
+            assignedToHTML += `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
+        });
+    } else {
+        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
+    }
+    return assignedToHTML;
 }
 
 
@@ -369,33 +467,18 @@ function boardEditTask(taskId) {
         overlay.classList.add('boardoverlay');
         const card = document.createElement('div');
         card.classList.add('card');        
-        let backgroundColor = '';
-        if (task.category === 'Technical Task') {
-            backgroundColor = 'var(--technical-task-turquoise)';
-        } else if (task.category === 'User Story') {
-            backgroundColor = 'var(--user-story-blue)';
-        }
-        let prioContent = task.prio;
-        if (task.prio === 'urgent') {
-            prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
-        } else if (task.prio === 'medium') {
-            prioContent = `<p class="boardOverlayUrgentPElement"><strong>Medium</strong></p><img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
-        } else if (task.prio === 'low') {
-            prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
-        }
-        const assignedToContacts = task.assignedTo && task.assignedTo.userNames ? task.assignedTo.userNames : [];
-        const assignedToColors = task.assignedTo && task.assignedTo.colorCodes ? task.assignedTo.colorCodes : [];
-        const assignedToHTML = assignedToContacts.map((userName, index) => {
-            const user = {
-                userNames: [userName],
-                colorCodes: [assignedToColors[index]],
-            };
-            const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
-            const backgroundColor = assignedToColors[index];
-            const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
-            return `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
-        }).join('');
-        card.innerHTML = `
+        let backgroundColor = boardEditTaskCategory(task);
+        boardEditTaskPrio(task);
+        const assignedToHTML = boardEditTaskAssignetTo(task);
+        boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML);
+        overlay.appendChild(card);
+        document.body.appendChild(overlay);
+    }
+}
+
+
+function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) {
+    card.innerHTML = `
             <div class="boardOverlayCategoryAndCloseXContainer">
                 <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}</div>
                 <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard(); initBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
@@ -446,10 +529,47 @@ function boardEditTask(taskId) {
                 <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTaskUpdate('${taskId}')">
                 <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
             </div>
-        `;        
-        overlay.appendChild(card);
-        document.body.appendChild(overlay);
+        `;
+}
+
+
+function boardEditTaskAssignetTo(task) {
+    const assignedToContacts = task.assignedTo && task.assignedTo.userNames ? task.assignedTo.userNames : [];
+    const assignedToColors = task.assignedTo && task.assignedTo.colorCodes ? task.assignedTo.colorCodes : [];
+    const assignedToHTML = assignedToContacts.map((userName, index) => {
+        const user = {
+            userNames: [userName],
+            colorCodes: [assignedToColors[index]],
+        };
+        const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
+        const backgroundColor = assignedToColors[index];
+        const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
+        return `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
+    }).join('');
+    return assignedToHTML;
+}
+
+
+function boardEditTaskPrio(task) {
+    let prioContent = task.prio;
+    if (task.prio === 'urgent') {
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+    } else if (task.prio === 'medium') {
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Medium</strong></p><img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+    } else if (task.prio === 'low') {
+        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
     }
+}
+
+
+function boardEditTaskCategory(task) {
+    let backgroundColor = '';
+    if (task.category === 'Technical Task') {
+        backgroundColor = 'var(--technical-task-turquoise)';
+    } else if (task.category === 'User Story') {
+        backgroundColor = 'var(--user-story-blue)';
+    }
+    return backgroundColor;
 }
 
 
@@ -489,27 +609,20 @@ function getTaskFromLocalStorage(taskId) {
 
 
 function editUpdateAssignedTo(taskId) {
-    const selectedContacts = document.querySelectorAll('.contact-option.selected');
-    const selectedContactNames = Array.from(selectedContacts).map(contact => contact.textContent.trim());    
+    const selectedContacts = Array.from(document.querySelectorAll('.contact-option.selected')).map(contact => contact.textContent.trim());
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
     if (taskIndex !== -1) {
-        if (!currentUser.tasks[taskIndex].assignedTo) {
-            currentUser.tasks[taskIndex].assignedTo = {
-                userNames: [],
-                colorCodes: []
-            };
-        }
-        const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo;        
-        userNames.length = 0;
-        colorCodes.length = 0;
-        selectedContactNames.forEach(contactName => {
-            userNames.push(contactName);
-            colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
-        });
-        saveTasksToLocalStorage(currentUser);
-        updateCurrentUserInBackend(currentUser);
-        boardEditTask(taskId);
+      const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo || { userNames: [], colorCodes: [] };
+      userNames.length = 0;
+      colorCodes.length = 0;
+      selectedContacts.forEach(contactName => {
+        userNames.push(contactName);
+        colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
+      });
+      saveTasksToLocalStorage(currentUser);
+      updateCurrentUserInBackend(currentUser);
+      boardEditTask(taskId);
     }
 }
 
@@ -523,15 +636,7 @@ function getColorCodeForContact(contacts, contactName) {
 
 
 function boardEditTaskUpdate(taskId) {
-    const editTitleInput = document.getElementById('editTitle');
-    const editDescriptionTextarea = document.getElementById('editDescription');
-    const editDateInput = document.getElementById('editDate');
-    const editPrioritySelect = document.getElementById('editPriority');    
-    const updatedTitle = editTitleInput.value;
-    const updatedDescription = editDescriptionTextarea.value;
-    const updatedDate = editDateInput.value;
-    const updatedPriority = editPrioritySelect.value;    
-    const task = getTaskFromLocalStorage(taskId);    
+    const { task, updatedTitle, updatedDescription, updatedDate, updatedPriority } = boardEditTaskUpdateVariables(taskId);    
     if (task) {        
         task.title = updatedTitle;
         task.description = updatedDescription;
@@ -541,6 +646,20 @@ function boardEditTaskUpdate(taskId) {
         closeOverlayBoard();
         initBoard();
     }
+}
+
+
+function boardEditTaskUpdateVariables(taskId) {
+    const editTitleInput = document.getElementById('editTitle');
+    const editDescriptionTextarea = document.getElementById('editDescription');
+    const editDateInput = document.getElementById('editDate');
+    const editPrioritySelect = document.getElementById('editPriority');
+    const updatedTitle = editTitleInput.value;
+    const updatedDescription = editDescriptionTextarea.value;
+    const updatedDate = editDateInput.value;
+    const updatedPriority = editPrioritySelect.value;
+    const task = getTaskFromLocalStorage(taskId);
+    return { task, updatedTitle, updatedDescription, updatedDate, updatedPriority };
 }
 
 
@@ -582,17 +701,27 @@ function addSubtask(taskId) {
             if (!currentUser.tasks[taskIndex].subtasks) {
                 currentUser.tasks[taskIndex].subtasks = [];
             }            
-            const newSubtask = {
-                id: boardGenerateRandomID(),                
-                title: subtaskTitle,
-                completed: false
-            };            
-            currentUser.tasks[taskIndex].subtasks.push(newSubtask);            
-            saveTasksToLocalStorage(currentUser);            
-            updateCurrentUserInBackend(currentUser);            
-            boardEditTask(taskId);
+            addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId);
         }
     }
+}
+
+
+function addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId) {
+    const newSubtask = addSubtaskNewSubtask(subtaskTitle);
+    currentUser.tasks[taskIndex].subtasks.push(newSubtask);
+    saveTasksToLocalStorage(currentUser);
+    updateCurrentUserInBackend(currentUser);
+    boardEditTask(taskId);
+}
+
+
+function addSubtaskNewSubtask(subtaskTitle) {
+    return {
+        id: boardGenerateRandomID(),
+        title: subtaskTitle,
+        completed: false
+    };
 }
 
 
