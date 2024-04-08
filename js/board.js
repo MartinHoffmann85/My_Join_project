@@ -13,14 +13,12 @@ function redirectToAddTask() {
 
 function renderAllTasks() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {                
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks) && currentUser.tasks.length > 0) {                
         clearTaskContainers();        
         currentUser.tasks.forEach(task => {
             renderTask(task);
             addTaskClickListener();
         });
-    } else {
-        console.error('Invalid tasks data in localStorage');
     }
 }
 

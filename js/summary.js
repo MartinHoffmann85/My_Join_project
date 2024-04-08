@@ -12,116 +12,154 @@ function summaryInit() {
 
 
 function getSummaryToDosCount() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
         const todoTasksCount = currentUser.tasks.filter(task => task.columnId === 'todo').length;
         const summaryToDoID = document.getElementById('summaryToDoID');
         if (summaryToDoID) {
             summaryToDoID.textContent = todoTasksCount.toString();
-        } else {
-            console.error('Summary to-do ID element not found');
         }
-    } else {
-        console.error('Invalid tasks data in localStorage');
+    } else {        
+        const summaryToDoID = document.getElementById('summaryToDoID');
+        if (summaryToDoID) {
+            summaryToDoID.textContent = '0';
+        }
     }
 }
 
 
 function getDoneTasksCount() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-      const doneTasksCount = currentUser.tasks.filter(task => task.columnId === 'done').length;
-      const summaryDoneID = document.getElementById('summaryDoneID');
-      if (summaryDoneID) {
-          summaryDoneID.textContent = doneTasksCount.toString();
-      } else {
-          console.error('Summary done ID element not found');
-      }
-  } else {
-      console.error('Invalid tasks data in localStorage');
-  }
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const doneTasksCount = currentUser.tasks.filter(task => task.columnId === 'done').length;
+        const summaryDoneID = document.getElementById('summaryDoneID');
+        if (summaryDoneID) {
+            summaryDoneID.textContent = doneTasksCount.toString();
+        }
+    } else {        
+        const summaryDoneID = document.getElementById('summaryDoneID');
+        if (summaryDoneID) {
+            summaryDoneID.textContent = '0';
+        }
+    }
 }
 
 
 function summaryGetUrgentPriorityCount() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-      const urgentPriorityCount = currentUser.tasks.filter(task => task.prio === 'urgent').length;
-      const summaryPriorityID = document.getElementById('summaryPriorityID');
-      if (summaryPriorityID) {
-          summaryPriorityID.textContent = urgentPriorityCount.toString();
-      } else {
-          console.error('Summary Priority ID element not found');
-      }
-  } else {
-      console.error('Invalid tasks data in localStorage');
-  }
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const urgentPriorityCount = currentUser.tasks.filter(task => task.prio === 'urgent').length;
+        const summaryPriorityID = document.getElementById('summaryPriorityID');
+        if (summaryPriorityID) {
+            summaryPriorityID.textContent = urgentPriorityCount.toString();
+        }
+    } else {        
+        const summaryPriorityID = document.getElementById('summaryPriorityID');
+        if (summaryPriorityID) {
+            summaryPriorityID.textContent = '0';
+        }
+    }
 }
 
 
 function summaryGetNextDateTask() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {      
-      const tasksWithDueDate = currentUser.tasks.filter(task => task.date !== "");
-      tasksWithDueDate.sort((a, b) => new Date(a.date) - new Date(b.date));
-      if (tasksWithDueDate.length > 0) {
-          const nextDueDate = new Date(tasksWithDueDate[0].date);
-          const options = { month: 'long', day: 'numeric', year: 'numeric' };
-          const formattedDate = nextDueDate.toLocaleDateString('en-US', options);
-          const summaryDateID = document.getElementById('summaryDateID');
-          if (summaryDateID) {
-              summaryDateID.textContent = formattedDate;
-          }
-      }
-  }
+    const currentUser = getCurrentUser();
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const tasksWithDueDate = getTasksWithDueDate(currentUser.tasks);
+        if (tasksWithDueDate.length > 0) {
+            const nextDueDate = getNextDueDate(tasksWithDueDate);
+            displayFormattedDate(nextDueDate);
+        } else {
+            displayNoTaskMessage();
+        }
+    } else {
+        displayNoTaskMessage();
+    }
+}
+
+
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem('currentUser'));
+}
+
+
+function getTasksWithDueDate(tasks) {
+    return tasks.filter(task => task.date !== "");
+}
+
+
+function getNextDueDate(tasks) {
+    tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+    return new Date(tasks[0].date);
+}
+
+
+function displayFormattedDate(date) {
+    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    const summaryDateID = document.getElementById('summaryDateID');
+    if (summaryDateID) {
+        summaryDateID.textContent = formattedDate;
+    }
+}
+
+
+function displayNoTaskMessage() {
+    const summaryDateID = document.getElementById('summaryDateID');
+    if (summaryDateID) {
+        summaryDateID.textContent = "No Task";
+    }
 }
 
 
 function summaryGetAllTasksCount() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-      const taskCount = currentUser.tasks.length;
-      const summaryToDoID = document.getElementById('summaryAllTasksID');
-      if (summaryToDoID) {
-          summaryToDoID.textContent = taskCount.toString();
-      } else {
-          console.error('Summary to-do ID element not found');
-      }
-  } else {
-      console.error('Invalid tasks data in localStorage');
-  }
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const taskCount = currentUser.tasks.length;
+        const summaryToDoID = document.getElementById('summaryAllTasksID');
+        if (summaryToDoID) {
+            summaryToDoID.textContent = taskCount.toString();
+        }
+    } else {        
+        const summaryToDoID = document.getElementById('summaryAllTasksID');
+        if (summaryToDoID) {
+            summaryToDoID.textContent = '0';
+        }
+    }
 }
 
 
 function getInProgressTasksCount() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-      const inProgressTasksCount = currentUser.tasks.filter(task => task.columnId === 'inprogress').length;
-      const summaryInProgressID = document.getElementById('summaryProgressID');
-      if (summaryInProgressID) {
-          summaryInProgressID.textContent = inProgressTasksCount.toString();
-      } else {
-          console.error('Summary in Progress ID element not found');
-      }
-  } else {
-      console.error('Invalid tasks data in localStorage');
-  }
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const inProgressTasksCount = currentUser.tasks.filter(task => task.columnId === 'inprogress').length;
+        const summaryInProgressID = document.getElementById('summaryProgressID');
+        if (summaryInProgressID) {
+            summaryInProgressID.textContent = inProgressTasksCount.toString();
+        }
+    } else {        
+        const summaryInProgressID = document.getElementById('summaryProgressID');
+        if (summaryInProgressID) {
+            summaryInProgressID.textContent = '0';
+        }
+    }
 }
 
 
 function summaryGetAwaitingFeedbackCount() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-      const awaitingFeedbackCount = currentUser.tasks.filter(task => task.columnId === 'awaitfeedback').length;
-      const summaryFeedbackID = document.getElementById('summaryFeedbackID');
-      if (summaryFeedbackID) {
-          summaryFeedbackID.textContent = awaitingFeedbackCount.toString();
-      } else {
-          console.error('Summary Feedback ID element not found');
-      }
-  } else {
-      console.error('Invalid tasks data in localStorage');
-  }
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const awaitingFeedbackCount = currentUser.tasks.filter(task => task.columnId === 'awaitfeedback').length;
+        const summaryFeedbackID = document.getElementById('summaryFeedbackID');
+        if (summaryFeedbackID) {
+            summaryFeedbackID.textContent = awaitingFeedbackCount.toString();
+        }
+    } else {        
+        const summaryFeedbackID = document.getElementById('summaryFeedbackID');
+        if (summaryFeedbackID) {
+            summaryFeedbackID.textContent = '0';
+        }
+    }
 }
 
 
