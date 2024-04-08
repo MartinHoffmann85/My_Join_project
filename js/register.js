@@ -11,8 +11,7 @@ let confirmPwVisibility = { pwVisibilityOn: false };
 
 async function init() {
     users = await loadUsersFromBackend('users');
-    console.log(users)
-    // await setItem("users", JSON.stringify({})); //  funktion zum clearen des Backends
+    console.log(users)    
     addPasswordVisibilityListener('login-pw-border-id', 
                                 'lock-id', 
                                 'login-pw-visibility-off-id',
@@ -24,10 +23,10 @@ async function init() {
 async function loadUsersFromBackend(key) {
     try {
         const result = await getItem(key);
-        return JSON.parse(result) || []; // Stelle sicher, dass hier immer ein Array zurückgegeben wird
+        return JSON.parse(result) || [];
     } catch (e) {
-        console.error('Ladefehler:', e);
-        return []; // Gebe ein leeres Array zurück, wenn ein Fehler auftritt
+        console.error('loading error:', e);
+        return [];
     }
 }
 
@@ -57,6 +56,11 @@ function generateNewUserObject() {
     const userEMail = document.getElementById("add-email-id").value;
     const userPassword = document.getElementById("add-pw-id").value;
     const userPasswordConfirm = document.getElementById("add-confirm-pw-id").value;
+    return generateNewUserObjectConstructor(userName, userEMail, userPassword, userPasswordConfirm);
+}
+
+
+function generateNewUserObjectConstructor(userName, userEMail, userPassword, userPasswordConfirm) {
     return {
         'userName': userName,
         'userEMail': userEMail,
@@ -80,7 +84,7 @@ async function addNewUserToBackend(user) {
     try {
         let existingUsers = await loadUsersFromBackend('users');
         if (!Array.isArray(existingUsers)) {
-            existingUsers = []; // Wenn der Wert kein Array ist, initialisiere ihn als leeres Array
+            existingUsers = [];
         }
         existingUsers.push(user);
         await setItem('users', JSON.stringify(existingUsers));        
@@ -182,16 +186,6 @@ function toggleSuccessesMsg() {
 }
 
 
-function resetRegisterInputs() {
-    const boolArr = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
-    handlerFieldValidationLogin(boolArr);
-    document.getElementById("add-name-id").value = "";
-    document.getElementById("add-email-id").value = "";
-    document.getElementById("add-pw-id").value = "";
-    document.getElementById("add-confirm-pw-id").value = "";
-}
-
-
 function resetLoginInputs() {
     const boolArr = [false, false, false, false, false, false, false];
     handlerFieldValidationLogin(boolArr);
@@ -239,16 +233,21 @@ function signUp() {
     toggleVisibility('login-id', false);
     let signUpPopupElement = document.getElementById('sign-up-popup-id');
     signUpPopupElement.innerHTML += templateSignUpPopup();
+    addPasswordVisibilityOption();
+}
+
+
+function addPasswordVisibilityOption() {
     addPasswordVisibilityListener('add-pw-border-id',
-                                'register-lock-id', 
-                                'register-pw-visibility-off-id',
-                                'register-pw-visibility-id',
-                                pwVisibility);
-    addPasswordVisibilityListener('add-confirm-pw-border-id', 
-                                'register-confirm-lock-id',
-                                'register-confirm-pw-visibility-off-id',
-                                'register-confirm-pw-visibility-id',
-                                confirmPwVisibility);
+        'register-lock-id',
+        'register-pw-visibility-off-id',
+        'register-pw-visibility-id',
+        pwVisibility);
+    addPasswordVisibilityListener('add-confirm-pw-border-id',
+        'register-confirm-lock-id',
+        'register-confirm-pw-visibility-off-id',
+        'register-confirm-pw-visibility-id',
+        confirmPwVisibility);
 }
 
 
@@ -284,10 +283,7 @@ async function login() {
 
 
 async function authenticateUser() {
-    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
-    const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const users = await loadUsersFromBackend('users');
-    const foundUser = users.find(user => user.userEMail === loginUserEmail);    
+    const { foundUser, loginUserPassword } = await authenticateUserVariables();    
     if (foundUser) {
         if (foundUser.userPassword === loginUserPassword) {
             return foundUser;
@@ -302,6 +298,15 @@ async function authenticateUser() {
 }    
 
 
+async function authenticateUserVariables() {
+    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
+    const loginUserPassword = document.getElementById("login-user-password-id").value;
+    const users = await loadUsersFromBackend('users');
+    const foundUser = users.find(user => user.userEMail === loginUserEmail);
+    return { foundUser, loginUserPassword };
+}
+
+
 function handlerFieldValidationLogin(boolArr) {
     toggleVisibility('empty-email-id', boolArr[0]);
     toggleVisibility('this-is-no-email-id', boolArr[1]);
@@ -313,51 +318,14 @@ function handlerFieldValidationLogin(boolArr) {
 }
 
 
-function loginValidationCheck() {
-    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
-    const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const boolArr = [false, false, false, false, false, false, false];
-    if (loginUserEmail === '' && loginUserPassword === '')
-        boolArr[0] = boolArr[4] = boolArr[5] = boolArr[6] = true;
-    else if (loginUserEmail === '' && loginUserPassword !== '') 
-        boolArr[0] = boolArr[5] = true;
-    else if (loginUserEmail !== '' && loginUserPassword === '') 
-        if (!validateLoginEmail(loginUserEmail))
-            boolArr[1] = boolArr[4] = boolArr[5] = boolArr[6] = true;
-        else 
-            boolArr[4] = boolArr[6] = true;
-    else if (loginUserEmail !== '' && loginUserPassword !== '') 
-        if (!validateLoginEmail(loginUserEmail)) 
-            boolArr[1] = boolArr[5] = true; 
-        else if (validateLoginEmail(loginUserEmail) && !(loginUserEmail in users) ) 
-            boolArr[2] = boolArr[5] = true; 
-        else if (users[loginUserEmail].userPassword !== loginUserPassword) 
-            boolArr[3] = boolArr[6] = true; 
-    handlerFieldValidationLogin(boolArr);
-    return !boolArr.some(Boolean);
-}
-
-
-function validateLoginEmail(email) {
-    return email !== '' && email.includes('@') && email.indexOf('@') !== 0 && email.split('@').pop() !== '';
-}
-
-
 function toggleVisibility(elementId, show = true, className = 'd-none') {
     const element = document.getElementById(elementId);
     show ? element.classList.remove(className) : element.classList.add(className);
 }
 
 
-function saveCurrentUser() {
-    localStorage.setItem('users', JSON.stringify(users));
-}
-
-
 function toggleCheckbox(event) {
-    const loginCheckbox = document.getElementById("uncheckbox-id");
-    const ppCheckbox = document.getElementById("privacy-checkbox-id");
-    ppCheckboxConfirmed = !ppCheckboxConfirmed;
+    const { loginCheckbox, ppCheckbox } = toggleCheckboxVariables();
     if (event.target.id === 'uncheckbox-id') {
         rmCheckboxConfirmed = !rmCheckboxConfirmed;
         loginCheckbox.src = rmCheckboxConfirmed
@@ -369,6 +337,14 @@ function toggleCheckbox(event) {
             ? './assets/img/checkbox_confirmed.svg'
             : './assets/img/checkbox.svg'; 
     }
+}
+
+
+function toggleCheckboxVariables() {
+    const loginCheckbox = document.getElementById("uncheckbox-id");
+    const ppCheckbox = document.getElementById("privacy-checkbox-id");
+    ppCheckboxConfirmed = !ppCheckboxConfirmed;
+    return { loginCheckbox, ppCheckbox };
 }
 
 
@@ -429,31 +405,6 @@ function getPasswordInput(whichform) {
 }
 
 
-async function loadCurrentUser() {
-    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
-    const loginUserPassword = document.getElementById("login-user-password-id").value;
-    try {
-        const users = await loadUsersFromBackend('users');
-        const foundUser = users.find(user => user.userEMail === loginUserEmail);        
-        if (foundUser) {
-            if (foundUser.userPassword === loginUserPassword) {
-                localStorage.setItem('currentUser', JSON.stringify(foundUser));
-                return foundUser;
-            } else {
-                console.error("Error: Incorrect password.");
-                return null;
-            }
-        } else {
-            console.error("Error: User not found.");
-            return null;
-        }
-    } catch (error) {
-        console.error("Error loading current user:", error);
-        return null;
-    }
-}
-
-
 // Guest login
 
 function guestLogin() {    
@@ -466,20 +417,6 @@ function guestLogin() {
 }
 
 
-function getUserInitials() {    
-    if (localStorage.getItem('currentUser')) {        
-        const userEmail = localStorage.getItem('currentUser');        
-        const userName = userEmail.split('@')[0];        
-        const [firstName, lastName] = userName.split('.');        
-        const initials = `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;        
-        localStorage.setItem('userInitials', initials);        
-        return initials;
-    } else {
-        return '';
-    }
-}
-
-
 function showHeaderUserInitials() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.userName) {
@@ -489,11 +426,7 @@ function showHeaderUserInitials() {
         const headerProfil = document.querySelector(".header-profil");
         if (headerProfil) {
             headerProfil.textContent = initials;
-        } else {
-            console.error("Das Element .header-profil wurde nicht gefunden!");
         }
-    } else {
-        console.error("Benutzerdaten nicht gefunden!");
     }
 }
 
@@ -514,4 +447,10 @@ async function removeDuplicateUsers() {
     } catch (error) {
         console.error('Fehler beim Entfernen doppelter Benutzer:', error);
     }
+}
+
+
+// Function only for developers to clear double user entrys
+async function deletAllUsersInBackend() {
+    await setItem("users", JSON.stringify({})); //  funktion zum clearen des Backends
 }
