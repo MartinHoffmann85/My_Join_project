@@ -453,5 +453,5 @@ function generateTaskID() {
 
 
 function redirectToAddBoard() {
-  window.location.assign("../board.html");
+  window.location.assign("./board.html");
 }
