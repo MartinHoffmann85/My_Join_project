@@ -71,14 +71,8 @@ function summaryGetNextDateTask() {
           const summaryDateID = document.getElementById('summaryDateID');
           if (summaryDateID) {
               summaryDateID.textContent = formattedDate;
-          } else {
-              console.error('Summary Date ID element not found');
           }
-      } else {
-          console.error('No tasks with due dates found');
       }
-  } else {
-      console.error('Invalid tasks data in localStorage');
   }
 }
 
@@ -132,13 +126,7 @@ function summaryGetAwaitingFeedbackCount() {
 
 
 async function updateGreeting() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const now = new Date();
-    const h = now.getHours();
-    const m = now.getMinutes();
-    const e = document.getElementById("greeting-id");
-    let addHours = 0;
-    let addMinutes = m;
+    let { h, e, currentUser, addHours, addMinutes } = updateGreetingVariables();
     if (h <= 4) {
       e.textContent = `Good night, ${currentUser.userName}`;
       addHours = 4 - h;
@@ -157,4 +145,16 @@ async function updateGreeting() {
     }  
     const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;    
     setTimeout(updateGreeting, waitTime)
-  }
+}
+
+
+function updateGreetingVariables() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const e = document.getElementById("greeting-id");
+    let addHours = 0;
+    let addMinutes = m;
+    return { h, e, currentUser, addHours, addMinutes };
+}
