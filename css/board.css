@@ -387,6 +387,7 @@ body {
     line-height: 24px;
     width: 100%;
     outline: none;
+    cursor: pointer;
 }
 
 .boardEditTaskOverlayTitleInput:focus {
@@ -407,6 +408,7 @@ body {
     line-height: 24px;
     width: 100%;
     outline: none;
+    cursor: pointer;
 }
 
 .editRenderTaskCardoverlyDate:focus {
@@ -554,6 +556,7 @@ body {
     font-size: 18px;
     line-height: 24px;    
     outline: none;
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 1025px) and (min-width: 949px) {
