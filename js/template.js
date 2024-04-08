@@ -68,6 +68,7 @@ function templateSignUpPopup() {
   `;
 }
 
+
 function templateAssignedToContainerHTML(contact, index, iconColor, initials, textColor, isSelected) {
   const setSelectedContact = isSelected ? 'selected-contact' : '';
   return /*html*/ `
@@ -87,6 +88,7 @@ function templateAssignedToContainerHTML(contact, index, iconColor, initials, te
   `;
 }
 
+
 function templateSvgCheckboxConfirmedHTML() {
   return /*html*/ `
       <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,6 +98,7 @@ function templateSvgCheckboxConfirmedHTML() {
   `;
 }
 
+
 function templateSvgDefaultCheckboxHTML() {
   return /*html*/ `
       <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,6 +106,7 @@ function templateSvgDefaultCheckboxHTML() {
       </svg>
   `;
 }
+
 
 function templateaddedContactsHTML(index, iconColor,  initials, textColor) {
   if (index === 4 ){
@@ -118,6 +122,7 @@ function templateaddedContactsHTML(index, iconColor,  initials, textColor) {
   </div>
 `;
 }
+
 
 function templateSubtaskHTML(index, subtask) {
   return /*html*/ `
