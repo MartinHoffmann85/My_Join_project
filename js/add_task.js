@@ -48,10 +48,10 @@ function iterateOverContacts(contacts) {
   contacts.forEach((contact, index) => {
     if (contact.name === currentUser.userName) 
       contact.name = contact.name + ' (you)'
-    const initials = getFirstLettersOfName(contact.name);
-    textColor = isColorLight(contact.colorCode) ? 'white' : 'black'; 
-    const isSelected = contacts[index].selected;
-    assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, index, contact.colorCode, initials, textColor, isSelected);
+      const initials = getFirstLettersOfName(contact.name);
+      textColor = isColorLight(contact.colorCode) ? 'white' : 'black'; 
+      const isSelected = contacts[index].selected;
+      assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, index, contact.colorCode, initials, textColor, isSelected);
   });  
   const contactElements = assignedToContainer.querySelectorAll('.assigned-to-box');
   contactElements.forEach(contactElement => {
@@ -141,31 +141,47 @@ function renderAddedContacts() {
 
 
 function selectedAssignedToUser(event, index) {
-  userIndex = index;
-  const svgElement = event.currentTarget.querySelector('svg'); 
-  const spanElement = document.getElementById(`contact-id${index}`);
-  const contact = currentUser.contacts.find(contact => contact.name === spanElement.innerHTML);
-  event.currentTarget.classList.toggle('selected-contact');    
-  const contactIndex = assignedTo.userNames.indexOf(contact.name);
+  const { svgElement, contactIndex, contact } = selectedAssignedToUserVariables(index, event);
   if (event.currentTarget.classList.contains('selected-contact')) {
     svgElement.innerHTML = templateSvgCheckboxConfirmedHTML();    
-    if (contactIndex === -1) {
-      assignedTo.initials.push(getFirstLettersOfName(contact.name));
-      assignedTo.colorCodes.push(contact.colorCode);
-      assignedTo.textColor.push(contact.textColorCode || (isColorLight(contact.colorCode) ? 'black' : 'white'));
-      assignedTo.userNames.push(contact.name);
-    }
+    addContactToAssignedTo(contactIndex, contact);
   } else { 
     svgElement.innerHTML = templateSvgDefaultCheckboxHTML();    
-    if (contactIndex !== -1) {
-      assignedTo.initials.splice(contactIndex, 1);
-      assignedTo.colorCodes.splice(contactIndex, 1);
-      assignedTo.textColor.splice(contactIndex, 1);
-      assignedTo.userNames.splice(contactIndex, 1);
-    }
+    removeContactFromAssignedTo(contactIndex);
   }  
   updateAssignedToLocalStorage();
   renderAddedContacts(); 
+}
+
+
+function addContactToAssignedTo(contactIndex, contact) {
+  if (contactIndex === -1) {
+    assignedTo.initials.push(getFirstLettersOfName(contact.name));
+    assignedTo.colorCodes.push(contact.colorCode);
+    assignedTo.textColor.push(contact.textColorCode || (isColorLight(contact.colorCode) ? 'black' : 'white'));
+    assignedTo.userNames.push(contact.name);
+  }
+}
+
+
+function removeContactFromAssignedTo(contactIndex) {
+  if (contactIndex !== -1) {
+    assignedTo.initials.splice(contactIndex, 1);
+    assignedTo.colorCodes.splice(contactIndex, 1);
+    assignedTo.textColor.splice(contactIndex, 1);
+    assignedTo.userNames.splice(contactIndex, 1);
+  }
+}
+
+
+function selectedAssignedToUserVariables(index, event) {
+  userIndex = index;
+  const svgElement = event.currentTarget.querySelector('svg');
+  const spanElement = document.getElementById(`contact-id${index}`);
+  const contact = currentUser.contacts.find(contact => contact.name === spanElement.innerHTML);
+  event.currentTarget.classList.toggle('selected-contact');
+  const contactIndex = assignedTo.userNames.indexOf(contact.name);
+  return { svgElement, contactIndex, contact };
 }
 
 
@@ -336,27 +352,37 @@ async function createTask() {
 
 async function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo) {
   if (!Array.isArray(currentUser.tasks)) {
-      currentUser.tasks = [];
+    currentUser.tasks = [];
   }  
-  const subtasks = subtaskList.map(subtask => ({
-      id: generateTaskID(),
-      title: subtask,
-      completed: false
-  }));
-  const task = {
-      id: taskID,
-      title: titleInput,
-      description: textareaInput,
-      date: dateInput,
-      category: categoryInput,
-      columnId: columnId,
-      prio: priority,
-      assignedTo: assignedTo,
-      subtasks: subtasks
-  };
+  const subtasks = generateSubtasks(subtaskList);
+  const task = createTaskObject(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo, subtasks);
   currentUser.tasks.push(task);
   saveTasksToLocalStorage(currentUser);
   await updateCurrentUserInBackend(currentUser);
+}
+
+
+function generateSubtasks(subtaskList) {
+  return subtaskList.map(subtask => ({
+    id: generateTaskID(),
+    title: subtask,
+    completed: false
+  }));
+}
+
+
+function createTaskObject(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo, subtasks) {
+  return {
+    id: taskID,
+    title: titleInput,
+    description: textareaInput,
+    date: dateInput,
+    category: categoryInput,
+    columnId: columnId,
+    prio: priority,
+    assignedTo: assignedTo,
+    subtasks: subtasks
+  };
 }
 
 
