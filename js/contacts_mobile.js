@@ -15,12 +15,7 @@ function contactsInit() {
         renderContacts();
         renderAddContactButtonMobile();
         setTimeout(showHeaderUserInitials, 500);
-        document.body.style.overflow = 'hidden';
-        const content = document.getElementById("all-contacts-id");
-        // content.style.paddingTop = '100px';
-        // content.style.marginTop = '80px';
-        content.style.paddingBottom = '60px';
-        content.style.overflow= 'auto';
+        contactsInitVariables();
     } else {
         setTimeout(showHeaderAndFooter, 200);
         renderContactsDesktop();        
@@ -30,11 +25,17 @@ function contactsInit() {
 }
 
 
+function contactsInitVariables() {
+  document.body.style.overflow = 'hidden';
+  const content = document.getElementById("all-contacts-id");
+  content.style.marginTop = '80px';
+  content.style.paddingBottom = '60px';
+  content.style.overflow = 'auto';
+}
+
+
 async function renderContacts() {
-    const content = document.getElementById("all-contacts-id");
-    content.innerHTML = "";
-    const contactsByFirstLetter = {};
-    const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+    const { loggedInUser, contactsByFirstLetter, content } = renderContactsVariables();
     if (loggedInUser && loggedInUser.contacts) {      
         loggedInUser.contacts.sort((a, b) => a.name.localeCompare(b.name));
         loggedInUser.contacts.forEach((oneContact) => {
@@ -43,9 +44,16 @@ async function renderContacts() {
         });      
         renderContactsByFirstLetter(content, contactsByFirstLetter);
         registerContactClickHandlers();
-    } else {
-        console.error('Error: User or contacts not found.');
-    }
+      }
+}
+
+
+function renderContactsVariables() {
+  const content = document.getElementById("all-contacts-id");
+  content.innerHTML = "";
+  const contactsByFirstLetter = {};
+  const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+  return { loggedInUser, contactsByFirstLetter, content };
 }
 
 
@@ -77,6 +85,12 @@ function createOneContactContainer(oneContact) {
   container.setAttribute('data-contact-id', oneContact.id);
   container.addEventListener('click', () => showContactOverlayMobile(oneContact.id));
   const iconHtml = renderSingleMemberToHTMLMobile(oneContact, oneContact.colorCode, oneContact.textColorCode);
+  createOneContactContainerHTML(container, iconHtml, oneContact);
+  return container;
+}
+
+
+function createOneContactContainerHTML(container, iconHtml, oneContact) {
   container.innerHTML = `
     <div class="contact-info-container">
       <div>
@@ -88,7 +102,6 @@ function createOneContactContainer(oneContact) {
       </div>
     </div>
   `;
-  return container;
 }
 
 
@@ -106,8 +119,8 @@ function registerContactClickHandlers() {
         container.addEventListener('click', () => showContactOverlayMobile(contactId));        
     });
 }
-  
-  
+
+
 function renderAddContactButtonMobile() {
     const content = document.getElementById("all-contacts-id");
     const addContactButtonMobile = document.createElement('div');
@@ -118,17 +131,6 @@ function renderAddContactButtonMobile() {
     content.appendChild(addContactButtonMobile);
 }
 
-function hideAddContactButtonMobile() {
-    let addContactButtonMobile = document.querySelectorAll(`addContactButtonImgMobile`);    
-    addContactButtonMobile.classList.add('displayNone');
-}
-
-
-function showAddContactButtonMobile() {
-    let addContactButtonMobile = document.querySelectorAll(`addContactButtonImgMobile`);    
-    addContactButtonMobile.classList.remove('displayNone');
-}
-
 
 function renderSingleMemberToHTMLMobile(oneContact, colorCode, textColor) {
     return `
@@ -137,8 +139,8 @@ function renderSingleMemberToHTMLMobile(oneContact, colorCode, textColor) {
       </div>
     `;
 }
-  
-  
+
+
 function getFirstLettersOfName(name) {
     let words = name.replace(/\s+/g, ' ').trim().split(" ");
     let initials = "";
@@ -147,8 +149,8 @@ function getFirstLettersOfName(name) {
     }  
     return initials;
 }
-  
-  
+ 
+
 function isColorLight(hexcode) {
     if (hexcode) {
       let r = parseInt(hexcode.slice(1, 3), 16);
@@ -160,8 +162,8 @@ function isColorLight(hexcode) {
       return true;
     }
 }
-  
-  
+
+
 function getRandomColorHex() {
     let colorHex = "#";
     let colorVal;
@@ -183,8 +185,8 @@ function hideHeaderAndFooter() {
     mobileHeader.style.display = "none";
     menuTemplate.style.display = "none";
 }
-  
-  
+
+
 /**
   * Show header and footer screen on mobile view
   */
@@ -194,6 +196,7 @@ function showHeaderAndFooter() {
     mobileHeader.style.display = "block";
     menuTemplate.style.display = "flex";
 }
+
 
 // Add contact screen
 
@@ -243,10 +246,6 @@ function redirectToContacts() {
 
 async function createContactMobile() {
     const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("No user logged in.");
-        return;
-    }    
     const newContact = getNewContact();
     newContact.id = generateUniqueID();
     addContactToCurrentUser(newContact);
@@ -263,14 +262,7 @@ function getNewContact() {
 
 
 async function addContactToCurrentUser(newContact) {
-    const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("Logged in user not found.");
-        return;
-    }
-    newContact.id = generateUniqueID();  
-    let colorCode = localStorage.getItem(`color_${newContact.id}`);
-    let textColorCode = localStorage.getItem(`textColor_${newContact.id}`);
+    let { colorCode, textColorCode, currentUser } = addContactToCurrentUserVariables(newContact);
     if (!colorCode || !textColorCode) {      
         colorCode = getRandomColorHex();
         textColorCode = isColorLight(colorCode) ? 'white' : 'black';
@@ -280,6 +272,15 @@ async function addContactToCurrentUser(newContact) {
     currentUser.contacts.push(newContact);
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     updateCurrentUserInBackend(currentUser);  
+}
+
+
+function addContactToCurrentUserVariables(newContact) {
+  const currentUser = getLoggedInUser();
+  newContact.id = generateUniqueID();
+  let colorCode = localStorage.getItem(`color_${newContact.id}`);
+  let textColorCode = localStorage.getItem(`textColor_${newContact.id}`);
+  return { colorCode, textColorCode, currentUser };
 }
 
 
@@ -325,14 +326,10 @@ async function updateCurrentUserInBackend(currentUser) {
 function showContactOverlayMobile(contactId) {   
     const content = document.getElementById('all-contacts-id');
     content.innerHTML = "";
-    const selectedContact = findSelectedContactMobile(contactId);
-    if (!selectedContact) {
-        handleContactNotFound();
-        return;
-    }
+    const selectedContact = findSelectedContactMobile(contactId);    
     const overlayContent = createContactOverlayContent(selectedContact);
     openOverlay(overlayContent);
-    setupContactScreen();    
+    addDropdownMenuClickListener();
 }
 
 
@@ -343,11 +340,6 @@ function findSelectedContactMobile(contactId) {
       return null;
     }
     return loggedInUser.contacts.find(contact => contact.id === contactId);    
-}
-
-
-function handleContactNotFound() {
-    console.error("Selected contact not found in current user's contacts.");
 }
 
 
@@ -413,58 +405,56 @@ function closeOverlay() {
 }
 
 
-function setupContactScreen() {    
-    addDropdownMenuClickListener();
-}
-
-
-function triggerSlideInAnimation() {
-    const content = document.getElementById("all-contacts-id");
-    setTimeout(() => {
-        content.classList.add("slideInContactsContentMobile");
-    }, 10);
-    setTimeout(() => {
-        content.classList.remove("slideInContactsContentMobile");
-    }, 2000);
-}
-
-
-function contactsContentBackgroundColorWhiteGray() {
-    const content = document.getElementById("all-contacts-id");
-    content.style.backgroundColor = "var(--white-grey)";
-}
-
-
 /**
  * Drop down menu click event listener
  */
 function addDropdownMenuClickListener() {
-    const dropdownTrigger = document.getElementById("menuContactOptionsButton");
-    const dropdownMenu = document.getElementById("contactOptionsDropdown");
-    if (!dropdownTrigger || !dropdownMenu) {
-      console.error("Dropdown trigger or menu not found");
-      return;
-    }  
-    /**
-     * Drop down menu click event listener
-     */
-    const handleDocumentClick = function(event) {
-      if (!dropdownTrigger.contains(event.target) && !dropdownMenu.contains(event.target)) {
-        dropdownMenu.style.display = "none";
-        document.removeEventListener("click", handleDocumentClick);
-      }
-    };  
-    dropdownTrigger.addEventListener("click", function(event) {
-      const isDropdownVisible = (dropdownMenu.style.display === "block");
-      closeAllDropdowns();
-      dropdownMenu.style.display = isDropdownVisible ? "none" : "block";
-      if (!isDropdownVisible) {
-        document.addEventListener("click", handleDocumentClick);
-      } else {
-        document.removeEventListener("click", handleDocumentClick);
-      }  
-      event.stopPropagation();
-    });
+  const { dropdownTrigger, dropdownMenu, handleDocumentClick } = addDropDownMenuClickListenerDropDownTrigger();
+  dropdownTrigger.addEventListener("click", function(event) {
+    const isDropdownVisible = (dropdownMenu.style.display === "block");
+    closeAllDropdowns();
+    toggleDropdownVisibility(dropdownMenu, isDropdownVisible);
+    adjustDocumentClickListener(isDropdownVisible, handleDocumentClick);
+    event.stopPropagation();
+  });
+}
+
+
+function addDropDownMenuClickListenerDropDownTrigger() {
+  const dropdownTrigger = document.getElementById("menuContactOptionsButton");
+  const dropdownMenu = document.getElementById("contactOptionsDropdown");
+  const handleDocumentClick = function (event) {
+    if (!dropdownTrigger.contains(event.target) && !dropdownMenu.contains(event.target)) {
+      closeDropdownMenu(dropdownMenu);
+      document.removeEventListener("click", handleDocumentClick);
+    }
+  };
+  return { dropdownTrigger, dropdownMenu, handleDocumentClick };
+}
+
+
+function closeDropdownMenu(menu) {
+  menu.style.display = "none";
+}
+
+
+function closeAllDropdowns() {
+  const allDropdowns = document.querySelectorAll('.dropdown-menu');
+  allDropdowns.forEach(menu => closeDropdownMenu(menu));
+}
+
+
+function toggleDropdownVisibility(menu, isVisible) {
+  menu.style.display = isVisible ? "none" : "block";
+}
+
+
+function adjustDocumentClickListener(isVisible, listener) {
+  if (!isVisible) {
+    document.addEventListener("click", listener);
+  } else {
+    document.removeEventListener("click", listener);
+  }
 }
 
 
@@ -477,20 +467,8 @@ function closeAllDropdowns() {
       dropdown.style.display = "none";
     });
 }
-  
-  
-/**
-  * Handle click on drop down menu option
-  */
-function handleDropdownOptionClick(action) {
-    if (action === "edit") {      
-    } else if (action === "delete") {      
-    }
-    const dropdownMenu = document.getElementById("contactOptionsDropdown");
-    dropdownMenu.style.display = "none";
-}
- 
-  
+
+
 /**
  * Toggle the dropdown menu visibility
  */
@@ -504,8 +482,8 @@ function toggleDropdownMenu() {
         closeAllDropdowns();        
     }
 }
-  
-  
+
+
 /**
   * Handle click on drop down menu option
   * @param {string} dropdownContainer - Drop down div Container
@@ -520,8 +498,8 @@ function handleDocumentClick(dropdownTrigger, dropdownMenu) {
         }
     };
 }
-  
-  
+
+
 function singleMemberToHTML(member) {
     const colorCode = member.colorCode || getRandomColorHex();
     const textColor = isColorLight(colorCode) ? "black" : "white";  
@@ -537,10 +515,6 @@ function singleMemberToHTML(member) {
 
 function deleteContactMobile(contactId) {
     const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("Logged in user not found.");
-        return;
-    }
     const index = currentUser.contacts.findIndex(contact => contact.id === contactId);
     if (index === -1) {
         console.error("Contact not found.");
@@ -556,24 +530,26 @@ function deleteContactMobile(contactId) {
 // Edit contact mobile
 
 function editContactOverlayMobile(contactId) {  
-    let content = document.getElementById('all-contacts-id');
-    content.innerHTML = "";
-    const overlay = document.createElement("div");
-    overlay.classList.add("overlay");
-    const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("Logged in user not found.");
-        return;
-    }
-    const selectedContact = currentUser.contacts.find(contact => contact.id === contactId);  
-    const randomColor = getRandomColorHex();
-    const textColor = isColorLight(randomColor) ? 'white' : 'black';
-    const editContactHTML = createEditContactHTML(selectedContact, randomColor, textColor);  
+    let { content, editContactHTML } = editContactOverlayMobileVariables(contactId);  
     content.innerHTML = editContactHTML;  
     hideHeaderAndFooter();
     content.style.height = '100dvh';
     content.style.marginTop = '0px';
     content.style.overflow = 'hidden';
+}
+
+
+function editContactOverlayMobileVariables(contactId) {
+  let content = document.getElementById('all-contacts-id');
+  content.innerHTML = "";
+  const overlay = document.createElement("div");
+  overlay.classList.add("overlay");
+  const currentUser = getLoggedInUser();
+  const selectedContact = currentUser.contacts.find(contact => contact.id === contactId);
+  const randomColor = getRandomColorHex();
+  const textColor = isColorLight(randomColor) ? 'white' : 'black';
+  const editContactHTML = createEditContactHTML(selectedContact, randomColor, textColor);
+  return { content, editContactHTML };
 }
 
 
@@ -623,15 +599,7 @@ function updateContactMobile(contactId) {
     const updatedEmail = document.getElementById('editContactInputMailAddresssMobileID').value;
     const updatedPhone = document.getElementById('editContactInputPhoneMobileID').value;  
     const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("Logged in user not found.");
-        return;
-    }  
     const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
-    if (contactIndex === -1) {
-        console.error("Contact not found.");
-        return;
-    }  
     currentUser.contacts[contactIndex].name = updatedName;
     currentUser.contacts[contactIndex].email = updatedEmail;
     currentUser.contacts[contactIndex].phone = updatedPhone;  
