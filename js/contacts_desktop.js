@@ -1,4 +1,3 @@
-/* Desktop view */
 /* Render contacts desktop view */
 
 let lastClickedContactId;
@@ -35,11 +34,7 @@ function renderAddContactButtonDesktop() {
  */
 function groupContactsByFirstLetter() {
     const contactsByFirstLetter = {};
-    const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));    
-    if (!loggedInUser || !loggedInUser.contacts) {
-        console.error('Error: User or contacts not found.');
-        return contactsByFirstLetter;
-    }
+    const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
     loggedInUser.contacts.sort((a, b) => a.name.localeCompare(b.name));
     loggedInUser.contacts.forEach((oneContact) => {
         const firstLetter = oneContact.name.charAt(0).toUpperCase();
@@ -92,7 +87,7 @@ function createContactContainer(oneContact) {
  * @param {string} content - contactsContent div container
  * @param {string} contactsByFirstLetter - Sorted contacts by first letter
  */
-function renderContactsByFirstLetterDesktop(content, contactsByFirstLetter) {  // 
+function renderContactsByFirstLetterDesktop(content, contactsByFirstLetter) {
     Object.values(contactsByFirstLetter).forEach((section) => {
         content.innerHTML += section;
     });
@@ -106,17 +101,7 @@ function renderContactsByFirstLetterDesktop(content, contactsByFirstLetter) {  /
  * @param {string} contactId - This is the contact ID example "5"
  */
 function openContactScreenDesktop(contactId) {    
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (!currentUser || !currentUser.contacts) {
-        console.error('Error: User or contacts not found.');
-        return;
-    }
-    const content = document.getElementById("contactsContentRightSideID");    
-    const selectedContact = currentUser.contacts.find(contact => contact.id === contactId);
-    if (!selectedContact) {
-        console.error('Error: Selected contact not found.');
-        return;
-    }    
+    const { content, selectedContact } = openContactScreenDesktopVariables(contactId);
     if (lastClickedContactId !== contactId) {
         openContactsScreenDesktopChangeColorWhite(lastClickedContactId);
         lastClickedContactId = contactId;
@@ -127,6 +112,14 @@ function openContactScreenDesktop(contactId) {
     showContactsContentRightSideDesktop();    
     const contactContainer = document.getElementById("contactsContentRightSideContactDataContainerID");
     contactContainer.style.animation = "slide-in-desktop 0.5s ease-out";
+}
+
+
+function openContactScreenDesktopVariables(contactId) {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const content = document.getElementById("contactsContentRightSideID");
+  const selectedContact = currentUser.contacts.find(contact => contact.id === contactId);
+  return { content, selectedContact };
 }
 
 
@@ -224,19 +217,12 @@ function showContactsContentRightSideDesktop() {
     showcontactsContentRightSide.style.display = "flex";
 }
 
+
 // Delete contact desktop
 
 function deleteContactDesktop(contactId) {
-    const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("Logged in user not found.");
-        return;
-    }
-    const index = currentUser.contacts.findIndex(contact => contact.id === contactId);
-    if (index === -1) {
-        console.error("Contact not found.");
-        return;
-    }
+    const currentUser = getLoggedInUser();    
+    const index = currentUser.contacts.findIndex(contact => contact.id === contactId);    
     currentUser.contacts.splice(index, 1);  
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
     updateCurrentUserInBackend(currentUser);
@@ -344,15 +330,7 @@ function getNewContactDesktop() {
  */
 function editContactDestop(lastClickedContactId) {
     const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("Logged in user not found.");
-        return;
-    }
-    const selectedContact = currentUser.contacts.find(contact => contact.id === lastClickedContactId);
-    if (!selectedContact) {
-        console.error('Error: Selected contact not found.');
-        return;
-    }  
+    const selectedContact = currentUser.contacts.find(contact => contact.id === lastClickedContactId);    
     const overlayContainer = document.createElement("div");
     overlayContainer.classList.add("overlay-container");
     document.body.appendChild(overlayContainer);  
@@ -423,78 +401,13 @@ function singleMemberToHTMLOpenContactDesktop2(member, index) {
 
 
 /**
- * Get updated input data for desktop view
- */
-function getUpdatedInputsDesktop() {
-    const nameInput = document.querySelector(".addContactInputNameDesktop");
-    const mailInput = document.querySelector(".addContactInputMailAddresssDesktop");
-    const phoneInput = document.querySelector(".addContactInputPhoneDesktop");
-    return {
-        updatedName: nameInput.value.trim(),
-        updatedMail: mailInput.value.trim(),
-        updatedPhone: phoneInput.value.trim()
-    };
-}
-
-
-/**
- * Get the contact to edit
- * @param {string} updatedInputs - Here are the new contact name / the new contact email / the new contact phone number
- * @param {string} contactId - This is the contact ID example "5"
- */
-function findExistingContactDesktop(updatedInputs, contactId) {
-    return currentUser.contacts.find(
-        (contact) =>
-            contact.name === updatedInputs.updatedName &&
-            contact.email === updatedInputs.updatedMail &&
-            contact.id !== contactId
-    );
-}
-
-
-/**
- * Find the contact by ID
- * @param {string} contactId - This is the contact ID example "5"
- */
-function findOldContactDesktop(contactId) {
-    return currentUser.contacts.find((contact) => contact.id === contactId);
-}
-
-
-/**
- * Check if contact data changed
- * @param {string} oldContact - This are the old contact name / emal / phone number
- * @param {string} updatedInputs - This are the new contact / email / phone number
- */
-function checkForChangesDesktop(oldContact, updatedInputs) {
-    return {
-        hasNameChanged: oldContact.name !== updatedInputs.updatedName,
-        hasMailChanged: oldContact.email !== updatedInputs.updatedMail,
-        hasPhoneChanged: oldContact.phone !== updatedInputs.updatedPhone
-    };
-}
-
-
-/**
  * Overwrite the old contact data with the new contact data
  * @param {string} contactId - This is the contact ID example "5"
  * @param {string} updatedInputs - This are the new contact / email / phone number
  * @param {boolean} hasChanged - Example {hasNameChanged: false, hasMailChanged: false, hasPhoneChanged: true}
  */
 function updateContactsDataDesktop(contactId) {    
-    const updatedName = document.getElementById('editContactInputNameDesktopID').value;
-    const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
-    const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value;  
-    const currentUser = getLoggedInUser();
-    if (!currentUser) {
-        console.error("Logged in user not found.");
-        return;
-    }  
-    const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
-    if (contactIndex === -1) {
-        console.error("Contact not found.");
-        return;
-    }  
+    const { currentUser, contactIndex, updatedName, updatedEmail, updatedPhone } = updateContactsDataDesktopVariables(contactId);
     currentUser.contacts[contactIndex].name = updatedName;
     currentUser.contacts[contactIndex].email = updatedEmail;
     currentUser.contacts[contactIndex].phone = updatedPhone;  
@@ -503,6 +416,16 @@ function updateContactsDataDesktop(contactId) {
     clearAddContactDesktopRightSideContainer();
     hideOverlay();
     contactsInit();
+}
+
+
+function updateContactsDataDesktopVariables(contactId) {
+  const updatedName = document.getElementById('editContactInputNameDesktopID').value;
+  const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
+  const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value;
+  const currentUser = getLoggedInUser();
+  const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
+  return { currentUser, contactIndex, updatedName, updatedEmail, updatedPhone };
 }
 
 
