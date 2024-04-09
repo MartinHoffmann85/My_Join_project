@@ -432,9 +432,7 @@ function singleMemberToHTMLOpenContactDesktop2(member, index) {
 
 /**
  * Overwrite the old contact data with the new contact data
- * @param {string} contactId - This is the contact ID example "5"
- * @param {string} updatedInputs - This are the new contact / email / phone number
- * @param {boolean} hasChanged - Example {hasNameChanged: false, hasMailChanged: false, hasPhoneChanged: true}
+ * @param {string} contactId - This is the contact ID example "5" 
  */
 function updateContactsDataDesktop(contactId) {    
     const { currentUser, contactIndex, updatedName, updatedEmail, updatedPhone } = updateContactsDataDesktopVariables(contactId);
