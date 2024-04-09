@@ -3,6 +3,9 @@
 let lastClickedContactId;
 
 
+/**
+ * Renders the contacts list on the desktop view.
+ */
 function renderContactsDesktop() {
     const content = document.getElementById("all-contacts-id");
     content.innerHTML = "";
@@ -115,6 +118,11 @@ function openContactScreenDesktop(contactId) {
 }
 
 
+/**
+ * Retrieves necessary variables for opening the contact screen on desktop.
+ * @param {string} contactId - The ID of the selected contact.
+ * @returns {Object} An object containing the content element and the selected contact.
+ */
 function openContactScreenDesktopVariables(contactId) {
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const content = document.getElementById("contactsContentRightSideID");
@@ -123,6 +131,10 @@ function openContactScreenDesktopVariables(contactId) {
 }
 
 
+/**
+ * Changes the background color of the selected contact container to black.
+ * @param {string} contactId - The ID of the selected contact.
+ */
 function openContactsScreenDesktopChangeColorBlack(contactId) {
     const currentContactContainer = document.querySelector(`.oneContactContainer[data-contact-id="${contactId}"]`);
     if (currentContactContainer) {
@@ -135,6 +147,10 @@ function openContactsScreenDesktopChangeColorBlack(contactId) {
 }
 
 
+/**
+ * Changes the background color of the previously clicked contact container to white.
+ * @param {string} contactId - The ID of the previously clicked contact.
+ */
 function openContactsScreenDesktopChangeColorWhite(contactId) {
     const lastClickedContactContainer = document.querySelector(`.oneContactContainer[data-contact-id="${contactId}"]`);
     if (lastClickedContactContainer) {
@@ -192,7 +208,7 @@ function openContactScreenDesktopHTML(content, selectedContact) {
 }
 
 
-  /**
+/**
  * Show the color from user image background html
  * @param {string} member - This is the user or contact name
  * @param {string} index - This is the ID for the user or contact
@@ -220,14 +236,18 @@ function showContactsContentRightSideDesktop() {
 
 // Delete contact desktop
 
+/**
+ * Deletes a contact from the desktop view.
+ * @param {string} contactId - The ID of the contact to be deleted.
+ */
 function deleteContactDesktop(contactId) {
-    const currentUser = getLoggedInUser();    
-    const index = currentUser.contacts.findIndex(contact => contact.id === contactId);    
-    currentUser.contacts.splice(index, 1);  
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    updateCurrentUserInBackend(currentUser);
-    document.getElementById("contactsContentRightSideContactDataContainerID").innerHTML = "";
-    contactsInit();  
+  const currentUser = getLoggedInUser();    
+  const index = currentUser.contacts.findIndex(contact => contact.id === contactId);    
+  currentUser.contacts.splice(index, 1);  
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  updateCurrentUserInBackend(currentUser);
+  document.getElementById("contactsContentRightSideContactDataContainerID").innerHTML = "";
+  contactsInit();  
 }
 
 
@@ -300,25 +320,32 @@ function hideOverlay() {
 }
 
 
+/**
+ * Creates a new contact in the desktop view.
+ */
 function createContactDesktop() {
-    const currentUser = getLoggedInUser();
-      if (!currentUser) {
-          console.error("No user logged in.");
-          return;
-      }    
-      const newContact = getNewContactDesktop();
-      newContact.id = generateUniqueID();    
-      addContactToCurrentUser(newContact);
-      hideOverlay();
-      contactsInit();
+  const currentUser = getLoggedInUser();
+  if (!currentUser) {
+      console.error("No user logged in.");
+      return;
+  }    
+  const newContact = getNewContactDesktop();
+  newContact.id = generateUniqueID();    
+  addContactToCurrentUser(newContact);
+  hideOverlay();
+  contactsInit();
 }
 
 
+/**
+* Retrieves the new contact details from the input fields in the desktop view.
+* @returns {Object} - The new contact object with name, email, and phone.
+*/
 function getNewContactDesktop() {
-    const contactName = document.getElementById("add-contact-input-name-desktop-id").value;
-    const contactEmail = document.getElementById("add-contact-input-mail-addresss-desktop-id").value;
-    const contactPhone = document.getElementById("add-contact-input-phone-desktop-id").value;
-    return { name: contactName, email: contactEmail, phone: contactPhone };
+  const contactName = document.getElementById("add-contact-input-name-desktop-id").value;
+  const contactEmail = document.getElementById("add-contact-input-mail-addresss-desktop-id").value;
+  const contactPhone = document.getElementById("add-contact-input-phone-desktop-id").value;
+  return { name: contactName, email: contactEmail, phone: contactPhone };
 }
 
 
@@ -386,17 +413,20 @@ function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
 
 
 /**
-  * Function to generate user image with random background-color on mobile view
-  */
+ * Converts a single member object to HTML markup for displaying in the open contact desktop view.
+ * @param {Object} member - The member object containing details like name and color code.
+ * @param {number} index - The index of the member.
+ * @returns {string} - The HTML markup representing the member.
+ */
 function singleMemberToHTMLOpenContactDesktop2(member, index) {
-    let textcolor;
-    let iconRightStep = 10;
-    if (!isColorLight(member.colorCode)) textcolor = 'white';
-    return `
-        <div class="openContactUserImgMobile2" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
-              ${getFirstLettersOfName(member.name)}
-        </div>
-    `;
+  let textcolor;
+  let iconRightStep = 10;
+  if (!isColorLight(member.colorCode)) textcolor = 'white';
+  return `
+      <div class="openContactUserImgMobile2" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
+          ${getFirstLettersOfName(member.name)}
+      </div>
+  `;
 }
 
 
@@ -419,6 +449,11 @@ function updateContactsDataDesktop(contactId) {
 }
 
 
+/**
+ * Retrieves variables required for updating contact data on desktop.
+ * @param {string} contactId - The ID of the contact to be updated.
+ * @returns {Object} - Object containing updated contact data and related variables.
+ */
 function updateContactsDataDesktopVariables(contactId) {
   const updatedName = document.getElementById('editContactInputNameDesktopID').value;
   const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
