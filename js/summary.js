@@ -1,3 +1,6 @@
+/**
+ * Initializes the summary page.
+ */
 function summaryInit() {
     setTimeout(showHeaderUserInitials, 200);    
     getSummaryToDosCount();
@@ -11,6 +14,9 @@ function summaryInit() {
 }
 
 
+/**
+ * Retrieves the count of tasks in the 'To Do' column and updates the corresponding summary display.
+ */
 function getSummaryToDosCount() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
@@ -28,6 +34,9 @@ function getSummaryToDosCount() {
 }
 
 
+/**
+ * Retrieves the count of tasks in the 'Done' column and updates the corresponding summary display.
+ */
 function getDoneTasksCount() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
@@ -45,6 +54,9 @@ function getDoneTasksCount() {
 }
 
 
+/**
+ * Retrieves the count of tasks with 'Urgent' priority and updates the corresponding summary display.
+ */
 function summaryGetUrgentPriorityCount() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
@@ -62,6 +74,9 @@ function summaryGetUrgentPriorityCount() {
 }
 
 
+/**
+ * Retrieves the next due date task and displays its formatted date.
+ */
 function summaryGetNextDateTask() {
     const currentUser = getCurrentUser();
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
@@ -78,22 +93,40 @@ function summaryGetNextDateTask() {
 }
 
 
+/**
+ * Retrieves the current user object from local storage.
+ * @returns {Object} The current user object.
+ */
 function getCurrentUser() {
     return JSON.parse(localStorage.getItem('currentUser'));
 }
 
 
+/**
+ * Filters tasks to include only those with a due date specified.
+ * @param {Array} tasks - The array of tasks.
+ * @returns {Array} - The filtered array of tasks with due dates.
+ */
 function getTasksWithDueDate(tasks) {
     return tasks.filter(task => task.date !== "");
 }
 
 
+/**
+ * Finds the next due date from an array of tasks.
+ * @param {Array} tasks - The array of tasks.
+ * @returns {Date} - The next due date.
+ */
 function getNextDueDate(tasks) {
     tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
     return new Date(tasks[0].date);
 }
 
 
+/**
+ * Displays a formatted date in the summary section.
+ * @param {Date} date - The date to be formatted.
+ */
 function displayFormattedDate(date) {
     const options = { month: 'long', day: 'numeric', year: 'numeric' };
     const formattedDate = date.toLocaleDateString('en-US', options);
@@ -104,6 +137,9 @@ function displayFormattedDate(date) {
 }
 
 
+/**
+ * Displays a message indicating no task is available.
+ */
 function displayNoTaskMessage() {
     const summaryDateID = document.getElementById('summaryDateID');
     if (summaryDateID) {
@@ -112,23 +148,29 @@ function displayNoTaskMessage() {
 }
 
 
+/**
+ * Updates the summary section with the count of all tasks.
+ */
 function summaryGetAllTasksCount() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
         const taskCount = currentUser.tasks.length;
-        const summaryToDoID = document.getElementById('summaryAllTasksID');
-        if (summaryToDoID) {
-            summaryToDoID.textContent = taskCount.toString();
+        const summaryAllTasksID = document.getElementById('summaryAllTasksID');
+        if (summaryAllTasksID) {
+            summaryAllTasksID.textContent = taskCount.toString();
         }
     } else {        
-        const summaryToDoID = document.getElementById('summaryAllTasksID');
-        if (summaryToDoID) {
-            summaryToDoID.textContent = '0';
+        const summaryAllTasksID = document.getElementById('summaryAllTasksID');
+        if (summaryAllTasksID) {
+            summaryAllTasksID.textContent = '0';
         }
     }
 }
 
 
+/**
+ * Retrieves the count of tasks in progress and updates the summary section.
+ */
 function getInProgressTasksCount() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
@@ -146,6 +188,9 @@ function getInProgressTasksCount() {
 }
 
 
+/**
+ * Retrieves the count of tasks awaiting feedback and updates the summary section.
+ */
 function summaryGetAwaitingFeedbackCount() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
@@ -163,6 +208,9 @@ function summaryGetAwaitingFeedbackCount() {
 }
 
 
+/**
+ * Updates the greeting message based on the time of the day.
+ */
 async function updateGreeting() {
     let { h, e, currentUser, addHours, addMinutes } = updateGreetingVariables();
     if (h <= 4) {
@@ -186,6 +234,10 @@ async function updateGreeting() {
 }
 
 
+/**
+ * Retrieves variables required for updating the greeting message.
+ * @returns {Object} - Object containing required variables.
+ */
 function updateGreetingVariables() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const now = new Date();
