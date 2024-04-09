@@ -9,9 +9,12 @@ let pwVisibility = { pwVisibilityOn: false };
 let confirmPwVisibility = { pwVisibilityOn: false };
 
 
+/**
+ * Initializes the application by loading users from the backend and setting up password visibility listener.
+ */
 async function init() {
     users = await loadUsersFromBackend('users');
-    console.log(users)    
+    console.log(users);
     addPasswordVisibilityListener('login-pw-border-id', 
                                 'lock-id', 
                                 'login-pw-visibility-off-id',
@@ -20,6 +23,11 @@ async function init() {
 }
 
 
+/**
+ * Loads users data from the backend.
+ * @param {string} key - The key to identify the data in the backend.
+ * @returns {Promise<Array>} - An array of user objects.
+ */
 async function loadUsersFromBackend(key) {
     try {
         const result = await getItem(key);
@@ -31,6 +39,9 @@ async function loadUsersFromBackend(key) {
 }
 
 
+/**
+ * Registers a new user if validation checks pass and privacy policy checkbox is confirmed.
+ */
 function register() {
     if (!(registerValidationCheck() && ppCheckboxConfirmed))
         return;
@@ -40,6 +51,9 @@ function register() {
 }
 
 
+/**
+ * Adds a new user to the application.
+ */
 async function addNewUser() {
     const newUser = generateNewUserObject();
     newUserArray.push(newUser);
@@ -51,6 +65,10 @@ async function addNewUser() {
 }
 
 
+/**
+ * Generates a new user object from input field values.
+ * @returns {Object} - The newly created user object.
+ */
 function generateNewUserObject() {
     const userName = document.getElementById("add-name-id").value;
     const userEMail = document.getElementById("add-email-id").value;
@@ -60,6 +78,14 @@ function generateNewUserObject() {
 }
 
 
+/**
+ * Generates a new user object constructor.
+ * @param {string} userName - The user's name.
+ * @param {string} userEMail - The user's email.
+ * @param {string} userPassword - The user's password.
+ * @param {string} userPasswordConfirm - The user's password confirmation.
+ * @returns {Object} - The newly created user object.
+ */
 function generateNewUserObjectConstructor(userName, userEMail, userPassword, userPasswordConfirm) {
     return {
         'userName': userName,
@@ -80,6 +106,10 @@ function generateNewUserObjectConstructor(userName, userEMail, userPassword, use
 }
 
 
+/**
+ * Adds a new user to the backend.
+ * @param {Object} user - The user object to be added to the backend.
+ */
 async function addNewUserToBackend(user) {
     try {
         let existingUsers = await loadUsersFromBackend('users');
@@ -94,6 +124,11 @@ async function addNewUserToBackend(user) {
 }
 
 
+/**
+ * Validates the user's name.
+ * @param {string} name - The user's name to be validated.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ */
 function validateName(name, boolArr) {
     const specialCharRegex  = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/0123456789]/;
     const checkForDoubleHyphen = name.split("-").length - 1;
@@ -108,6 +143,11 @@ function validateName(name, boolArr) {
 }
 
 
+/**
+ * Validates the user's email during registration.
+ * @param {string} email - The user's email to be validated.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ */
 function validateRegisterEmail(email, boolArr) {
     if (email.trim() === "") 
         boolArr[3] = boolArr[11] = true;
@@ -118,6 +158,11 @@ function validateRegisterEmail(email, boolArr) {
 }
 
 
+/**
+ * Validates the user's password during registration.
+ * @param {string} password - The user's password to be validated.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ */
 function validatePassword(password, boolArr) {
     const hasUpperCase = /[A-Z]/.test(password);
     const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/]/.test(password);
@@ -129,6 +174,12 @@ function validatePassword(password, boolArr) {
 }
 
 
+/**
+ * Validates the user's confirm password during registration.
+ * @param {string} password - The user's password.
+ * @param {string} confirmPassword - The user's confirmation password.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ */
 function validateConfirmPassword(password, confirmPassword, boolArr) {
     if (confirmPassword.trim() === "") 
         boolArr[8] = boolArr[13] = true;
@@ -137,11 +188,19 @@ function validateConfirmPassword(password, confirmPassword, boolArr) {
 }
 
 
+/**
+ * Toggles the visibility of a checkbox based on its state.
+ */
 function validateCheckBoxClicked() {
     toggleVisibility('pp-id', ppCheckboxConfirmed, 'err-msg-color');
 }
 
 
+/**
+ * Handles field validation during registration.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ * @returns {boolean} - Indicates whether all fields are validated.
+ */
 function handlerFieldValidationRegister(boolArr) {
     toggleVisibility('empty-add-name-id', boolArr[0]);
     toggleVisibility('invalid-add-name-id', boolArr[1]);
@@ -161,6 +220,10 @@ function handlerFieldValidationRegister(boolArr) {
 }
 
 
+/**
+ * Checks the validity of the registration form fields.
+ * @returns {boolean} - Indicates whether the registration form is valid.
+ */
 function registerValidationCheck() {
     const name = document.getElementById("add-name-id").value;
     const email = document.getElementById("add-email-id").value;
@@ -177,6 +240,9 @@ function registerValidationCheck() {
 }
 
 
+/**
+ * Toggles the visibility of the success message.
+ */
 function toggleSuccessesMsg() {
     const successMsg =  document.getElementById('success-msg-id');
     successMsg.classList.toggle('d-none')
@@ -186,6 +252,9 @@ function toggleSuccessesMsg() {
 }
 
 
+/**
+ * Resets the login inputs and validation states.
+ */
 function resetLoginInputs() {
     const boolArr = [false, false, false, false, false, false, false];
     handlerFieldValidationLogin(boolArr);
@@ -196,6 +265,10 @@ function resetLoginInputs() {
 }
 
 
+/**
+ * Handles errors by logging them to the console.
+ * @param {Error} error - The error object to be handled.
+ */
 function handleError(error) {
     console.error("Error sending user data to the backend:", error);
 }
@@ -225,6 +298,9 @@ async function getItem(key) {
 }
 
 
+/**
+ * Displays the sign-up form and initializes password visibility options.
+ */
 function signUp() {
     pwVisibility.pwVisibilityOn = false;
     resetLoginInputs();
@@ -237,6 +313,9 @@ function signUp() {
 }
 
 
+/**
+ * Adds password visibility options for the sign-up form.
+ */
 function addPasswordVisibilityOption() {
     addPasswordVisibilityListener('add-pw-border-id',
         'register-lock-id',
@@ -251,6 +330,9 @@ function addPasswordVisibilityOption() {
 }
 
 
+/**
+ * Closes the sign-up form and resets related elements.
+ */
 function closeSignUp() {
     document.getElementById('login-user-password-id').type = 'password';
     pwVisibility.pwVisibilityOn = false;
@@ -266,6 +348,9 @@ function closeSignUp() {
 }
 
 
+/**
+ * Attempts to log in the user.
+ */
 async function login() {
     try {
         const loggedInUser = await authenticateUser();
@@ -282,6 +367,10 @@ async function login() {
 }
 
 
+/**
+ * Authenticates the user based on the provided credentials.
+ * @returns {object|null} The authenticated user object if successful, otherwise null.
+ */
 async function authenticateUser() {
     const { foundUser, loginUserPassword } = await authenticateUserVariables();    
     if (foundUser) {
@@ -295,9 +384,13 @@ async function authenticateUser() {
         console.error("Error: User not found.");
         return null;
     }
-}    
+}
 
 
+/**
+ * Retrieves user email and password inputs, loads users from the backend, and finds the user with the provided email.
+ * @returns {object} An object containing the found user and the login user password.
+ */
 async function authenticateUserVariables() {
     const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
     const loginUserPassword = document.getElementById("login-user-password-id").value;
@@ -307,23 +400,37 @@ async function authenticateUserVariables() {
 }
 
 
+/**
+ * Handles field validation for the login form.
+ * @param {boolean[]} boolArr - An array representing validation error flags.
+ */
 function handlerFieldValidationLogin(boolArr) {
     toggleVisibility('empty-email-id', boolArr[0]);
     toggleVisibility('this-is-no-email-id', boolArr[1]);
     toggleVisibility('invalid-email-id', boolArr[2]);
     toggleVisibility('invalid-password-id', boolArr[3]);
     toggleVisibility('empty-password-id', boolArr[4]);
-    toggleVisibility('login-email-border-id', !boolArr[5],'error-border')
-    toggleVisibility('login-pw-border-id', !boolArr[6],'error-border' )
+    toggleVisibility('login-email-border-id', !boolArr[5],'error-border');
+    toggleVisibility('login-pw-border-id', !boolArr[6],'error-border');
 }
 
 
+/**
+ * Toggles the visibility of an element.
+ * @param {string} elementId - The ID of the element to toggle.
+ * @param {boolean} show - Indicates whether to show or hide the element.
+ * @param {string} className - The class name used to control visibility.
+ */
 function toggleVisibility(elementId, show = true, className = 'd-none') {
     const element = document.getElementById(elementId);
     show ? element.classList.remove(className) : element.classList.add(className);
 }
 
 
+/**
+ * Toggles the checkbox state based on the event target ID.
+ * @param {Event} event - The event object.
+ */
 function toggleCheckbox(event) {
     const { loginCheckbox, ppCheckbox } = toggleCheckboxVariables();
     if (event.target.id === 'uncheckbox-id') {
@@ -340,6 +447,10 @@ function toggleCheckbox(event) {
 }
 
 
+/**
+ * Retrieves checkbox elements and toggles their states.
+ * @returns {object} An object containing references to the login and privacy policy checkboxes.
+ */
 function toggleCheckboxVariables() {
     const loginCheckbox = document.getElementById("uncheckbox-id");
     const ppCheckbox = document.getElementById("privacy-checkbox-id");
@@ -348,6 +459,14 @@ function toggleCheckboxVariables() {
 }
 
 
+/**
+ * Adds an event listener to a password input element to toggle password visibility.
+ * @param {string} elementId - The ID of the password input element.
+ * @param {string} lockImgId - The ID of the lock image element.
+ * @param {string} visibilityOffImg - The ID of the visibility off image element.
+ * @param {string} visibilityOnImg - The ID of the visibility on image element.
+ * @param {object} visibilityObj - An object representing password visibility state.
+ */
 function addPasswordVisibilityListener(elementId, lockImgId, visibilityOffImg, visibilityOnImg, visibilityObj) {
     const inputElement = document.getElementById(elementId);
     inputElement.addEventListener("input", function(event) {
@@ -361,16 +480,33 @@ function addPasswordVisibilityListener(elementId, lockImgId, visibilityOffImg, v
 }
 
 
+/**
+ * Checks if the provided input value is not empty.
+ * @param {string} passwordInput - The input value to check.
+ * @returns {boolean} Indicates whether the input value is not empty.
+ */
 function isValueNotEmpty(passwordInput) {
     return passwordInput.trim().length !== 0;
 }
 
 
+/**
+ * Displays an image by setting its source attribute.
+ * @param {HTMLElement} lockImage - The lock image element.
+ * @param {string} src - The source URL of the image.
+ */
 function showImage(lockImage, src) {
     lockImage.src = src;
 }
 
 
+/**
+ * Toggles password visibility based on the input type and form.
+ * @param {Event} event - The event object.
+ * @param {string} ImgId - The ID of the image element.
+ * @param {string} whichform - The type of form ('password' or 'confirmPw').
+ * @param {number} value - The value indicating visibility state (-1 for hidden, 1 for visible).
+ */
 function togglePasswordVisibility(event, ImgId, whichform, value) {
     let visibilityOn, inputType;
     if ((whichform === 'password' || whichform === 'registerPw') && value === 1) 
@@ -388,12 +524,22 @@ function togglePasswordVisibility(event, ImgId, whichform, value) {
 }
 
 
+/**
+ * Updates the input type of the password input element.
+ * @param {string} whichform - The type of form ('password' or 'confirmPw').
+ * @param {string} inputType - The type of input ('text' or 'password').
+ */
 function updatePasswordInput(whichform, inputType) {
     const passwordInput = getPasswordInput(whichform);
     passwordInput.type = inputType;
 }
 
 
+/**
+ * Retrieves the password input element based on the specified form.
+ * @param {string} whichform - The type of form ('password', 'registerPw', or 'confirmPw').
+ * @returns {HTMLElement} The password input element.
+ */
 function getPasswordInput(whichform) {
     const formMap = {
         'password': 'login-user-password-id',
@@ -405,8 +551,9 @@ function getPasswordInput(whichform) {
 }
 
 
-// Guest login
-
+/**
+ * Logs in a guest user with predefined guest credentials.
+ */
 function guestLogin() {    
     const guestEmail = "guest@login.de";
     const guestPassword = "Guest!login1";    
@@ -417,6 +564,9 @@ function guestLogin() {
 }
 
 
+/**
+ * Displays the initials of the current user in the header profile section.
+ */
 function showHeaderUserInitials() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser && currentUser.userName) {
@@ -430,8 +580,9 @@ function showHeaderUserInitials() {
     }
 }
 
-
-// Function only for developers to clear double user entrys
+/**
+ * Function only for developers to clear double user entrys.
+ */
 async function removeDuplicateUsers() {
     try {
         let existingUsers = await loadUsersFromBackend('users');
@@ -450,7 +601,9 @@ async function removeDuplicateUsers() {
 }
 
 
-// Function only for developers to clear double user entrys
+/**
+ * Function only for developers to clear double user entrys.
+ */
 async function deletAllUsersInBackend() {
-    await setItem("users", JSON.stringify({})); //  funktion zum clearen des Backends
+    await setItem("users", JSON.stringify({}));
 }
