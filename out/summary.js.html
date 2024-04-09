@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: summary.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: summary.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Initializes the summary page.
+ */
+function summaryInit() {
+    setTimeout(showHeaderUserInitials, 200);    
+    getSummaryToDosCount();
+    getDoneTasksCount();
+    summaryGetUrgentPriorityCount();
+    summaryGetNextDateTask();
+    summaryGetAllTasksCount();
+    getInProgressTasksCount();
+    summaryGetAwaitingFeedbackCount();
+    updateGreeting();
+}
+
+
+/**
+ * Retrieves the count of tasks in the 'To Do' column and updates the corresponding summary display.
+ */
+function getSummaryToDosCount() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const todoTasksCount = currentUser.tasks.filter(task => task.columnId === 'todo').length;
+        const summaryToDoID = document.getElementById('summaryToDoID');
+        if (summaryToDoID) {
+            summaryToDoID.textContent = todoTasksCount.toString();
+        }
+    } else {        
+        const summaryToDoID = document.getElementById('summaryToDoID');
+        if (summaryToDoID) {
+            summaryToDoID.textContent = '0';
+        }
+    }
+}
+
+
+/**
+ * Retrieves the count of tasks in the 'Done' column and updates the corresponding summary display.
+ */
+function getDoneTasksCount() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const doneTasksCount = currentUser.tasks.filter(task => task.columnId === 'done').length;
+        const summaryDoneID = document.getElementById('summaryDoneID');
+        if (summaryDoneID) {
+            summaryDoneID.textContent = doneTasksCount.toString();
+        }
+    } else {        
+        const summaryDoneID = document.getElementById('summaryDoneID');
+        if (summaryDoneID) {
+            summaryDoneID.textContent = '0';
+        }
+    }
+}
+
+
+/**
+ * Retrieves the count of tasks with 'Urgent' priority and updates the corresponding summary display.
+ */
+function summaryGetUrgentPriorityCount() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const urgentPriorityCount = currentUser.tasks.filter(task => task.prio === 'urgent').length;
+        const summaryPriorityID = document.getElementById('summaryPriorityID');
+        if (summaryPriorityID) {
+            summaryPriorityID.textContent = urgentPriorityCount.toString();
+        }
+    } else {        
+        const summaryPriorityID = document.getElementById('summaryPriorityID');
+        if (summaryPriorityID) {
+            summaryPriorityID.textContent = '0';
+        }
+    }
+}
+
+
+/**
+ * Retrieves the next due date task and displays its formatted date.
+ */
+function summaryGetNextDateTask() {
+    const currentUser = getCurrentUser();
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const tasksWithDueDate = getTasksWithDueDate(currentUser.tasks);
+        if (tasksWithDueDate.length > 0) {
+            const nextDueDate = getNextDueDate(tasksWithDueDate);
+            displayFormattedDate(nextDueDate);
+        } else {
+            displayNoTaskMessage();
+        }
+    } else {
+        displayNoTaskMessage();
+    }
+}
+
+
+/**
+ * Retrieves the current user object from local storage.
+ * @returns {Object} The current user object.
+ */
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem('currentUser'));
+}
+
+
+/**
+ * Filters tasks to include only those with a due date specified.
+ * @param {Array} tasks - The array of tasks.
+ * @returns {Array} - The filtered array of tasks with due dates.
+ */
+function getTasksWithDueDate(tasks) {
+    return tasks.filter(task => task.date !== "");
+}
+
+
+/**
+ * Finds the next due date from an array of tasks.
+ * @param {Array} tasks - The array of tasks.
+ * @returns {Date} - The next due date.
+ */
+function getNextDueDate(tasks) {
+    tasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+    return new Date(tasks[0].date);
+}
+
+
+/**
+ * Displays a formatted date in the summary section.
+ * @param {Date} date - The date to be formatted.
+ */
+function displayFormattedDate(date) {
+    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    const summaryDateID = document.getElementById('summaryDateID');
+    if (summaryDateID) {
+        summaryDateID.textContent = formattedDate;
+    }
+}
+
+
+/**
+ * Displays a message indicating no task is available.
+ */
+function displayNoTaskMessage() {
+    const summaryDateID = document.getElementById('summaryDateID');
+    if (summaryDateID) {
+        summaryDateID.textContent = "No Task";
+    }
+}
+
+
+/**
+ * Updates the summary section with the count of all tasks.
+ */
+function summaryGetAllTasksCount() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const taskCount = currentUser.tasks.length;
+        const summaryAllTasksID = document.getElementById('summaryAllTasksID');
+        if (summaryAllTasksID) {
+            summaryAllTasksID.textContent = taskCount.toString();
+        }
+    } else {        
+        const summaryAllTasksID = document.getElementById('summaryAllTasksID');
+        if (summaryAllTasksID) {
+            summaryAllTasksID.textContent = '0';
+        }
+    }
+}
+
+
+/**
+ * Retrieves the count of tasks in progress and updates the summary section.
+ */
+function getInProgressTasksCount() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const inProgressTasksCount = currentUser.tasks.filter(task => task.columnId === 'inprogress').length;
+        const summaryInProgressID = document.getElementById('summaryProgressID');
+        if (summaryInProgressID) {
+            summaryInProgressID.textContent = inProgressTasksCount.toString();
+        }
+    } else {        
+        const summaryInProgressID = document.getElementById('summaryProgressID');
+        if (summaryInProgressID) {
+            summaryInProgressID.textContent = '0';
+        }
+    }
+}
+
+
+/**
+ * Retrieves the count of tasks awaiting feedback and updates the summary section.
+ */
+function summaryGetAwaitingFeedbackCount() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const awaitingFeedbackCount = currentUser.tasks.filter(task => task.columnId === 'awaitfeedback').length;
+        const summaryFeedbackID = document.getElementById('summaryFeedbackID');
+        if (summaryFeedbackID) {
+            summaryFeedbackID.textContent = awaitingFeedbackCount.toString();
+        }
+    } else {        
+        const summaryFeedbackID = document.getElementById('summaryFeedbackID');
+        if (summaryFeedbackID) {
+            summaryFeedbackID.textContent = '0';
+        }
+    }
+}
+
+
+/**
+ * Updates the greeting message based on the time of the day.
+ */
+async function updateGreeting() {
+    let { h, e, currentUser, addHours, addMinutes } = updateGreetingVariables();
+    if (h &lt;= 4) {
+      e.textContent = `Good night, ${currentUser.userName}`;
+      addHours = 4 - h;
+    } else if (h &lt;= 10) {
+      e.textContent = `Good morning, ${currentUser.userName}`;
+      addHours = 10 - h;
+    } else if (h &lt;= 12) {
+      e.textContent = `Good noon, ${currentUser.userName}`;
+      addHours = 12 - h;
+    } else if (h &lt;= 17) {
+        e.textContent = `Good afternoon, ${currentUser.userName}`;
+        addHours = 17 - h;
+    } else {
+      e.innerHTML = `Good evening,&lt;br> ${currentUser.userName}`;
+      addHours = 23 - h;
+    }  
+    const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;    
+    setTimeout(updateGreeting, waitTime)
+}
+
+
+/**
+ * Retrieves variables required for updating the greeting message.
+ * @returns {Object} - Object containing required variables.
+ */
+function updateGreetingVariables() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const e = document.getElementById("greeting-id");
+    let addHours = 0;
+    let addMinutes = m;
+    return { h, e, currentUser, addHours, addMinutes };
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#displayFormattedDate">displayFormattedDate</a></li><li><a href="global.html#displayNoTaskMessage">displayNoTaskMessage</a></li><li><a href="global.html#getCurrentUser">getCurrentUser</a></li><li><a href="global.html#getDoneTasksCount">getDoneTasksCount</a></li><li><a href="global.html#getInProgressTasksCount">getInProgressTasksCount</a></li><li><a href="global.html#getNextDueDate">getNextDueDate</a></li><li><a href="global.html#getSummaryToDosCount">getSummaryToDosCount</a></li><li><a href="global.html#getTasksWithDueDate">getTasksWithDueDate</a></li><li><a href="global.html#summaryGetAllTasksCount">summaryGetAllTasksCount</a></li><li><a href="global.html#summaryGetAwaitingFeedbackCount">summaryGetAwaitingFeedbackCount</a></li><li><a href="global.html#summaryGetNextDateTask">summaryGetNextDateTask</a></li><li><a href="global.html#summaryGetUrgentPriorityCount">summaryGetUrgentPriorityCount</a></li><li><a href="global.html#summaryInit">summaryInit</a></li><li><a href="global.html#updateGreeting">updateGreeting</a></li><li><a href="global.html#updateGreetingVariables">updateGreetingVariables</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 09 2024 17:22:35 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
