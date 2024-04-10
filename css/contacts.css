@@ -1106,6 +1106,7 @@
 @media only screen and (max-width: 400px) and (min-width: 320px) {
     .openContactInputNameMobile {
         width: 300px;
+        margin-top: 50px;
     }
 
     .openContactInputMailAddresssMobile {
@@ -1118,6 +1119,7 @@
 
     .addContactInputNameMobile {
         width: 300px;
+        margin-top: 50px;
     }
 
     .addContactInputMailAddresssMobile {
@@ -1131,5 +1133,9 @@
     .menu-content {
         justify-content: left;
         margin-right: 40px;
+    }
+
+    .task-container {
+        margin-bottom: 50px;
     }
 }
