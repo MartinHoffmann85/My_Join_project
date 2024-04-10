@@ -1029,3 +1029,53 @@ function addSubtaskNewSubtask(subtaskTitle) {
 function boardGenerateRandomID() {    
     return Math.random().toString(36).substring(2, 11);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Handles the touch start event for task elements.
+ * @param {Event} event - The touchstart event object.
+ */
+function touchStart(event) {
+    event.preventDefault();
+    const taskId = event.target.getAttribute("data-taskid");
+    if (taskId) {
+        event.dataTransfer.setData("text/plain", taskId);
+    }
+}
+
+/**
+ * Handles the touch move event for draggable elements.
+ * @param {Event} event - The touchmove event object.
+ */
+function touchMove(event) {
+    event.preventDefault();
+}
+
+/**
+ * Handles the touch end event for draggable elements.
+ * @param {Event} event - The touchend event object.
+ */
+function touchEnd(event) {
+    event.preventDefault();
+    const taskId = event.target.getAttribute("data-taskid");
+    const targetColumn = event.target.closest('.boardColumn');
+    if (targetColumn) {
+        const targetColumnId = targetColumn.id.split('-')[0];
+        const targetContainer = document.getElementById(targetColumnId + '-tasks');
+        const draggedTaskElement = document.getElementById(taskId);
+        if (draggedTaskElement && targetContainer) {
+            targetContainer.appendChild(draggedTaskElement);
+            updateTaskColumnId(taskId, targetColumnId);
+        }
+    }
+}
