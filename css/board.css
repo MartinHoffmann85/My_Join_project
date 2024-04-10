@@ -621,6 +621,11 @@ body {
 
     .renderTaskDate {
         flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .renderTaskOverlayDate {
+        margin-left: 0;
     }
 
     .editAssigntToPElementAndSelectContactsButton {

@@ -15,13 +15,13 @@ window.onload = contactsInit;
 function contactsInit() {
   const maxWidth = 949;    
   if (window.innerWidth <= maxWidth) {
-      setTimeout(showHeaderAndFooter, 200);
+      setTimeout(showHeaderAndFooter, 300);
       renderContacts();
       renderAddContactButtonMobile();
       setTimeout(showHeaderUserInitials, 500);
       contactsInitVariables();
   } else {
-      setTimeout(showHeaderAndFooter, 200);
+      setTimeout(showHeaderAndFooter, 300);
       renderContactsDesktop();        
       document.body.style.overflow = 'hidden';
       setTimeout(showHeaderUserInitials, 200);

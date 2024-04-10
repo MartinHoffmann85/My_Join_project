@@ -32,6 +32,7 @@ body {
         height: 80dvh;
         margin-left: 10px;
         margin-top: 90px;
+        padding-bottom: 30px;
         overflow-y: scroll;
         overflow-x: hidden;
         width: -webkit-fill-available; 
