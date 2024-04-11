@@ -296,7 +296,7 @@ function generateHTMLAddContactShowOverlayDesktop(overlayContent) {
                 <input class="addContactInputPhoneDesktop" type="tel" name="addContactInputPhoneDesktop" id="add-contact-input-phone-desktop-id" required pattern="[0-9]{1,}" placeholder="Phone" data-contacts>
                 <div class="addContactButtonContainerDesktop">
                   <button class="cancelContactDesktopDeleteButton" onclick="event.preventDefault(); hideOverlay()">Cancel</button>
-                  <button class="createContactButton" onclick="createContactDesktop()">Create contact</button>
+                  <button class="createContactButton" onclick="event.preventDefault();createContactDesktop()">Create contact</button>
                   </div>
                 </div>
               </form>  
