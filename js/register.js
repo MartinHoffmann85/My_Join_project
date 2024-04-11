@@ -607,3 +607,22 @@ async function removeDuplicateUsers() {
 async function deletAllUsersInBackend() {
     await setItem("users", JSON.stringify({}));
 }
+
+
+/** 
+ * @param {number} index - Die Indexposition des zu löschenden Benutzers.
+ */
+async function deleteUserAtIndex(index) {
+    try {        
+        let existingUsers = await loadUsersFromBackend('users');
+        if (index < 0 || index >= existingUsers.length) {
+            console.error('Ungültiger Index für Benutzerlöschung');
+            return;
+        }
+        existingUsers.splice(index, 1);
+        await setItem('users', JSON.stringify(existingUsers));
+        console.log('Benutzer an Index', index, 'erfolgreich gelöscht');
+    } catch (error) {
+        console.error('Fehler beim Löschen des Benutzers:', error);
+    }
+}
