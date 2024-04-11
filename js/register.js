@@ -610,7 +610,7 @@ async function deletAllUsersInBackend() {
 
 
 /** 
- * @param {number} index - Die Indexposition des zu löschenden Benutzers.
+ * @param {number} index - Index ist for the index of the user to delete
  */
 async function deleteUserAtIndex(index) {
     try {        
