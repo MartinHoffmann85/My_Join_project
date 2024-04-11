@@ -1,3 +1,6 @@
+let draggedTaskId;
+let originalColumnId;
+
 /**
  * Initializes the board by loading tasks from local storage, rendering them, and showing user initials in the header.
  */
@@ -301,6 +304,17 @@ function boardRenderSubtaskForEach(task, checkedCount, subtasksHTML, taskId) {
         subtasksHTML += generateSubtaskHTML(subtask, isChecked, checkboxId, taskId);
     });
     return { checkedCount, subtasksHTML };
+}
+
+
+/**
+ * Retrieves the task data of the current user by task ID.
+ * @param {string} taskId - The ID of the task.
+ * @returns {Object|null} - The task data or null if not found.
+ */
+function getCurrentUserTask(taskId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return currentUser.tasks.find(task => task.id === taskId);
 }
 
 
@@ -1028,54 +1042,4 @@ function addSubtaskNewSubtask(subtaskTitle) {
  */
 function boardGenerateRandomID() {    
     return Math.random().toString(36).substring(2, 11);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * Handles the touch start event for task elements.
- * @param {Event} event - The touchstart event object.
- */
-function touchStart(event) {
-    event.preventDefault();
-    const taskId = event.target.getAttribute("data-taskid");
-    if (taskId) {
-        event.dataTransfer.setData("text/plain", taskId);
-    }
-}
-
-/**
- * Handles the touch move event for draggable elements.
- * @param {Event} event - The touchmove event object.
- */
-function touchMove(event) {
-    event.preventDefault();
-}
-
-/**
- * Handles the touch end event for draggable elements.
- * @param {Event} event - The touchend event object.
- */
-function touchEnd(event) {
-    event.preventDefault();
-    const taskId = event.target.getAttribute("data-taskid");
-    const targetColumn = event.target.closest('.boardColumn');
-    if (targetColumn) {
-        const targetColumnId = targetColumn.id.split('-')[0];
-        const targetContainer = document.getElementById(targetColumnId + '-tasks');
-        const draggedTaskElement = document.getElementById(taskId);
-        if (draggedTaskElement && targetContainer) {
-            targetContainer.appendChild(draggedTaskElement);
-            updateTaskColumnId(taskId, targetColumnId);
-        }
-    }
 }
