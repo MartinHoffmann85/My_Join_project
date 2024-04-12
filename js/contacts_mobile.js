@@ -339,7 +339,7 @@ async function createContactMobile() {
  */
 function showSuccessfullyContactCreatedImageMobile() {  
   const imageElement = document.createElement("img");
-  imageElement.src = './assets/img/contacts/ContactSuccessfullyCreatedOverlay.svg';
+  imageElement.src = './assets/img/contacts/contactSuccessfullyCreatedOverlay.svg';
   imageElement.style.position = "fixed";
   imageElement.style.top = "50%";
   imageElement.style.left = "50%";

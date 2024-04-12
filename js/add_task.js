@@ -483,7 +483,28 @@ async function createTask() {
   const taskID = generateTaskID();
   await updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  redirectToAddBoard();
+  showSuccessfullyTaskCreatedImage();
+  setTimeout(() => {
+    redirectToAddBoard();
+  }, 2000);  
+}
+
+
+/**
+ * Show successfully contact created image.
+ */
+function showSuccessfullyTaskCreatedImage() {  
+  const imageElement = document.createElement("img");
+  imageElement.src = './assets/img/addedTaskToBoardSuccessfully.svg';
+  imageElement.style.position = "fixed";
+  imageElement.style.top = "50%";
+  imageElement.style.left = "50%";
+  imageElement.style.transform = "translate(-50%, -50%)";
+  imageElement.style.zIndex = "9999";  
+  document.body.appendChild(imageElement);
+  setTimeout(() => {
+      document.body.removeChild(imageElement);
+  }, 2000);
 }
 
 
