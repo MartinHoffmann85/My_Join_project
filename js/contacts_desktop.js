@@ -334,6 +334,7 @@ function createContactDesktop() {
   addContactToCurrentUser(newContact);
   hideOverlay();
   contactsInit();
+  showSuccessfullyContactCreatedImageDesktop();
 }
 
 
@@ -443,7 +444,25 @@ function updateContactsDataDesktop(contactId) {
     updateCurrentUserInBackend(currentUser);  
     clearAddContactDesktopRightSideContainer();
     hideOverlay();
-    contactsInit();
+    contactsInit();    
+}
+
+
+/**
+ * Show successfully contact created image.
+ */
+function showSuccessfullyContactCreatedImageDesktop() {  
+  const imageElement = document.createElement("img");
+  imageElement.src = './assets/img/contacts/ContactSuccessfullyCreatedOverlay.svg';
+  imageElement.style.position = "fixed";
+  imageElement.style.top = "50%";
+  imageElement.style.left = "50%";
+  imageElement.style.transform = "translate(-50%, -50%)";
+  imageElement.style.zIndex = "9999";  
+  document.body.appendChild(imageElement);
+  setTimeout(() => {
+      document.body.removeChild(imageElement);
+  }, 2000);
 }
 
 
@@ -453,12 +472,12 @@ function updateContactsDataDesktop(contactId) {
  * @returns {Object} - Object containing updated contact data and related variables.
  */
 function updateContactsDataDesktopVariables(contactId) {
-  const updatedName = document.getElementById('editContactInputNameDesktopID').value;
-  const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
-  const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value;
-  const currentUser = getLoggedInUser();
-  const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
-  return { currentUser, contactIndex, updatedName, updatedEmail, updatedPhone };
+    const updatedName = document.getElementById('editContactInputNameDesktopID').value;
+    const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
+    const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value;
+    const currentUser = getLoggedInUser();
+    const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
+    return { currentUser, contactIndex, updatedName, updatedEmail, updatedPhone };
 }
 
 

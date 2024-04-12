@@ -330,6 +330,25 @@ async function createContactMobile() {
   newContact.id = generateUniqueID();
   addContactToCurrentUser(newContact);
   contactsInit();
+  showSuccessfullyContactCreatedImageMobile();
+}
+
+
+/**
+ * Show successfully contact created image.
+ */
+function showSuccessfullyContactCreatedImageMobile() {  
+  const imageElement = document.createElement("img");
+  imageElement.src = './assets/img/contacts/ContactSuccessfullyCreatedOverlay.svg';
+  imageElement.style.position = "fixed";
+  imageElement.style.top = "50%";
+  imageElement.style.left = "50%";
+  imageElement.style.transform = "translate(-50%, -50%)";
+  imageElement.style.zIndex = "9999";  
+  document.body.appendChild(imageElement);
+  setTimeout(() => {
+      document.body.removeChild(imageElement);
+  }, 2000);
 }
 
 
