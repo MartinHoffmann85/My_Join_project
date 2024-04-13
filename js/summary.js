@@ -213,24 +213,25 @@ function summaryGetAwaitingFeedbackCount() {
  */
 async function updateGreeting() {
     let { h, e, currentUser, addHours, addMinutes } = updateGreetingVariables();
+    const currentUserPElement = `<p class="greetingUserNamePElement">${currentUser.userName}</p>`;
     if (h <= 4) {
-      e.textContent = `Good night, ${currentUser.userName}`;
+      e.innerHTML = `Good night, ${currentUserPElement}`;
       addHours = 4 - h;
     } else if (h <= 10) {
-      e.textContent = `Good morning, ${currentUser.userName}`;
+      e.innerHTML = `Good morning, ${currentUserPElement}`;
       addHours = 10 - h;
     } else if (h <= 12) {
-      e.textContent = `Good noon, ${currentUser.userName}`;
+      e.innerHTML = `Good noon, ${currentUserPElement}`;
       addHours = 12 - h;
     } else if (h <= 17) {
-        e.textContent = `Good afternoon, ${currentUser.userName}`;
+        e.innerHTML = `Good afternoon, ${currentUserPElement}`;
         addHours = 17 - h;
     } else {
-      e.innerHTML = `Good evening,<br> ${currentUser.userName}`;
+      e.innerHTML = `Good evening,<br> ${currentUserPElement}`;
       addHours = 23 - h;
-    }  
+    }
     const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;    
-    setTimeout(updateGreeting, waitTime)
+    setTimeout(updateGreeting, waitTime);
 }
 
 
