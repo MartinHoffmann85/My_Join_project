@@ -54,23 +54,36 @@
             <h1 class="boardH1">Board</h1>
             <input class="boardSearchInput" name="boardSearchInput" id="boardSearchInputID" type="text" placeholder="Find Task" oninput="searchTasks()">
             <button onclick="redirectToAddTask()" class="boardAddTaskButton">Add task +</button>
-            <img onclick="redirectToAddTask()" class="plusAddTaskMobile" src="./assets/svg/plusAddTaskMobile.svg" alt="">
+            <img onclick="redirectToAddTask()" class="plusAddTaskMobile" src="./assets/svg/plusAddTaskMobile.svg" alt="plusAddTaskMobile">
         </div>
         <div class="boardContent">            
             <div class="boardColumn" id="todo-column" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <h2 class="boardTodoH2GreyColor">To Do</h2>
+                <div class="boardTaskH2AndPlusTaskButtonContainer">
+                    <h2 class="boardTodoH2GreyColor">To Do</h2>
+                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" onclick="redirectToAddTask()">
+                </div>                
                 <div id="todo-tasks" class="task-container"></div>
             </div>
             <div class="boardColumn" id="inprogress-column" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <h2 class="boardTodoH2GreyColor">In Progress</h2>
+                <div class="boardTaskH2AndPlusTaskButtonContainer">
+                    <h2 class="boardTodoH2GreyColor">In Progress</h2>
+                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" onclick="redirectToAddTask()">
+                </div>                
                 <div id="inprogress-tasks" class="task-container"></div>
             </div>
             <div class="boardColumn" id="awaitfeedback-column" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <h2 class="boardTodoH2GreyColor">Await Feedback</h2>
+                <div class="boardTaskH2AndPlusTaskButtonContainer">
+                    <h2 class="boardTodoH2GreyColor">Await Feedback</h2>
+                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" onclick="redirectToAddTask()">
+                </div>
+                
                 <div id="awaitfeedback-tasks" class="task-container"></div>
             </div>
             <div class="boardColumn" id="done-column" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <h2 class="boardTodoH2GreyColor">Done</h2>
+                <div class="boardTaskH2AndPlusTaskButtonContainer">
+                    <h2 class="boardTodoH2GreyColor">Done</h2>
+                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" onclick="redirectToAddTask()">
+                </div>                
                 <div id="done-tasks" class="task-container"></div>
             </div>
         </div> 

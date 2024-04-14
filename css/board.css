@@ -570,6 +570,13 @@ body {
     padding: 5px;
 }
 
+.boardTaskH2AndPlusTaskButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
 @media only screen and (max-width: 1025px) and (min-width: 949px) {
     .boardColumn {
         margin: 0;
