@@ -197,15 +197,19 @@ function renderSingleMemberToHTMLMobile(oneContact, colorCode, textColor) {
 
 
 /**
-* Retrieves the first letters of a name to generate initials.
+* Retrieves the first letters of the first name and last name to generate initials.
 * @param {string} name - The name of the contact.
 * @returns {string} The initials of the name.
 */
 function getFirstLettersOfName(name) {
   let words = name.replace(/\s+/g, ' ').trim().split(" ");
   let initials = "";
+  let namesProcessed = 0;  
   for (let word of words) {
-    initials += word[0].toUpperCase();
+    if (namesProcessed < 2 && word) {
+      initials += word[0].toUpperCase();
+      namesProcessed++;
+    }
   }  
   return initials;
 }
