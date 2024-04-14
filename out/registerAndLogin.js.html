@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: registerAndLogin.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: registerAndLogin.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471";
+const STORAGE_URL = "https://remote-storage.developerakademie.org/item";
+let rmCheckboxConfirmed = false;
+let ppCheckboxConfirmed = false;
+let users = {};
+let newUserArray = [];
+let emptyInput = true;
+let pwVisibility = { pwVisibilityOn: false };
+let confirmPwVisibility = { pwVisibilityOn: false };
+
+
+/**
+ * Initializes the application by loading users from the backend and setting up password visibility listener.
+ */
+async function init() {
+    users = await loadUsersFromBackend('users');
+    console.log(users);
+    addPasswordVisibilityListener('login-pw-border-id', 
+                                'lock-id', 
+                                'login-pw-visibility-off-id',
+                                'login-pw-visibility-id',
+                                pwVisibility);
+}
+
+
+/**
+ * Loads users data from the backend.
+ * @param {string} key - The key to identify the data in the backend.
+ * @returns {Promise&lt;Array>} - An array of user objects.
+ */
+async function loadUsersFromBackend(key) {
+    try {
+        const result = await getItem(key);
+        return JSON.parse(result) || [];
+    } catch (e) {
+        console.error('loading error:', e);
+        return [];
+    }
+}
+
+
+/**
+ * Registers a new user if validation checks pass and privacy policy checkbox is confirmed.
+ */
+function register() {
+    if (!(registerValidationCheck() &amp;&amp; ppCheckboxConfirmed))
+        return;
+    addNewUser();
+    toggleSuccessesMsg();
+    closeSignUp();
+}
+
+
+/**
+ * Adds a new user to the application.
+ */
+async function addNewUser() {
+    const newUser = generateNewUserObject();
+    newUserArray.push(newUser);
+    try {
+        await addNewUserToBackend(newUser);
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+
+/**
+ * Generates a new user object from input field values.
+ * @returns {Object} - The newly created user object.
+ */
+function generateNewUserObject() {
+    const userName = document.getElementById("add-name-id").value;
+    const userEMail = document.getElementById("add-email-id").value;
+    const userPassword = document.getElementById("add-pw-id").value;
+    const userPasswordConfirm = document.getElementById("add-confirm-pw-id").value;
+    return generateNewUserObjectConstructor(userName, userEMail, userPassword, userPasswordConfirm);
+}
+
+
+/**
+ * Generates a new user object constructor.
+ * @param {string} userName - The user's name.
+ * @param {string} userEMail - The user's email.
+ * @param {string} userPassword - The user's password.
+ * @param {string} userPasswordConfirm - The user's password confirmation.
+ * @returns {Object} - The newly created user object.
+ */
+function generateNewUserObjectConstructor(userName, userEMail, userPassword, userPasswordConfirm) {
+    return {
+        'userName': userName,
+        'userEMail': userEMail,
+        'userPassword': userPassword,
+        'userPasswordConfirm': userPasswordConfirm,
+        'contacts': [],
+        'tasks': {
+            'titles': [],
+            'descriptions': [],
+            'assignedTo': [],
+            'prios': [],
+            'categories': [],
+            'subtasks': [],
+            'dates': []
+        }
+    };
+}
+
+
+/**
+ * Adds a new user to the backend.
+ * @param {Object} user - The user object to be added to the backend.
+ */
+async function addNewUserToBackend(user) {
+    try {
+        let existingUsers = await loadUsersFromBackend('users');
+        if (!Array.isArray(existingUsers)) {
+            existingUsers = [];
+        }
+        existingUsers.push(user);
+        await setItem('users', JSON.stringify(existingUsers));        
+    } catch (error) {
+        console.error('Error adding new user to backend:', error);
+    }
+}
+
+
+/**
+ * Validates the user's name.
+ * @param {string} name - The user's name to be validated.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ */
+function validateName(name, boolArr) {
+    const specialCharRegex  = /[!@#$%^&amp;*()_+{}\[\]:;&lt;>,.?~\\/0123456789]/;
+    const checkForDoubleHyphen = name.split("-").length - 1;
+    if (name.trim() === "") 
+        boolArr[0] = boolArr[10] = true;
+    else if (specialCharRegex.test(name)) 
+        boolArr[2] = boolArr[10] = true;
+    else if (name.length &lt; 2 &amp;&amp; checkForDoubleHyphen === 0) 
+        boolArr[1] = boolArr[10] = true;
+    else if (checkForDoubleHyphen !== 0 &amp;&amp; (!name.match(/[a-zA-Z]-[a-zA-Z]{2,}/) || name.indexOf('-') &lt; 2 || name.split('-').pop() === '')) 
+        boolArr[1] = boolArr[10] = true;
+}
+
+
+/**
+ * Validates the user's email during registration.
+ * @param {string} email - The user's email to be validated.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ */
+function validateRegisterEmail(email, boolArr) {
+    if (email.trim() === "") 
+        boolArr[3] = boolArr[11] = true;
+    else if (!email.includes('@') || email.indexOf('@') === 0 || email.split('@').pop() === '') 
+        boolArr[4] = boolArr[11] = true;
+    else if (email in users) 
+        boolArr[5] = boolArr[11] = true;
+}
+
+
+/**
+ * Validates the user's password during registration.
+ * @param {string} password - The user's password to be validated.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ */
+function validatePassword(password, boolArr) {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&amp;*()_+{}\[\]:;&lt;>,.?~\\/]/.test(password);
+    const hasDigit = /[0123456789]/.test(password);
+    if (password.trim() === "") 
+        boolArr[6] = boolArr[12] = true;
+    else if (!hasUpperCase || !hasSpecialChar || !hasDigit || password.length &lt; 6 )  
+        boolArr[7] = boolArr[12] = true;
+}
+
+
+/**
+ * Validates the user's confirm password during registration.
+ * @param {string} password - The user's password.
+ * @param {string} confirmPassword - The user's confirmation password.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ */
+function validateConfirmPassword(password, confirmPassword, boolArr) {
+    if (confirmPassword.trim() === "") 
+        boolArr[8] = boolArr[13] = true;
+    else if (password !== confirmPassword  )  
+        boolArr[9] = boolArr[13] = true;
+}
+
+
+/**
+ * Toggles the visibility of a checkbox based on its state.
+ */
+function validateCheckBoxClicked() {
+    toggleVisibility('pp-id', ppCheckboxConfirmed, 'err-msg-color');
+}
+
+
+/**
+ * Handles field validation during registration.
+ * @param {boolean[]} boolArr - An array of boolean values representing validation checks.
+ * @returns {boolean} - Indicates whether all fields are validated.
+ */
+function handlerFieldValidationRegister(boolArr) {
+    toggleVisibility('empty-add-name-id', boolArr[0]);
+    toggleVisibility('invalid-add-name-id', boolArr[1]);
+    toggleVisibility('no-special-chars-id', boolArr[2]);
+    toggleVisibility('empty-add-email-id', boolArr[3]);
+    toggleVisibility('invalid-add-email-id', boolArr[4]);
+    toggleVisibility('existing-add-email-id', boolArr[5]);
+    toggleVisibility('empty-add-pw-id', boolArr[6]);
+    toggleVisibility('invalid-add-pw-id', boolArr[7]);
+    toggleVisibility('empty-confirm-pw-id', boolArr[8]);
+    toggleVisibility('invalid-confirm-pw-id', boolArr[9]);
+    toggleVisibility('add-name-border-id', !boolArr[10],'error-border')
+    toggleVisibility('add-email-border-id', !boolArr[11],'error-border')
+    toggleVisibility('add-pw-border-id', !boolArr[12],'error-border')
+    toggleVisibility('add-confirm-pw-border-id', !boolArr[13],'error-border')
+    return !boolArr.some(Boolean);
+}
+
+
+/**
+ * Checks the validity of the registration form fields.
+ * @returns {boolean} - Indicates whether the registration form is valid.
+ */
+function registerValidationCheck() {
+    const name = document.getElementById("add-name-id").value;
+    const email = document.getElementById("add-email-id").value;
+    const password = document.getElementById("add-pw-id").value;
+    const confirmPassword = document.getElementById("add-confirm-pw-id").value;
+    const checkBox = document.getElementById('privacy-check-id');
+    const boolArr = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+    validateName(name, boolArr);
+    validateRegisterEmail(email, boolArr);
+    validatePassword(password, boolArr);
+    validateConfirmPassword(password, confirmPassword, boolArr);
+    validateCheckBoxClicked(checkBox);
+    return handlerFieldValidationRegister(boolArr);
+}
+
+
+/**
+ * Toggles the visibility of the success message.
+ */
+function toggleSuccessesMsg() {
+    const successMsg =  document.getElementById('success-msg-id');
+    successMsg.classList.toggle('d-none')
+    window.setTimeout(() => {
+        successMsg.classList.toggle('d-none');
+    }, 800);
+}
+
+
+/**
+ * Resets the login inputs and validation states.
+ */
+function resetLoginInputs() {
+    const boolArr = [false, false, false, false, false, false, false];
+    handlerFieldValidationLogin(boolArr);
+    document.getElementById("login-user-e-mail-id").value = "";
+    document.getElementById("login-user-password-id").value = "";
+    const pwInput = document.getElementById('lock-id');
+    showImage(pwInput, './assets/img/lock.png');
+}
+
+
+/**
+ * Handles errors by logging them to the console.
+ * @param {Error} error - The error object to be handled.
+ */
+function handleError(error) {
+    console.error("Error sending user data to the backend:", error);
+}
+
+
+/**
+ * Push request to backend.
+ * Either it is fulfilled successfully (resolved) or it fails (rejected).
+ * @param {lokal storage key} key
+ * @param {string} value
+ * @returns Promise: resolved or rejected.
+ */
+async function setItem(key, value) {
+    const payload = { key, value, token: STORAGE_TOKEN };
+    return fetch(STORAGE_URL, { method: 'POST', body: JSON.stringify(payload)})
+    .then(res => res.json());
+}
+
+
+/**
+ * Get request to backend.
+ * @param {lokal storage key} key
+ */
+async function getItem(key) {
+    const url = `${STORAGE_URL}?key=${key}&amp;token=${STORAGE_TOKEN}`;
+    return fetch(url).then(res => res.json()).then(res => res.data.value);
+}
+
+
+/**
+ * Displays the sign-up form and initializes password visibility options.
+ */
+function signUp() {
+    pwVisibility.pwVisibilityOn = false;
+    resetLoginInputs();
+    toggleVisibility('sign-up-popup-id', true);
+    toggleVisibility('signup-container-id', false);
+    toggleVisibility('login-id', false);
+    let signUpPopupElement = document.getElementById('sign-up-popup-id');
+    signUpPopupElement.innerHTML += templateSignUpPopup();
+    addPasswordVisibilityOption();
+}
+
+
+/**
+ * Adds password visibility options for the sign-up form.
+ */
+function addPasswordVisibilityOption() {
+    addPasswordVisibilityListener('add-pw-border-id',
+        'register-lock-id',
+        'register-pw-visibility-off-id',
+        'register-pw-visibility-id',
+        pwVisibility);
+    addPasswordVisibilityListener('add-confirm-pw-border-id',
+        'register-confirm-lock-id',
+        'register-confirm-pw-visibility-off-id',
+        'register-confirm-pw-visibility-id',
+        confirmPwVisibility);
+}
+
+
+/**
+ * Closes the sign-up form and resets related elements.
+ */
+function closeSignUp() {
+    document.getElementById('login-user-password-id').type = 'password';
+    pwVisibility.pwVisibilityOn = false;
+    confirmPwVisibility.pwVisibilityOn = false;
+    toggleVisibility('lock-id', true);
+    toggleVisibility('login-pw-visibility-off-id', false);
+    toggleVisibility('login-pw-visibility-id', false);
+    toggleVisibility('sign-up-popup-id', false);
+    toggleVisibility('signup-container-id', true);
+    toggleVisibility('login-id', true);
+    document.getElementById('sign-up-popup-id').innerHTML = "";
+    ppCheckboxConfirmed = false;
+}
+
+
+/**
+ * Attempts to log in the user.
+ */
+async function login() {
+    try {
+        const loggedInUser = await authenticateUser();
+        if (loggedInUser) {
+            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
+            window.location.assign('./summary.html');
+            localStorage.setItem('isLoggedIn', 'true');
+            setTimeout(showHeaderUserInitials, 500);
+        } else {
+            console.error('Error: Unable to log in user.');
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+    }
+}
+
+
+/**
+ * Authenticates the user based on the provided credentials.
+ * @returns {object|null} The authenticated user object if successful, otherwise null.
+ */
+async function authenticateUser() {
+    const { foundUser, loginUserPassword } = await authenticateUserVariables();    
+    if (foundUser) {
+        if (foundUser.userPassword === loginUserPassword) {
+            return foundUser;
+        } else {
+            console.error("Error: Incorrect password.");
+            return null;
+        }
+    } else {
+        console.error("Error: User not found.");
+        return null;
+    }
+}
+
+
+/**
+ * Retrieves user email and password inputs, loads users from the backend, and finds the user with the provided email.
+ * @returns {object} An object containing the found user and the login user password.
+ */
+async function authenticateUserVariables() {
+    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
+    const loginUserPassword = document.getElementById("login-user-password-id").value;
+    const users = await loadUsersFromBackend('users');
+    const foundUser = users.find(user => user.userEMail === loginUserEmail);
+    return { foundUser, loginUserPassword };
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addNewUser">addNewUser</a></li><li><a href="global.html#addNewUserToBackend">addNewUserToBackend</a></li><li><a href="global.html#addPasswordVisibilityOption">addPasswordVisibilityOption</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#authenticateUserVariables">authenticateUserVariables</a></li><li><a href="global.html#closeSignUp">closeSignUp</a></li><li><a href="global.html#generateNewUserObject">generateNewUserObject</a></li><li><a href="global.html#generateNewUserObjectConstructor">generateNewUserObjectConstructor</a></li><li><a href="global.html#getItem">getItem</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handlerFieldValidationRegister">handlerFieldValidationRegister</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loadUsersFromBackend">loadUsersFromBackend</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#registerValidationCheck">registerValidationCheck</a></li><li><a href="global.html#resetLoginInputs">resetLoginInputs</a></li><li><a href="global.html#setItem">setItem</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleSuccessesMsg">toggleSuccessesMsg</a></li><li><a href="global.html#validateCheckBoxClicked">validateCheckBoxClicked</a></li><li><a href="global.html#validateConfirmPassword">validateConfirmPassword</a></li><li><a href="global.html#validateName">validateName</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#validateRegisterEmail">validateRegisterEmail</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 14 2024 20:33:40 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
