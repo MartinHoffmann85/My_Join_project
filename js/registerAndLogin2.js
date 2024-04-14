@@ -180,12 +180,20 @@ function showHeaderUserInitials() {
 }
 
 
+/**
+ * Logs out the current user by updating the local storage items.
+ * Sets the 'isLoggedIn' item to 'false' and removes the 'currentUser' item.
+ */
 function userLogOut() {
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.removeItem('currentUser');
 }
 
 
+/**
+ * Checks if a user is logged in and adjusts the visibility of the footer link menu accordingly.
+ * Retrieves the 'isLoggedIn' item from local storage and updates the display of the footer link menu based on its value.
+ */
 function checkIfLoggedIn() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');    
     let hideFooterLinkMenu = document.querySelector('.menu-box');
