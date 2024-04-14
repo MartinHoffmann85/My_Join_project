@@ -180,33 +180,14 @@ function showHeaderUserInitials() {
 }
 
 
-function hideFooterLinkMenu(event) {
-    event.preventDefault();
-    let hideFooterLinkMenu = document.querySelector('.menu-box');
-    setTimeout(() => {
-        hideFooterLinkMenu.style.display = "none";
-        console.log("function hideFooterLinkMenu()" , "display none");
-        window.location.href = event.target.href;
-    }, 800);
-}
-
-
-function showFooterLinkMenu() {
-    let hideFooterLinkMenu = document.querySelector('.menu-box');
-    setTimeout(() => {
-        hideFooterLinkMenu.style.display = "block";
-    }, 800);
-}
-
-
 function userLogOut() {
     localStorage.setItem('isLoggedIn', 'false');
+    localStorage.removeItem('currentUser');
 }
 
 
 function checkIfLoggedIn() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    console.log("isLoggedIn:", isLoggedIn);
+    const isLoggedIn = localStorage.getItem('isLoggedIn');    
     let hideFooterLinkMenu = document.querySelector('.menu-box');
     if (isLoggedIn === 'true') {
         if (hideFooterLinkMenu) {
