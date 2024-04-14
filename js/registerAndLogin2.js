@@ -156,7 +156,8 @@ function guestLogin() {
     const guestEmail = "guest@login.de";
     const guestPassword = "Guest!login1";    
     document.getElementById("login-user-e-mail-id").value = guestEmail;
-    document.getElementById("login-user-password-id").value = guestPassword;    
+    document.getElementById("login-user-password-id").value = guestPassword;
+    localStorage.setItem('isLoggedIn', 'true');
     login();
     setTimeout(showHeaderUserInitials, 500);
 }
@@ -177,6 +178,47 @@ function showHeaderUserInitials() {
         }
     }
 }
+
+
+function hideFooterLinkMenu(event) {
+    event.preventDefault();
+    let hideFooterLinkMenu = document.querySelector('.menu-box');
+    setTimeout(() => {
+        hideFooterLinkMenu.style.display = "none";
+        console.log("function hideFooterLinkMenu()" , "display none");
+        window.location.href = event.target.href;
+    }, 800);
+}
+
+
+function showFooterLinkMenu() {
+    let hideFooterLinkMenu = document.querySelector('.menu-box');
+    setTimeout(() => {
+        hideFooterLinkMenu.style.display = "block";
+    }, 800);
+}
+
+
+function userLogOut() {
+    localStorage.setItem('isLoggedIn', 'false');
+}
+
+
+function checkIfLoggedIn() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    console.log("isLoggedIn:", isLoggedIn);
+    let hideFooterLinkMenu = document.querySelector('.menu-box');
+    if (isLoggedIn === 'true') {
+        if (hideFooterLinkMenu) {
+            hideFooterLinkMenu.style.display = "flex";
+        }
+    } else {
+        if (hideFooterLinkMenu) {
+            hideFooterLinkMenu.style.display = "none";
+        }
+    }
+}
+
 
 /**
  * Function only for developers to clear double user entrys.

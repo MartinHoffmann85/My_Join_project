@@ -3,6 +3,7 @@
  */
 function legalNoticeInit() {
     setTimeout(showHeaderUserInitials, 500);
+    setTimeout(checkIfLoggedIn, 200);
 }
 
 
@@ -12,3 +13,5 @@ function legalNoticeInit() {
 function backToSummary() {
     window.location.assign("./summary.html");
 }
+
+
