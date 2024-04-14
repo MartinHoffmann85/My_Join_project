@@ -560,9 +560,14 @@ body {
 }
 
 .empty-message {
+    color: rgba(168, 168, 168, 1);
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 400;
     margin-top: 24px;
+    background-color: rgba(231, 231, 231, 1);
+    border: 1px dotted;
+    border-radius: 10px;
+    padding: 5px;
 }
 
 @media only screen and (max-width: 1025px) and (min-width: 949px) {
