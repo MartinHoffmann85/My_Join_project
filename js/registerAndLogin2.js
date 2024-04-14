@@ -1,4 +1,37 @@
 /**
+ * Authenticates the user based on the provided credentials.
+ * @returns {object|null} The authenticated user object if successful, otherwise null.
+ */
+async function authenticateUser() {
+    const { foundUser, loginUserPassword } = await authenticateUserVariables();    
+    if (foundUser) {
+        if (foundUser.userPassword === loginUserPassword) {
+            return foundUser;
+        } else {
+            console.error("Error: Incorrect password.");
+            return null;
+        }
+    } else {
+        console.error("Error: User not found.");
+        return null;
+    }
+}
+
+
+/**
+ * Retrieves user email and password inputs, loads users from the backend, and finds the user with the provided email.
+ * @returns {object} An object containing the found user and the login user password.
+ */
+async function authenticateUserVariables() {
+    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
+    const loginUserPassword = document.getElementById("login-user-password-id").value;
+    const users = await loadUsersFromBackend('users');
+    const foundUser = users.find(user => user.userEMail === loginUserEmail);
+    return { foundUser, loginUserPassword };
+}
+
+
+/**
  * Handles field validation for the login form.
  * @param {boolean[]} boolArr - An array representing validation error flags.
  */

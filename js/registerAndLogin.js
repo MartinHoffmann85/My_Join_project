@@ -47,7 +47,7 @@ function register() {
         return;
     addNewUser();
     toggleSuccessesMsg();
-    closeSignUp();
+    closeSignUp();    
 }
 
 
@@ -349,6 +349,20 @@ function closeSignUp() {
 
 
 /**
+ * Check if the logged-in user is added as a contact. If not, create a new contact.
+ */
+async function checkIfUserAddedAsContact() {
+    const currentUser = getLoggedInUser();
+    const isUserAdded = currentUser.contacts.some(contact => contact.name === `${currentUser.userName} (you)` && contact.email === currentUser.userEMail);  
+    if (!isUserAdded) {      
+      const newContact = { name: `${currentUser.userName} (you)`, email: currentUser.userEMail, phone: '0' };
+      newContact.id = generateUniqueID();
+      addContactToCurrentUser(newContact);      
+    }
+}
+
+
+/**
  * Attempts to log in the user.
  */
 async function login() {
@@ -359,43 +373,11 @@ async function login() {
             window.location.assign('./summary.html');
             localStorage.setItem('isLoggedIn', 'true');
             setTimeout(showHeaderUserInitials, 500);
+            checkIfUserAddedAsContact();
         } else {
             console.error('Error: Unable to log in user.');
         }
     } catch (error) {
         console.error('Error during login:', error);
     }
-}
-
-
-/**
- * Authenticates the user based on the provided credentials.
- * @returns {object|null} The authenticated user object if successful, otherwise null.
- */
-async function authenticateUser() {
-    const { foundUser, loginUserPassword } = await authenticateUserVariables();    
-    if (foundUser) {
-        if (foundUser.userPassword === loginUserPassword) {
-            return foundUser;
-        } else {
-            console.error("Error: Incorrect password.");
-            return null;
-        }
-    } else {
-        console.error("Error: User not found.");
-        return null;
-    }
-}
-
-
-/**
- * Retrieves user email and password inputs, loads users from the backend, and finds the user with the provided email.
- * @returns {object} An object containing the found user and the login user password.
- */
-async function authenticateUserVariables() {
-    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
-    const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const users = await loadUsersFromBackend('users');
-    const foundUser = users.find(user => user.userEMail === loginUserEmail);
-    return { foundUser, loginUserPassword };
 }

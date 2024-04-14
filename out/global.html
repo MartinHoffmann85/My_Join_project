@@ -104,7 +104,7 @@
     
 
     
-    <h4 class="name" id="templateAssignedToContainerHTML"><span class="type-signature"></span>templateAssignedToContainerHTML<span class="signature">(contact, index, iconColor, initials, textColor, isSelected)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="addPasswordVisibilityListener"><span class="type-signature"></span>addPasswordVisibilityListener<span class="signature">(elementId, lockImgId, visibilityOffImg, visibilityOnImg, visibilityObj)</span><span class="type-signature"></span></h4>
     
 
     
@@ -112,7 +112,7 @@
 
 
 <div class="description">
-    Generates HTML template for an assigned-to container.
+    Adds an event listener to a password input element to toggle password visibility.
 </div>
 
 
@@ -148,7 +148,7 @@
 
         <tr>
             
-                <td class="name"><code>contact</code></td>
+                <td class="name"><code>elementId</code></td>
             
 
             <td class="type">
@@ -164,9 +164,610 @@
 
             
 
-            <td class="description last">Contact name.</td>
+            <td class="description last">The ID of the password input element.</td>
         </tr>
 
+    
+
+        <tr>
+            
+                <td class="name"><code>lockImgId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The ID of the lock image element.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visibilityOffImg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The ID of the visibility off image element.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visibilityOnImg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The ID of the visibility on image element.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visibilityObj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object representing password visibility state.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line101">line 101</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="authenticateUser"><span class="type-signature">(async) </span>authenticateUser<span class="signature">()</span><span class="type-signature"> &rarr; {object|null}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Authenticates the user based on the provided credentials.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line5">line 5</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The authenticated user object if successful, otherwise null.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="authenticateUserVariables"><span class="type-signature">(async) </span>authenticateUserVariables<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Retrieves user email and password inputs, loads users from the backend, and finds the user with the provided email.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An object containing the found user and the login user password.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkIfLoggedIn"><span class="type-signature"></span>checkIfLoggedIn<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Checks if a user is logged in and adjusts the visibility of the footer link menu accordingly.Retrieves the 'isLoggedIn' item from local storage and updates the display of the footer link menu based on its value.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line230">line 230</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="deletAllUsersInBackend"><span class="type-signature">(async) </span>deletAllUsersInBackend<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function only for developers to clear double user entrys.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line269">line 269</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="deleteUserAtIndex"><span class="type-signature">(async) </span>deleteUserAtIndex<span class="signature">(index)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
@@ -187,14 +788,128 @@
 
             
 
-            <td class="description last">Index of the assigned-to container.</td>
+            <td class="description last">Index ist for the index of the user to delete</td>
         </tr>
 
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line277">line 277</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getPasswordInput"><span class="type-signature"></span>getPasswordInput<span class="signature">(whichform)</span><span class="type-signature"> &rarr; {HTMLElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Retrieves the password input element based on the specified form.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>iconColor</code></td>
+                <td class="name"><code>whichform</code></td>
             
 
             <td class="type">
@@ -210,14 +925,375 @@
 
             
 
-            <td class="description last">Color of the icon.</td>
+            <td class="description last">The type of form ('password', 'registerPw', or 'confirmPw').</td>
         </tr>
 
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line174">line 174</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The password input element.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">HTMLElement</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="guestLogin"><span class="type-signature"></span>guestLogin<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Logs in a guest user with predefined guest credentials.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line188">line 188</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="handlerFieldValidationLogin"><span class="type-signature"></span>handlerFieldValidationLogin<span class="signature">(boolArr)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Handles field validation for the login form.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>initials</code></td>
+                <td class="name"><code>boolArr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;boolean></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An array representing validation error flags.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line38">line 38</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="isValueNotEmpty"><span class="type-signature"></span>isValueNotEmpty<span class="signature">(passwordInput)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Checks if the provided input value is not empty.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>passwordInput</code></td>
             
 
             <td class="type">
@@ -233,14 +1309,349 @@
 
             
 
-            <td class="description last">Initials of the contact.</td>
+            <td class="description last">The input value to check.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line119">line 119</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Indicates whether the input value is not empty.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="removeDuplicateUsers"><span class="type-signature">(async) </span>removeDuplicateUsers<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Function only for developers to clear double user entrys.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line248">line 248</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="showHeaderUserInitials"><span class="type-signature"></span>showHeaderUserInitials<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Displays the initials of the current user in the header profile section.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line202">line 202</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="showImage"><span class="type-signature"></span>showImage<span class="signature">(lockImage, src)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Displays an image by setting its source attribute.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lockImage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The lock image element.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>textColor</code></td>
+                <td class="name"><code>src</code></td>
             
 
             <td class="type">
@@ -256,14 +1667,610 @@
 
             
 
-            <td class="description last">Text color.</td>
+            <td class="description last">The source URL of the image.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line129">line 129</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toggleCheckbox"><span class="type-signature"></span>toggleCheckbox<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Toggles the checkbox state based on the event target ID.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The event object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line65">line 65</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toggleCheckboxVariables"><span class="type-signature"></span>toggleCheckboxVariables<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Retrieves checkbox elements and toggles their states.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line85">line 85</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An object containing references to the login and privacy policy checkboxes.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="togglePasswordVisibility"><span class="type-signature"></span>togglePasswordVisibility<span class="signature">(event, ImgId, whichform, value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Toggles password visibility based on the input type and form.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The event object.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>isSelected</code></td>
+                <td class="name"><code>ImgId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The ID of the image element.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>whichform</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The type of form ('password' or 'confirmPw').</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The value indicating visibility state (-1 for hidden, 1 for visible).</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line141">line 141</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toggleVisibility"><span class="type-signature"></span>toggleVisibility<span class="signature">(elementId, show, className)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Toggles the visibility of an element.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>elementId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The ID of the element to toggle.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>show</code></td>
             
 
             <td class="type">
@@ -278,8 +2285,43 @@
             
 
             
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
 
-            <td class="description last">Whether the contact is selected.</td>
+            <td class="description last">Indicates whether to show or hide the element.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>className</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    d-none
+                
+                </td>
+            
+
+            <td class="description last">The class name used to control visibility.</td>
         </tr>
 
     
@@ -320,7 +2362,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line86">line 86</a>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -345,28 +2387,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for assigned-to container.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -378,7 +2398,7 @@
     
 
     
-    <h4 class="name" id="templateSignUpPopup"><span class="type-signature"></span>templateSignUpPopup<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="updatePasswordInput"><span class="type-signature"></span>updatePasswordInput<span class="signature">(whichform, inputType)</span><span class="type-signature"></span></h4>
     
 
     
@@ -386,117 +2406,7 @@
 
 
 <div class="description">
-    Generates HTML template for the sign-up popup.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line5">line 5</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for sign-up popup.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="templateSubtaskHTML"><span class="type-signature"></span>templateSubtaskHTML<span class="signature">(index, subtask)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Generates HTML template for a subtask.
+    Updates the input type of the password input element.
 </div>
 
 
@@ -532,30 +2442,7 @@
 
         <tr>
             
-                <td class="name"><code>index</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Index of the subtask.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>subtask</code></td>
+                <td class="name"><code>whichform</code></td>
             
 
             <td class="type">
@@ -571,7 +2458,30 @@
 
             
 
-            <td class="description last">Subtask content.</td>
+            <td class="description last">The type of form ('password' or 'confirmPw').</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inputType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The type of input ('text' or 'password').</td>
         </tr>
 
     
@@ -612,7 +2522,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line163">line 163</a>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line163">line 163</a>
     </li></ul></dd>
     
 
@@ -637,28 +2547,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for a subtask.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -670,7 +2558,7 @@
     
 
     
-    <h4 class="name" id="templateSvgCheckboxConfirmedHTML"><span class="type-signature"></span>templateSvgCheckboxConfirmedHTML<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="userLogOut"><span class="type-signature"></span>userLogOut<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -678,7 +2566,7 @@
 
 
 <div class="description">
-    Generates HTML template for a confirmed checkbox SVG.
+    Logs out the current user by updating the local storage items.Sets the 'isLoggedIn' item to 'false' and removes the 'currentUser' item.
 </div>
 
 
@@ -722,7 +2610,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line110">line 110</a>
+        <a href="registerAndLogin2.js.html">registerAndLogin2.js</a>, <a href="registerAndLogin2.js.html#line220">line 220</a>
     </li></ul></dd>
     
 
@@ -747,366 +2635,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for confirmed checkbox SVG.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="templateSvgDefaultCheckboxHTML"><span class="type-signature"></span>templateSvgDefaultCheckboxHTML<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Generates HTML template for a default checkbox SVG.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line124">line 124</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for default checkbox SVG.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="templateaddedContactsHTML"><span class="type-signature"></span>templateaddedContactsHTML<span class="signature">(index, iconColor, initials, textColor)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Generates HTML template for added contacts.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Index of the contact.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>iconColor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Color of the icon.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>initials</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Initials of the contact.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>textColor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Text color.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line141">line 141</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for added contacts.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -1128,13 +2656,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#templateAssignedToContainerHTML">templateAssignedToContainerHTML</a></li><li><a href="global.html#templateSignUpPopup">templateSignUpPopup</a></li><li><a href="global.html#templateSubtaskHTML">templateSubtaskHTML</a></li><li><a href="global.html#templateSvgCheckboxConfirmedHTML">templateSvgCheckboxConfirmedHTML</a></li><li><a href="global.html#templateSvgDefaultCheckboxHTML">templateSvgDefaultCheckboxHTML</a></li><li><a href="global.html#templateaddedContactsHTML">templateaddedContactsHTML</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addPasswordVisibilityListener">addPasswordVisibilityListener</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#authenticateUserVariables">authenticateUserVariables</a></li><li><a href="global.html#checkIfLoggedIn">checkIfLoggedIn</a></li><li><a href="global.html#deletAllUsersInBackend">deletAllUsersInBackend</a></li><li><a href="global.html#deleteUserAtIndex">deleteUserAtIndex</a></li><li><a href="global.html#getPasswordInput">getPasswordInput</a></li><li><a href="global.html#guestLogin">guestLogin</a></li><li><a href="global.html#handlerFieldValidationLogin">handlerFieldValidationLogin</a></li><li><a href="global.html#isValueNotEmpty">isValueNotEmpty</a></li><li><a href="global.html#removeDuplicateUsers">removeDuplicateUsers</a></li><li><a href="global.html#showHeaderUserInitials">showHeaderUserInitials</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#toggleCheckbox">toggleCheckbox</a></li><li><a href="global.html#toggleCheckboxVariables">toggleCheckboxVariables</a></li><li><a href="global.html#togglePasswordVisibility">togglePasswordVisibility</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updatePasswordInput">updatePasswordInput</a></li><li><a href="global.html#userLogOut">userLogOut</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 14 2024 20:34:43 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 14 2024 22:06:48 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
