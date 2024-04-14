@@ -24,14 +24,15 @@ function redirectToAddTask() {
  * Renders all tasks onto the board.
  */
 function renderAllTasks() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks) && currentUser.tasks.length > 0) {                
-        clearTaskContainers();        
-        currentUser.tasks.forEach(task => {
-            renderTask(task);
-            addTaskClickListener();
-        });
-    }
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+  if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks) && currentUser.tasks.length > 0) {                
+      clearTaskContainers();        
+      currentUser.tasks.forEach(task => {
+          renderTask(task);
+          addTaskClickListener();
+      });
+  }
+  checkEmptyColumns();
 }
 
 
@@ -61,8 +62,6 @@ function renderTask(taskData) {
         taskContainer.appendChild(taskCard);
         taskCard.addEventListener('dragstart', dragStart);
         taskCard.setAttribute('draggable', 'true');
-    } else {
-        console.error('Task container not found for column:', actualColumnId);
     }
 }
 

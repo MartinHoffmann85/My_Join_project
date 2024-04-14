@@ -75,6 +75,7 @@ function drop(event) {
             updateTaskColumnId(taskId, targetColumnId);
         }
     }
+    renderAllTasks();
 }
 
 

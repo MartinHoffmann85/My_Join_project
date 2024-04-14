@@ -559,6 +559,12 @@ body {
     cursor: pointer;
 }
 
+.empty-message {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 24px;
+}
+
 @media only screen and (max-width: 1025px) and (min-width: 949px) {
     .boardColumn {
         margin: 0;

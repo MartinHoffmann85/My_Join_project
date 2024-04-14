@@ -251,3 +251,25 @@ function addSubtaskNewSubtask(subtaskTitle) {
 function boardGenerateRandomID() {    
     return Math.random().toString(36).substring(2, 11);
 }
+
+
+/**
+ * Checks if any column is empty and displays "No tasks in this line" if so.
+ */
+function checkEmptyColumns() {
+    const columns = document.querySelectorAll('.boardColumn');
+    columns.forEach(column => {
+        const taskContainer = column.querySelector('.task-container');
+        if (!taskContainer || taskContainer.children.length === 0) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.classList.add('empty-message');
+            emptyMessage.textContent = 'No tasks in this line';
+            taskContainer.appendChild(emptyMessage);
+        } else {
+            const emptyMessage = column.querySelector('.empty-message');
+            if (emptyMessage) {
+                emptyMessage.remove();
+            }
+        }
+    });
+}
