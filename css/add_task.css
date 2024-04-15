@@ -391,8 +391,7 @@ li:active .hidden-Edit_menu {
 
 @media (min-width: 954px) {
     .at-prio-img {
-        justify-content: center;
-        gap: 48px;
+        justify-content: center;        
     }
 }
 
