@@ -59,6 +59,7 @@ function templateSignUpPopup() {
           <img id="register-confirm-pw-visibility-off-id" class="visibility-off-img d-none" src="./assets/img/visibility_off.png" alt=""  onclick="togglePasswordVisibility(event, 'register-confirm-pw-visibility-id', 'confirmPw', 1)">
           <span id="empty-confirm-pw-id" class="err-msg d-none">This field is required!</span>
           <span id="invalid-confirm-pw-id" class="err-msg d-none">Ups! Your password don't match.</span>
+          <span id="existing-user-msg" class="err-msg d-none">User with this email already exists.</span>
         </div>
       </div>
       <div class="signin-flex-container">

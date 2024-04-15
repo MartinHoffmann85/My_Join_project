@@ -40,12 +40,20 @@ async function loadUsersFromBackend(key) {
 
 
 /**
- * Registers a new user if validation checks pass and privacy policy checkbox is confirmed.
+ * Registers a new user if validation checks pass, the privacy policy checkbox is confirmed, and the user does not already exist.
  */
-function register() {
-    if (!(registerValidationCheck() && ppCheckboxConfirmed))
+async function register() {
+    if (!(registerValidationCheck() && ppCheckboxConfirmed)) {
         return;
-    addNewUser();
+    }
+    const newUser = generateNewUserObject();
+    const userExists = users.some(user => user.userEMail === newUser.userEMail);
+    if (userExists) {
+        document.getElementById('existing-user-msg').innerText = "User with this email already exists.";
+        document.getElementById('existing-user-msg').classList.remove('d-none');
+        return;
+    }
+    addNewUser(newUser);
     toggleSuccessesMsg();
     closeSignUp();    
 }
@@ -53,9 +61,9 @@ function register() {
 
 /**
  * Adds a new user to the application.
+ * @param {Object} newUser - The new user object to be added.
  */
-async function addNewUser() {
-    const newUser = generateNewUserObject();
+async function addNewUser(newUser) {
     newUserArray.push(newUser);
     try {
         await addNewUserToBackend(newUser);
