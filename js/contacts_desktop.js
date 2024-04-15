@@ -366,5 +366,5 @@ function editContactDestop(lastClickedContactId) {
     overlayContent.classList.add("overlay-content");
     overlayContainer.appendChild(overlayContent);  
     generateHTMLEditContactDesktop(overlayContent, selectedContact);  
-    overlayContainer.style.animation = "slide-in 0.5s ease-out";
+    overlayContainer.style.animation = "slide-in-menu 0.5s ease-out";
 }
