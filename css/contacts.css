@@ -910,7 +910,7 @@
         height: 32px;
         border-radius: 56px;
         border: 0;
-        color: var(--light-grey);
+        color: rgba(42, 54, 71, 1);
         background-color: var(--white-color);
         font-weight: bold;
         font-size: 24px;
