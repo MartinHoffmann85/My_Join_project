@@ -8,7 +8,7 @@ async function initBoard() {
     const currentUser = await JSON.parse(localStorage.getItem('currentUser'));
     loadTasksFromLocalStorage(currentUser);
     renderAllTasks();
-    setTimeout(showHeaderUserInitials, 200);    
+    setTimeout(showHeaderUserInitials, 500);    
 }
 
 
