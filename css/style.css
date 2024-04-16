@@ -200,16 +200,13 @@ textarea::placeholder {
     animation: JoinLoginPrimary 2s ease-in-out forwards;
 } 
 
-.join-logo-animation {
-    width: 100%;
-    height: 100%;
+.join-logo-animation {    
     background-color: var(--light-grey);
     z-index: 21;
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
-    pointer-events: none;
+    top: 0;    
     animation: joinBackground 2s ease-in-out forwards;
 }
 
