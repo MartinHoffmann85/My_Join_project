@@ -196,13 +196,13 @@
     padding: 8px 16px;
 }
 
-.signup-container {
-    width: 100%;
+.signup-container {    
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: right;
     gap: 35px;
     margin-top: 57.5px;
+    margin-right: 20px;
 }
 
 .signup-container span {
@@ -272,5 +272,20 @@
         position: absolute;
         top: 13.63px;
         left: 0;
+    }
+
+    .loginHeader {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .signup-container {
+        justify-content: left;
+        margin-top: 660px;
+        margin-left: 24px;
+    }
+
+    .legal-information-container {
+        margin-top: 80px;
     }
 }

@@ -42,8 +42,17 @@
 <body onload="init()">
   <div class="container">
     <div class="join-logo-animation">
-      <img src="./assets/svg/firstLogo.svg" alt="" id="login-second-img" />
-      <img src="./assets/svg/secondLogo.svg" alt="" id="login-primary-img" />
+      <div class="loginHeader">
+        <div>
+          <img src="./assets/svg/firstLogo.svg" alt="" id="login-second-img" />
+          <img src="./assets/svg/secondLogo.svg" alt="" id="login-primary-img" />
+          <div id="signup-container-id" class="signup-container">
+            <span>Not a Join user?</span>
+            <button class="filled-btn width-small" onclick="signUp()">Sign up</button>
+          </div>
+        </div>        
+          
+      </div>
     </div>
     <div id="success-msg-id" class="success-msg-popup d-none">
         <span>You signed up successfully</span>
@@ -83,10 +92,7 @@
           <button class="white-btn" onclick="guestLogin();">Guest Log in</button>
         </div>
       </div>
-      <div id="signup-container-id" class="signup-container">
-        <span>Not a Join user?</span>
-        <button class="filled-btn width-small" onclick="signUp()">Sign up</button>
-      </div>
+
       <div class="legal-information-container">
         <a class="desktop-data-link" href="./privacy_policy.html">Privacy Policy</a>
         <a class="desktop-data-link" href="./legal_notice.html">Legal notice</a>        
