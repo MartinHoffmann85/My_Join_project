@@ -147,8 +147,7 @@
 .pp-checkbox-container {
     display: flex;
     align-items: center;
-    justify-content: start;
-    margin-left: 180px;
+    justify-content: center;    
     height: 24px;
 }
 
