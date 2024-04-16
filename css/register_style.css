@@ -267,3 +267,11 @@
 .d-none {
     display: none;
 }
+
+@media (max-width: 466px) {
+    .back-arrow {
+        position: absolute;
+        top: 13.63px;
+        left: 0;
+    }
+}

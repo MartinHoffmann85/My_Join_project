@@ -130,7 +130,7 @@ h2 {
 .input_global,
 .textarea-style { 
     position: relative;
-    width: 100%;
+    width: 422px;
     border-radius: 10px;
     border: 1px solid var(--placeholder-color);
     height: 48px;
@@ -255,6 +255,10 @@ textarea::placeholder {
 @media (max-width: 466px) {
     input::placeholder,
     textarea::placeholder {
-      font-size: 16px; 
+      font-size: 16px;      
+    }
+
+    .input_global {
+        width: 260px;
     }
 }
