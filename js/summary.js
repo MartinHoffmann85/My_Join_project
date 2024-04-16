@@ -2,7 +2,7 @@
  * Initializes the summary page.
  */
 function summaryInit() {
-    setTimeout(showHeaderUserInitials, 200);    
+    setTimeout(showHeaderUserInitials, 500);    
     getSummaryToDosCount();
     getDoneTasksCount();
     summaryGetUrgentPriorityCount();

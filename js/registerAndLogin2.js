@@ -10,7 +10,7 @@ async function authenticateUser() {
         return user;
     } else {
         const errorContainer = document.getElementById('login-email-error');
-        errorContainer.innerText = "User not found"; // Änderung hier
+        errorContainer.innerText = "User not found";
         return "User not found";
     }
 }
