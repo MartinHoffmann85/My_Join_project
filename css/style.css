@@ -68,17 +68,18 @@ h2 {
 .filled-btn, 
 .white-btn {
     border-radius: 8px;
-    width: 180px;
+    width: 110px;
     height: 40px;
     cursor: pointer;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 700;    
 }
 
 .white-btn {
     border: 1px solid var(--mockup-color);
     color: var(--mockup-color);
     transition: all 200ms ease-in-out;
+    margin-left: 10px;
 }
 
 .white-btn:hover {

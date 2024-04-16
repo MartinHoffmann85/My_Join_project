@@ -76,8 +76,7 @@
 .login-btns-container,
 .signin-flex-container {
     margin-top: 32px;
-    display: flex;
-    flex-direction: column;
+    display: flex;    
     justify-content: center;
     align-items: center;
     gap: 10px;
