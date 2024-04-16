@@ -218,6 +218,10 @@
     color: var(--mockup-highlight);
 }
 
+.displayFlex {
+    display: flex;
+}
+
 @media only screen and (max-width: 949px) and (min-width: 320px) {
     .summary-content {
         margin-left: 0;
@@ -230,77 +234,95 @@
     
     .summary-greeting {
         font-size: 36px;
+        margin-top: 20px;
     }
 
     .toDoAndDoneCountContainer {
-        margin-left: 50px;
+        margin-left: 25px;
     }
 
     .priorityAndNextDateContainer {
-        margin-left: 50px;
+        margin-left: 25px;
     }
 
     .allTasksAndProgressAndFeedbackContainer {
-        margin-left: 50px;
+        margin-left: 20px;
     }
 }
 
 @media only screen and (max-width: 650px) and (min-width: 320px) {
     .summary-content {        
         overflow-y: scroll;
-        height: 80vh;
-        margin-top: 90px;
+        height: 80vh;        
     }
 
     body {
         overflow-y: hidden;
     }
-}
-
-@media only screen and (max-width: 550px) and (min-width: 320px) {
-    .toDoAndDoneCountContainer {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .doneContainer {
-        margin-left: 0;
-        margin-top: 20px;
-        justify-content: flex-start;
-    }
 
     .priorityAndNextDateContainer {
         flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-left: 20px;
+    }
+}
+
+@media only screen and (max-width: 550px) and (min-width: 320px) {
+    .toDoAndDoneCountContainer {        
         align-items: center;
+        justify-content: left;
     }
 
-    .nextDateContainer {
-        margin-top: 20px;
+    .toDoContainer {
+        width: 120px;
     }
 
-    .allTasksAndProgressAndFeedbackContainer {
-        flex-direction: column;
+    .doneContainer {
+        margin-left: 20px;     
+        justify-content: flex-start;
+        width: 120px;
+    }
+
+    .priorityAndNextDateContainer {
+        justify-content: left;        
+    }
+
+    .priorityContainer {
+        width: 120px;
+    }
+
+    .nextDateContainer {        
+        width: 120px;
+    }
+
+    .allTasksAndProgressAndFeedbackContainer {        
         align-items: center;
         margin-bottom: 20px;
     }
 
     .progressContainer {
-        margin-left: 0;
+        margin-left: 20px;
         margin-bottom: 20px;
-        margin-top: 20px;
-    }
-
-    .feedbackContainer {
-        margin-left: 0;
-        margin-bottom: 20px;
+        width: 70px;      
     }
 
     .summary-title {
-        margin-top: 555px;
+        margin-top: 290px;
     }
 
     .summary-greeting {
         margin-top: 20px;
+    }
+
+    .allTasksContainer {
+        width: 70px;
+    }
+
+    .feedbackContainer {
+        width: 70px;
+        margin-left: 20px;
+        margin-bottom: 20px;
     }
 }
 
