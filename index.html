@@ -51,7 +51,7 @@
             <button class="filled-btn width-small" onclick="signUp()">Sign up</button>
           </div>
         </div>
-        
+
       </div>
     </div>
     <div id="success-msg-id" class="success-msg-popup d-none">
@@ -71,7 +71,7 @@
               <img class="login-email" src="./assets/img/mail.png" alt="">
               <span id="invalid-email-id" class="err-msg d-none">No user found with this email.</span>
               <span id="empty-email-id" class="err-msg d-none">This field is required!</span>
-              <span id="this-is-no-email-id" class="err-msg d-none">Enter a valid email (e.g., user@example.com)!</span>
+              <span id="this-is-no-email-id" class="err-msg d-none">Enter a valid email (e.g., user@example.com)!</span>              
             </div>            
             <div id="login-pw-border-id" class="input_global">
               <input type="password" name="loginUserPassword" id="login-user-password-id" placeholder="Password"  autocomplete="current-password">
@@ -81,6 +81,9 @@
               <span id="empty-password-id" class="err-msg d-none">This field is required!</span>
               <span id="invalid-password-id" class="err-msg d-none">Wrong password Ups! Try again.</span>
             </div>
+            <div class="form-group">              
+              <span><div id="login-email-error" class="text-danger"></div> <!-- Fehlermeldung hier --></span>
+          </div>
           </div>
           <div class="remember-me-checkbox-container">
             <img id="uncheckbox-id" src="./assets/img/checkbox.svg" alt="remember me checkbox" onclick="toggleCheckbox(event)">

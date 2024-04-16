@@ -377,14 +377,12 @@ async function checkIfUserAddedAsContact() {
 async function login() {
     try {
         const loggedInUser = await authenticateUser();
-        if (loggedInUser) {
+        if (loggedInUser && typeof loggedInUser === "object") {            
             localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
             window.location.assign('./summary.html');
             localStorage.setItem('isLoggedIn', 'true');
             setTimeout(showHeaderUserInitials, 500);
             checkIfUserAddedAsContact();
-        } else {
-            console.error('Error: Unable to log in user.');
         }
     } catch (error) {
         console.error('Error during login:', error);

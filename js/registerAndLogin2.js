@@ -1,19 +1,17 @@
 /**
- * Authenticates the user based on the provided credentials.
- * @returns {object|null} The authenticated user object if successful, otherwise null.
+ * Attempts to authenticate the user.
+ * @returns {Promise<Object|string>} - The authenticated user object if successful, otherwise a string indicating "User not found".
  */
 async function authenticateUser() {
-    const { foundUser, loginUserPassword } = await authenticateUserVariables();    
-    if (foundUser) {
-        if (foundUser.userPassword === loginUserPassword) {
-            return foundUser;
-        } else {
-            console.error("Error: Incorrect password.");
-            return null;
-        }
+    const email = document.getElementById("login-user-e-mail-id").value;
+    const password = document.getElementById("login-user-password-id").value;
+    const user = users.find(user => user.userEMail === email);
+    if (user && user.userPassword === password) {
+        return user;
     } else {
-        console.error("Error: User not found.");
-        return null;
+        const errorContainer = document.getElementById('login-email-error');
+        errorContainer.innerText = "User not found"; // Änderung hier
+        return "User not found";
     }
 }
 
