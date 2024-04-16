@@ -228,7 +228,7 @@ function userLogOut() {
  * Retrieves the 'isLoggedIn' item from local storage and updates the display of the footer link menu based on its value.
  */
 function checkIfLoggedIn() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');    
+    isLoggedIn = localStorage.getItem('isLoggedIn');    
     let hideFooterLinkMenu = document.querySelector('.menu-box');
     if (isLoggedIn === 'true') {
         if (hideFooterLinkMenu) {

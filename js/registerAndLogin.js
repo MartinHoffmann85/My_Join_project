@@ -7,6 +7,7 @@ let newUserArray = [];
 let emptyInput = true;
 let pwVisibility = { pwVisibilityOn: false };
 let confirmPwVisibility = { pwVisibilityOn: false };
+let isLoggedIn = false;
 
 
 /**
