@@ -148,7 +148,7 @@
     display: flex;
     align-items: center;
     justify-content: start;
-    margin-left: 20px;
+    margin-left: 180px;
     height: 24px;
 }
 
@@ -277,6 +277,7 @@
     .loginHeader {
         display: flex;
         flex-direction: column;
+        margin-top: 40px;
     }
 
     .signup-container {
@@ -287,5 +288,9 @@
 
     .legal-information-container {
         margin-top: 80px;
+    }
+
+    .remember-me-checkbox-container {
+        margin-left: 20px;
     }
 }
