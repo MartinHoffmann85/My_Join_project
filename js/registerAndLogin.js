@@ -23,6 +23,7 @@ async function init() {
                                 pwVisibility);
 }
 
+
 /**
  * If site refreshed than User logout.
  */
