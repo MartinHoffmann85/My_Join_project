@@ -619,6 +619,7 @@ li:active .hidden-Edit_menu {
 
     .addTaskTextThisFieldIsRequiredMobile {
         display: flex;
+        align-items: center;
     }
 }
 
