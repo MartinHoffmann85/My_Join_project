@@ -6,6 +6,7 @@ body {
     height: 90dvh;
     margin-left: 235px;
     margin-top: 90px;
+    padding-left: 100px;
     overflow-y: scroll;
     background-color: var(--white-grey);
     position: relative;
@@ -655,7 +656,11 @@ body {
     }
     .boardContent {
         margin-left: 60px;
-    }  
+    }
+
+    .boardContentContainer {
+        padding-left: 0;
+    }
 }
 
 @media only screen and (max-width: 430px) and (min-width: 320px) {

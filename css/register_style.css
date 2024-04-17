@@ -95,12 +95,12 @@
     position: relative;
     display: inline-block;
     font-weight: 700;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--mockup-color);
-    border-radius: 50%;
+    width: 25px;
+    border: 2px solid #C9C9C9;
+    border-radius: 10px;
     text-align: center;
-    margin-right: 4px;
+    margin-right: 10px;
+    color: #C9C9C9;
 }
 
 .tooltip .tooltiptext {

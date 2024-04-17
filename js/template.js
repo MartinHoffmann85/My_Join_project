@@ -13,7 +13,7 @@ function templateSignUpPopup() {
       <div class="login-fields-gap">
         <div id="add-name-border-id" class="input_global">
           <input type="name" name="name" id="add-name-id" placeholder="Name" autocomplete="off">
-          <span class="tooltip">i
+          <span class="tooltip"><p>i</p>
             <div class="tooltiptext">Valid inputs:
               <ul>
                 <li>First name only</li>
