@@ -644,3 +644,9 @@ li:active .hidden-Edit_menu {
         margin-top: 20px;
     }
 }
+
+@media only screen and (max-width: 1342px) and (min-width: 320px) {
+    .content-bottom-and-rigth {
+        margin-left: 80px;
+    }
+}
