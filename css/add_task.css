@@ -25,8 +25,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     position: sticky;
     overflow-y: auto;
     max-height: calc(100vh - 238px);
-    margin-top: 80px;
-    padding: 46px 16px 0 16px;    
+    margin-top: 80px;    
 }
 
 .content-container h1 {
@@ -547,7 +546,7 @@ li:active .hidden-Edit_menu {
     }
 }
 
-@media (max-width: 466px) {
+@media (max-width: 500px) {
     .at-prio-img img {
         height: 30px;
         width: 85px;
@@ -642,11 +641,39 @@ li:active .hidden-Edit_menu {
 
     .bottom-btns-container {
         margin-top: 20px;
+        display: flex;
+        gap: 16px;
     }
 }
 
 @media only screen and (max-width: 1342px) and (min-width: 320px) {
     .content-bottom-and-rigth {
         margin-left: 80px;
+    }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 320px) {
+    .textarea-style {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 466px) and (min-width: 320px) {
+    .content-bottom-and-rigth {
+        margin-left: 40px!important;
+    }
+
+    .textarea-style {
+        width: 260px;
+    }
+}
+
+@media only screen and (max-width: 360px) and (min-width: 320px) {
+    .content-container {
+        align-items: flex-start;
+    }
+
+    .content-bottom-and-rigth {
+        margin-left: 0!important;
     }
 }
