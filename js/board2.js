@@ -210,7 +210,7 @@ function renderTaskCardAsOverlayAssignetTo(assignedTo) {
     let assignedToHTML = '';
     if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
         assignedTo.userNames.forEach((userName, index) => {
-            const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
+            const initials = getFirstLettersOfName(userName);
             const backgroundColor = assignedTo.colorCodes[index];
             const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
             assignedToHTML += `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
