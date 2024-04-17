@@ -23,6 +23,15 @@ async function init() {
                                 pwVisibility);
 }
 
+/**
+ * If site refreshed than User logout.
+ */
+window.addEventListener('pageshow', function(event) {    
+    if (event.persisted) {        
+        userLogOut();
+    }
+});
+
 
 /**
  * Loads users data from the backend.
