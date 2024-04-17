@@ -114,7 +114,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .filled-btn {
     font-size: 22px;
-    height: 45px;
+    height: 56px;
+    width: 183px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -410,7 +411,8 @@ li:active .hidden-Edit_menu {
         justify-content: center;
         align-items: center;
         font-size: 22px;
-        height: 45px;
+        height: 56px;
+        width: 110px;
     }
     .bottom-btns-container {
         display: flex;
