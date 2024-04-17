@@ -378,11 +378,11 @@ function boardEditTaskAssignetTo(task) {
     const assignedToColors = task.assignedTo && task.assignedTo.colorCodes ? task.assignedTo.colorCodes : [];
     const assignedToHTML = assignedToContacts.map((userName, index) => {
         const user = {
-            userNames: [userName],
+            userNames: [getFirstLettersOfName(userName)],
             colorCodes: [assignedToColors[index]],
         };
-        const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
         const backgroundColor = assignedToColors[index];
+        const initials = getFirstLettersOfName(userName);
         const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
         return `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
     }).join('');
