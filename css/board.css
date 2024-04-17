@@ -138,6 +138,10 @@ body {
     margin-left: 12px;
 }
 
+.renderTaskCardAssignetToContainer > * {
+    margin-right: -5%;
+}
+
 .assignetToHTMLAndPrioContentContainer {
     display: flex;
     justify-content: space-between;

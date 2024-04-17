@@ -1,6 +1,7 @@
 let draggedTaskId;
 let originalColumnId;
 
+
 /**
  * Initializes the board by loading tasks from local storage, rendering them, and showing user initials in the header.
  */
@@ -140,20 +141,20 @@ function createTaskCardElementHTML(taskCard, backgroundColor, category, title, d
  * @param {Object} assignedTo - The user(s) assigned to the task.
  * @returns {string} - The HTML content for the assigned to section.
  */
-function generateAssignedToHTML(assignedTo) {
-    if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
-      let assignedToHTML = '';
-      assignedTo.userNames.forEach((userName, index) => {
-        const user = {
-          userNames: [userName],
-          colorCodes: [assignedTo.colorCodes[index]],
-        };
-        assignedToHTML += renderUserDetails(user);
-      });
-      return assignedToHTML;
-    } else {
-      return '<div><strong>Assigned to:</strong> No one assigned</div>';
-    }
+function generateAssignedToHTML(assignedTo) {  
+  if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
+    let assignedToHTML = '';
+    assignedTo.userNames.forEach((userName, index) => {
+      const user = {
+        userNames: [getFirstLettersOfName(userName)],
+        colorCodes: [assignedTo.colorCodes[index]],
+      };      
+      assignedToHTML += renderUserDetails(user);
+    });
+    return assignedToHTML;
+  } else {
+    return '<div><strong>Assigned to:</strong> No one assigned</div>';
+  }
 }
 
 
@@ -387,12 +388,12 @@ function updateSubtaskStatus(taskId, subtaskId, isChecked) {
  * @returns {string} - The HTML content representing user details.
  */
 function renderUserDetails(user) {
-    const colorCode = user.colorCodes && user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
-    const initials = user.userNames && user.userNames.length > 0 ? user.userNames[0].split(' ').map(word => word[0]).join('') : '';
-    const textColor = isColorLight(colorCode) ? "black" : "white";
-    return `
-      <div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
-        ${initials}
-      </div>
-    `;
+  const colorCode = user.colorCodes && user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
+  const initials = user.userNames && user.userNames.length > 0 ? user.userNames[0].slice(0, 2) : '';
+  const textColor = isColorLight(colorCode) ? "black" : "white";
+  return `
+    <div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
+      ${initials}
+    </div>
+  `;
 }
