@@ -11,21 +11,13 @@ async function authenticateUser() {
     } else {
         const errorContainer = document.getElementById('login-email-error');
         errorContainer.innerText = "User not found";
+        errorContainer.style.color = "red";
+        setTimeout(() => {
+            errorContainer.innerText = "";
+            resetLoginInputs();
+        }, 2000);
         return "User not found";
     }
-}
-
-
-/**
- * Retrieves user email and password inputs, loads users from the backend, and finds the user with the provided email.
- * @returns {object} An object containing the found user and the login user password.
- */
-async function authenticateUserVariables() {
-    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
-    const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const users = await loadUsersFromBackend('users');
-    const foundUser = users.find(user => user.userEMail === loginUserEmail);
-    return { foundUser, loginUserPassword };
 }
 
 

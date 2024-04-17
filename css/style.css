@@ -219,6 +219,10 @@ textarea::placeholder {
     opacity: 1;
 }
 
+.login-email-error {
+    color: red;
+}
+
 @keyframes JoinLoginSecondary {
     0% {
       opacity: 1;

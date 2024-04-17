@@ -392,9 +392,9 @@ async function login() {
             window.location.assign('./summary.html');
             localStorage.setItem('isLoggedIn', 'true');
             setTimeout(showHeaderUserInitials, 500);
-            checkIfUserAddedAsContact();
+            checkIfUserAddedAsContact();            
         }
     } catch (error) {
         console.error('Error during login:', error);
-    }
+    }    
 }
