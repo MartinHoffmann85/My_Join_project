@@ -3,6 +3,7 @@
     top: 37px;
     left: 38px;
 }
+
 .logo img {
     width: 64px;
     height: 78px;
@@ -72,7 +73,6 @@
     width: 100%;
 }
 
-
 .login-btns-container,
 .signin-flex-container {
     margin-top: 32px;
@@ -82,18 +82,14 @@
     gap: 10px;
 }
 
-
 .login-fields-gap {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     gap: 32px;
-    margin: 32px 0 40px 0;
-    
+    margin-top: 32px;    
 }
-
-
 
 .tooltip {
     position: relative;
@@ -162,6 +158,7 @@
 .remember-me-checkbox-container img {
     margin-right: 8px;
 }
+
 .remember-me-checkbox-container img,
 .pp-checkbox-container img  {
     cursor: pointer;
@@ -219,7 +216,6 @@
 
 }
 
-
 .legal-information-container a {
     line-height: 19.2px;
     color: #a8a8a8; 
@@ -241,7 +237,6 @@
     color: var(--err-msg-color);
     font-size: 12px;
 }
-
 
 .success-msg-popup {
     position: absolute;
@@ -280,9 +275,9 @@
     }
 
     .signup-container {
-        justify-content: left;
-        margin-top: 660px;
-        margin-left: 24px;
+        position: absolute;
+        top: 510px;
+        left: 20px;        
     }
 
     .legal-information-container {
@@ -291,5 +286,13 @@
 
     .remember-me-checkbox-container {
         margin-left: 20px;
+    }
+
+    .content {
+        margin-top: 120px;
+    }
+
+    body {
+        overflow-y: hidden;
     }
 }

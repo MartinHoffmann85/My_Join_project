@@ -207,7 +207,7 @@ textarea::placeholder {
     left: 0;
     right: 0;
     top: 0;    
-    animation: joinBackground 2s ease-in-out forwards;
+    animation: joinBackground 2s ease-in-out forwards;    
 }
 
 .join-logo-animation img {
