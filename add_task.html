@@ -63,6 +63,9 @@
                             <li onclick="selectCategory(this)">User Story</li>
                         </ul>
                     </div>
+                    <div class="addTaskTextThisFieldIsRequired">
+                        <span class="required">*</span>This field is required</span>
+                    </div>
                 </div>
             </div>
             <div class="vertical-bar"></div>
@@ -125,22 +128,21 @@
                         <input id="date-input-id" type="date"  max="2025-12-31" min="2024-02-27">
                         <img  class="event-style" src="./assets/img/event.png"  onclick="openAssignedbyArrow()">
                     </div>
+                    <div class="bottom-btns-container">
+                        <div class="addTaskTextThisFieldIsRequiredMobile">
+                            <span class="required">*</span>This field is required</span>
+                        </div>
+                        <button class="white-btn width-small hide-clear-btn" onclick="clearAll()">Clear
+                            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.2496 11.9998L17.4926 17.2428M7.00659 17.2428L12.2496 11.9998L7.00659 17.2428ZM17.4926 6.75684L12.2486 11.9998L17.4926 6.75684ZM12.2486 11.9998L7.00659 6.75684L12.2486 11.9998Z" stroke="#2A3647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="filled-btn" onclick="createTask()">Create Task 
+                            <img src="./assets/img/check.png" alt="">
+                        </button>
                 </div>
             </div> 
-        </div>
-        <div class="content-bottom-container">
-            <span>
-                <span class="required">*</span>This field is required</span>
-            <div class="bottom-btns-container">
-                <button class="white-btn width-small hide-clear-btn" onclick="clearAll()">Clear
-                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.2496 11.9998L17.4926 17.2428M7.00659 17.2428L12.2496 11.9998L7.00659 17.2428ZM17.4926 6.75684L12.2486 11.9998L17.4926 6.75684ZM12.2486 11.9998L7.00659 6.75684L12.2486 11.9998Z" stroke="#2A3647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-                <button class="filled-btn" onclick="createTask()">Create Task 
-                    <img src="./assets/img/check.png" alt="">
-                </button>
-            </div>
+        </div>        
         </div>
     </section>
     <div w3-include-html="./assets/templates/footer.html"></div>
