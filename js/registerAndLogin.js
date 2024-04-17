@@ -7,7 +7,6 @@ let newUserArray = [];
 let emptyInput = true;
 let pwVisibility = { pwVisibilityOn: false };
 let confirmPwVisibility = { pwVisibilityOn: false };
-let isLoggedIn = false;
 
 
 /**
@@ -16,6 +15,7 @@ let isLoggedIn = false;
 async function init() {
     users = await loadUsersFromBackend('users');
     console.log(users);
+    userLogOut();
     addPasswordVisibilityListener('login-pw-border-id', 
                                 'lock-id', 
                                 'login-pw-visibility-off-id',

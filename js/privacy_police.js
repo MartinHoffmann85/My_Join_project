@@ -8,8 +8,12 @@ function privacyPolicyInit() {
 
 
 /**
- * Redirects the user back to the summary page.
+ * Redirects the user based on the isLoggedIn status in localStorage.
  */
-function backToSummary() {
-    window.location.assign("./summary.html");
+function privacyPolicyRedirectBasedOnLoginStatus() {    
+    if (localStorage.getItem("isLoggedIn") === "true") {        
+        window.location.assign("./summary.html");
+    } else {        
+        window.location.assign("./index.html");
+    }
 }
