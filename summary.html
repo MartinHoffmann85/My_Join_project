@@ -56,47 +56,48 @@
                 <img class="summary-icon" src="./assets/img/to_do.png" alt="to-do">
                 <div class="toDo">
                     <div class="summary-change-content" id="summaryToDoID">1</div>
-                    <p>To-do</p>
+                    <p class="summaryTaskPElement">To-do</p>
                 </div>
             </a>            
             <a href="./board.html" class="doneContainer">
                 <img class="summary-icon" src="./assets/img/done.png" alt="done">
                 <div class="done">                    
                     <div class="summary-change-content" id="summaryDoneID">1</div>
-                    <p>Done</p>
+                    <p class="summaryTaskPElement">Done</p>
                 </div>                
             </a>
         </div>
 
         <div class="priorityAndNextDateContainer">
-            <div class="displayFlex">
-                <a href="./board.html" class="priorityContainer">
-                    <img class="summary-icon" src="./assets/img/urgent.png" alt="urgent">
-                    <div class="priority">
-                        <div class="summary-change-content" id="summaryPriorityID">1</div>
-                        <p>Urgent</p>
-                    </div>                
-                </a>
-                <a href="./board.html" class="nextDateContainer">
-                    <div class="summary-change-content2" id="summaryDateID">February 29,2022</div>
-                    <p>Upcomming deadline</p>
-                </a>
-            </div>
+            <a href="./board.html">
+                <div class="summarypriorityAndNextDate">
+                        <img class="summary-icon" src="./assets/img/urgent.png" alt="urgent">
+                        <div class="priority">
+                            <div class="summary-change-content" id="summaryPriorityID">1</div>
+                            <p class="summaryTaskPElement">Urgent</p>
+                        </div>
+                        <div class="greyLine"></div>
+                        <div>
+                            <div class="summary-change-content2" id="summaryDateID">February 29,2022</div>
+                            <p class="summaryTaskPElement">Upcomming deadline</p>
+                        </div>
+                </div>
+            </a>
             <div class="summary-greeting" id="greeting-id"></div>
         </div>
 
             <div class="allTasksAndProgressAndFeedbackContainer">
                 <a href="./board.html" class="allTasksContainer">
                     <div class="summary-change-content" id="summaryAllTasksID">1</div>
-                    <p>Tasks in Board</p> 
+                    <p class="summaryTaskPElement">Tasks in Board</p> 
                 </a>
                 <a href="./board.html" class="progressContainer">
                     <div class="summary-change-content" id="summaryProgressID">1</div>
-                    <p>Tasks In Progress</p>
+                    <p class="summaryTaskPElement">Tasks In Progress</p>
                 </a>
                 <a href="./board.html" class="feedbackContainer">
                     <div class="summary-change-content" id="summaryFeedbackID">1</div>
-                    <p>Awaiting feedback</p>
+                    <p class="summaryTaskPElement">Awaiting feedback</p>
                 </a>
             </div>
     </div>
