@@ -51,10 +51,14 @@
 
     <div class="boardContentContainer">
         <div class="boardH1AndSearchAndAddTaskButton">
-            <h1 class="boardH1">Board</h1>
-            <input class="boardSearchInput" name="boardSearchInput" id="boardSearchInputID" type="text" placeholder="Find Task" oninput="searchTasks()">
-            <button onclick="redirectToAddTask()" class="boardAddTaskButton">Add task +</button>
-            <img onclick="redirectToAddTask()" class="plusAddTaskMobile" src="./assets/svg/plusAddTaskMobile.svg" alt="plusAddTaskMobile">
+            <div class="boardH1AndAddTaskButtonContainer">
+                <h1 class="boardH1">Board</h1>
+                <img onclick="redirectToAddTask()" class="plusAddTaskMobile" src="./assets/svg/plusAddTaskMobile.svg" alt="plusAddTaskMobile">
+            </div>
+            <div class="boardInputAndAddTaskButtonContainer">
+                <input class="boardSearchInput" name="boardSearchInput" id="boardSearchInputID" type="text" placeholder="Find Task" oninput="searchTasks()">
+                <button onclick="redirectToAddTask()" class="boardAddTaskButton">Add task +</button>
+            </div>
         </div>
         <div class="boardContent">            
             <div class="boardColumn" id="todo-column" ondrop="drop(event)" ondragover="allowDrop(event)">

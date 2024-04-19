@@ -23,25 +23,35 @@ body {
     font-size: 61px;
 }
 
+.boardInputAndAddTaskButtonContainer {
+    display: flex;
+    gap: 32px;
+}
+
 .boardSearchInput {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 280px;
-    height: 32px;
+    width: 312px;
+    height: 48px;
     margin-top: 123px;
     border: 1px solid var(--mockup-color);
     border-radius: 10px;
     background-image: url("../assets/svg/boardSearchIcon.svg");
     background-size: 30px auto;
     background-repeat: no-repeat;
-    background-position-x: right;    
+    background-position-x: right;
+    background-position-y: center;    
     text-indent: 10px;
 }
 
 .boardSearchInput:focus {
     outline: none;
     border: 1px solid var(--mockup-highlight);
+}
+
+.boardSearchInput img {
+    margin-top: 10px;
 }
 
 .boardAddTaskButton {
@@ -54,7 +64,7 @@ body {
     color: var(--white-color);
     font-size: 21px;
     font-weight: 700;
-    margin-top: 115px;
+    margin-top: 123px;
     margin-right: 25px;
     cursor: pointer;
 }
@@ -587,6 +597,12 @@ body {
     cursor: pointer;
 }
 
+@media only screen and (max-width: 1060px) and (min-width: 320px) {
+    .boardSearchInput {
+        width: 200px;
+    }
+}
+
 @media only screen and (max-width: 1025px) and (min-width: 949px) {
     .boardColumn {
         margin: 0;
@@ -596,7 +612,7 @@ body {
 @media only screen and (max-width: 949px) and (min-width: 320px) {
     .boardContentContainer {
         height: 80dvh;
-        margin-left: 10px;
+        margin-left: 0;
         margin-top: 90px;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -615,6 +631,7 @@ body {
 
     .boardSearchInput {
         margin-top: 20px;
+        width: 364px;
     }
 
     .boardAddTaskButton {
@@ -631,6 +648,17 @@ body {
 
     .editRenderTaskCardoverlyDate{
         padding: 0;
+    }
+
+    .boardH1AndAddTaskButtonContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        width: 100%;
+    }
+
+    .boardTaskH2AndPlusTaskButtonContainer {
+        width: 315px;
     }
 }
 
@@ -659,17 +687,29 @@ body {
     .editAssigntToPElementAndSelectContactsButton {
         flex-direction: column;
     }
-    .boardContent {
-        margin-left: 60px;
-    }
 
     .boardContentContainer {
         padding-left: 0;
+        height: 80dvh;
     }
 }
 
 @media only screen and (max-width: 430px) and (min-width: 320px) {
     .card {
         width: 280px!important;
+    }
+
+    .boardSearchInput {
+        width: 290px;
+    }
+}
+
+@media only screen and (max-width: 360px) and (min-width: 320px) {
+    .boardTaskH2AndPlusTaskButtonContainer {
+        width: 250px;
+    }
+
+    .boardSearchInput {
+        width: 250px;
     }
 }
