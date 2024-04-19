@@ -30,8 +30,8 @@
 }
 
 .summary-icon {
-    height: 69px;
-    width: 69px;
+    height: 40px;
+    width: 40px;
     margin-right: 10px;
 }
 
@@ -388,7 +388,7 @@
     }
 }
 
-@media only screen and (max-width: 400px) and (min-width: 320px) {
+@media only screen and (max-width: 410px) and (min-width: 320px) {
     .summary-greeting {
         font-size: 24px;
         font-weight: 400;
@@ -396,7 +396,13 @@
 
     .summarypriorityAndNextDate {
         gap: 10px;
-        width: 290px;        
+        width: 250px;
+        height: 100px;      
+    }
+
+    .summary-change-content {
+        font-size: 47px;
+        font-weight: 600;
     }
 
     .summary-change-content2 {
@@ -404,15 +410,15 @@
     }
 
     .allTasksContainer {
-        width: 80px;
+        width: 75px;
     }
 
     .progressContainer {
-        width: 80px;
+        width: 75px;
     }
 
     .feedbackContainer {
-        width: 80px;        
+        width: 75px;        
     }
 
     .allTasksAndProgressAndFeedbackContainer {
@@ -429,11 +435,23 @@
 
     .doneContainer {
         margin-left: 0;
-        width: 140px;
+        width: 120px;
+        height: 90px;
     }
 
     .toDoContainer {
-        width: 140px;
+        width: 120px;
+        height: 90px;
+    }
+}
+
+@media only screen and (max-width: 375px) and (min-width: 320px){
+    .header-gap {
+        padding: 0;
+    }
+
+    .summary-title {
+        margin-top: 50px;
     }
 }
 
