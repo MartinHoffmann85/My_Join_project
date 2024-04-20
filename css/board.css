@@ -244,7 +244,7 @@ body {
 .renderTaskCardOverlayCategoryDiv {
     background-color: var(--user-story-blue);
     color: var(--white-color);
-    font-size: 16px;
+    font-size: 23px;
     font-weight: 400;
     padding: 4px 16px 4px 16px;
     border-radius: 8px;
@@ -271,6 +271,8 @@ body {
 
 .boardOverlayUrgentPElement {
     margin-right: 20px;
+    font-size: 20px;
+    font-weight: 400;
 }
 
 .renderTaskTitleOverlay {
@@ -290,6 +292,8 @@ body {
 }
 
 .renderTaskOverlayDate {
+    font-size: 20px;
+    font-weight: 400;
     margin-left: 20px;
 }
 
@@ -297,6 +301,15 @@ body {
     font-size: 20px;
     font-weight: 400;
     color: var(--mockup-color);
+}
+
+.boardOverlayPriorityIcon {
+    margin-top: 3px;
+}
+
+.boardOverlayPriorityIcon {
+    height: 12px;
+    width: 17px;
 }
 
 .renderTaskCardOverlayAssignetToContainer {
@@ -312,6 +325,8 @@ body {
 }
 
 .renderTaskCardOverlaySubtaskTitle {
+    font-size: 16px;
+    font-weight: 400;
     margin-left: 24px;
 }
 
@@ -333,6 +348,11 @@ body {
     display: flex;
     justify-content: flex-end;
     margin-right: 24px;
+}
+
+.contactsContentRightSideEditButton {
+    height: 24px;
+    width: 81px;
 }
 
 .subtaskCountContainer {
@@ -511,11 +531,14 @@ body {
 }
 
 .editAssignetToUserPElement {
-    margin-left: 12px;    
+    margin-left: 12px;
+    font-size: 16px;
+    font-weight: 400;
 }
 
 .assignedToUser {
     display: flex;
+    align-items: center;
     margin-bottom: 5px;
 }
 
@@ -523,9 +546,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 50%;
-    height: 30px;
-    width: 30px;
+    border-radius: 45px;
+    height: 48px;
+    width: 48px;
 }
 
 .subtaskInput {
@@ -660,11 +683,61 @@ body {
     .boardTaskH2AndPlusTaskButtonContainer {
         width: 315px;
     }
+
+    .boardoverlay .card {
+        height: 750px;
+    }
+
+    .renderTaskTitleOverlay {
+        font-size: 40px;
+    }
+
+    .renderTaskDescriptionOverlay {
+        font-size: 16px;
+    }
+
+    .renderTaskDate {
+        font-size: 16px;
+    }
+
+    .renderTaskOverlayDate {
+        font-size: 16px;
+    }
+
+    .renderTaskOverlayPrio {
+        font-size: 16px;
+    }
+
+    .boardPrioIcon  {
+        font-size: 16px;
+    }
+
+    .renderTaskCardOverlayAssignetToPElement {
+        font-size: 16px;
+    }
+
+    .userIcon {
+        height: 48px;
+        width: 48px;
+    }
+
+    .renderTasksubtaskHTMLSubtaskPElement {
+        font-size: 16px;
+    }
+
+    .renderTaskCardOverlaySubtaskTitle {
+        font-size: 16px;
+    }
+
+    .contactsContentRightSideEditButton {
+        height: 24px;
+        width: 81px;
+    }
 }
 
 @media only screen and (max-width: 610px) and (min-width: 320px) {
     .card {
-        width: 380px!important;
+        width: 396px!important;
     }
 
     .renderTaskTitleOverlay {
@@ -694,9 +767,10 @@ body {
     }
 }
 
-@media only screen and (max-width: 430px) and (min-width: 320px) {
+@media only screen and (max-width: 450px) and (min-width: 320px) {
     .card {
-        width: 280px!important;
+        width: 296px!important;
+        height: 500px!important;
     }
 
     .boardSearchInput {
@@ -711,5 +785,15 @@ body {
 
     .boardSearchInput {
         width: 250px;
+    }
+
+    .card {
+        width: 276px!important;
+    }
+}
+
+@media only screen and (max-width: 375px) and (min-width: 320px) {
+    .boardContentContainer {        
+        height: 75dvh;
     }
 }

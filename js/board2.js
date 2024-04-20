@@ -145,7 +145,7 @@ function renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title,
             <div class="renderTaskCardOverlayCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
             <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
         </div>        
-        <div class="renderTaskTitleOverlay"><strong>${title}</strong></div>
+        <div class="renderTaskTitleOverlay">${title}</div>
         <div class="renderTaskDescriptionOverlay">${description}</div>
         <div class="renderTaskDate"><p class="renderTaskDatePElement">Due date:</p><p class="renderTaskOverlayDate">${date}</p></div>               
         <div class="overlayAssignetToHTMLAndPrioContentContainer">
@@ -175,11 +175,11 @@ function renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title,
  */
 function renderTaskCarsAsOverlayPrio(prio, prioContent) {
     if (prio === 'urgent') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Urgent</strong></p><img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+        prioContent = `<p class="boardOverlayUrgentPElement">Urgent</p><div class="boardOverlayPriorityIcon"><img class="boardOverlayPriorityIcon" src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority"></div>`;
     } else if (prio === 'medium') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Medium</strong></p><img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+        prioContent = `<p class="boardOverlayUrgentPElement">Medium</p><div class="boardOverlayPriorityIcon"><img class="boardOverlayPriorityIcon" src="./assets/img/mediumCategory.svg" alt="Medium Priority"></div>`;
     } else if (prio === 'low') {
-        prioContent = `<p class="boardOverlayUrgentPElement"><strong>Low</strong></p><img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
+        prioContent = `<p class="boardOverlayUrgentPElement">Low</p><div class="boardOverlayPriorityIcon"><img class="boardOverlayPriorityIcon" src="./assets/img/lowPrio.svg" alt="Low Priority"></div>`;
     }
     return prioContent;
 }
