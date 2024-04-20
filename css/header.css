@@ -64,6 +64,8 @@
 }
   
 #dropdown ul {
+    display: flex;
+    flex-direction: column;
     list-style: none;
     margin: 0;
     padding: 0;    
@@ -103,8 +105,20 @@
     left: 400px;
 }
 
+.headerDropDownLinkHelp {
+    display: none;
+}
+
 @media only screen and (max-width: 949px) and (min-width: 320px) {
     .headerTextDesktop {
+        display: none;
+    }
+
+    .headerDropDownLinkHelp {
+        display: flex;
+    }
+
+    .helpButtonContainer {
         display: none;
     }
 }
