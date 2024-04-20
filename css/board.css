@@ -37,11 +37,11 @@ body {
     margin-top: 123px;
     border: 1px solid var(--mockup-color);
     border-radius: 10px;
-    background-image: url("../assets/svg/boardSearchIcon.svg");
-    background-size: 30px auto;
-    background-repeat: no-repeat;
-    background-position-x: right;
-    background-position-y: center;    
+    background-image: url(../assets/svg/boardSearchIcon.svg), url(../assets/svg/boardSearchBarGreyLine.svg);
+    background-size: 31px auto, auto;
+    background-repeat: no-repeat, no-repeat;
+    background-position-x: right, calc(100% - 40px); /* 30px für das erste Bild, plus 10px Abstand */
+    background-position-y: center, center;
     text-indent: 10px;
 }
 
