@@ -40,7 +40,7 @@ body {
     background-image: url(../assets/svg/boardSearchIcon.svg), url(../assets/svg/boardSearchBarGreyLine.svg);
     background-size: 31px auto, auto;
     background-repeat: no-repeat, no-repeat;
-    background-position-x: right, calc(100% - 40px); /* 30px für das erste Bild, plus 10px Abstand */
+    background-position-x: right, calc(100% - 40px);
     background-position-y: center, center;
     text-indent: 10px;
 }
