@@ -4,6 +4,7 @@
 function privacyPolicyInit() {
     setTimeout(showHeaderUserInitials, 500);
     setTimeout(checkIfLoggedIn, 200);
+    footerInit();
 }
 
 

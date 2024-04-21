@@ -20,11 +20,13 @@ function contactsInit() {
       renderAddContactButtonMobile();
       setTimeout(showHeaderUserInitials, 500);
       contactsInitVariables();
+      footerInit();
   } else {
       setTimeout(showHeaderAndFooter, 300);
       renderContactsDesktop();        
       document.body.style.overflow = 'hidden';
       setTimeout(showHeaderUserInitials, 500);
+      footerInit();
   }
 }
 

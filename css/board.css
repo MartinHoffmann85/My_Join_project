@@ -776,6 +776,11 @@ body {
     .boardSearchInput {
         width: 290px;
     }
+
+    .userIcon {
+        height: 42px;
+        width: 42px;
+    }
 }
 
 @media only screen and (max-width: 360px) and (min-width: 320px) {

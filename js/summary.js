@@ -2,7 +2,7 @@
  * Initializes the summary page.
  */
 function summaryInit() {
-    setTimeout(showHeaderUserInitials, 500);    
+    setTimeout(showHeaderUserInitials, 500);
     getSummaryToDosCount();
     getDoneTasksCount();
     summaryGetUrgentPriorityCount();
@@ -10,7 +10,8 @@ function summaryInit() {
     summaryGetAllTasksCount();
     getInProgressTasksCount();
     summaryGetAwaitingFeedbackCount();
-    updateGreeting();
+    updateGreeting();    
+    footerInit();
 }
 
 

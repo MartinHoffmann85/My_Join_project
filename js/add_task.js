@@ -29,6 +29,7 @@ function initAddTask() {
     closeCategoryMenu();
     filterAssignedToContacts();
     setTimeout(showHeaderUserInitials, 500);
+    footerInit();
 }
 
 

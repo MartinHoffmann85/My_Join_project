@@ -11,7 +11,7 @@ function renderContactsDesktop() {
     content.innerHTML = "";
     renderAddContactButtonDesktop();
     const contactsByFirstLetter = groupContactsByFirstLetter();
-    renderContactsByFirstLetterDesktop(content, contactsByFirstLetter);
+    renderContactsByFirstLetterDesktop(content, contactsByFirstLetter);    
 }
 
 

@@ -40,7 +40,11 @@
     align-items: center;
 }
 
-.footer-icon-box:hover {    
+.footer-icon-box:hover {
+    background-color: var(--focus-color-btn);
+}
+
+.footer-link.active:hover {
     background-color: var(--focus-color-btn);
 }
 
