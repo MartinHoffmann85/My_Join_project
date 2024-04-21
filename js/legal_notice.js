@@ -3,8 +3,7 @@
  */
 function legalNoticeInit() {
     setTimeout(showHeaderUserInitials, 500);
-    setTimeout(checkIfLoggedIn, 200);
-    footerInit();
+    setTimeout(checkIfLoggedIn, 200);    
 }
 
 

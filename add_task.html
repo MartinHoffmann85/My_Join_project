@@ -29,10 +29,10 @@
     <script src="./js/board2.js"></script>
     <script src="./js/board3.js"></script>
     <script src="./js/header.js"></script>
-    <script src="./js/footer.js"></script>
+    <script src="./js/footer.js" defer></script>
 
 </head>
-<body onload="initAddTask(); includeHTML()">
+<body onload="initAddTask(); includeHTML(); setTimeout(footerInit, 200)">
     <div w3-include-html="./assets/templates/header.html"></div>
     <section class="at-section">
         <div class="content-container">

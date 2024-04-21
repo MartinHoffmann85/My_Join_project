@@ -10,8 +10,7 @@ function summaryInit() {
     summaryGetAllTasksCount();
     getInProgressTasksCount();
     summaryGetAwaitingFeedbackCount();
-    updateGreeting();    
-    footerInit();
+    updateGreeting();
 }
 
 

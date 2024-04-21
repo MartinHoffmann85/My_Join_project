@@ -40,6 +40,10 @@
     align-items: center;
 }
 
+.footer-icon-box-hover {
+    background-color: var(--focus-color-btn);
+}
+
 .footer-icon-box:hover {
     background-color: var(--focus-color-btn);
 }

@@ -19,7 +19,7 @@
     <script src="./js/includeHTML.js"></script>
     <script src="./js/summary.js"></script>
     <script src="./js/header.js"></script>
-    <script src="./js/footer.js"></script>
+    <script src="./js/footer.js" defer></script>
     
     <!--Fav icon integration</!-->
     <link
@@ -41,7 +41,7 @@
     />
 </head>
 
-<body onload="includeHTML(); summaryInit()">
+<body onload="includeHTML(); summaryInit(); setTimeout(footerInit, 200)">
 
     <div w3-include-html="./assets/templates/header.html"></div>
 

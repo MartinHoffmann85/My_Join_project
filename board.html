@@ -25,7 +25,7 @@
     <script src="./js/contacts_mobile.js" ></script>
     <script src="./js/contacts_mobile2.js" ></script>
     <script src="./js/header.js"></script>
-    <script src="./js/footer.js"></script>
+    <script src="./js/footer.js" defer></script>
 
     <!--Fav icon integration</!-->
     <link
@@ -47,7 +47,7 @@
     />
 </head>
 
-<body onload="initBoard(); includeHTML()">
+<body onload="initBoard(); includeHTML(); setTimeout(footerInit, 200)">
     <div w3-include-html="./assets/templates/header.html"></div>
 
     <div class="boardContentContainer">

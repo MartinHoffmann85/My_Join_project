@@ -19,14 +19,12 @@ function contactsInit() {
       renderContacts();
       renderAddContactButtonMobile();
       setTimeout(showHeaderUserInitials, 500);
-      contactsInitVariables();
-      footerInit();
+      contactsInitVariables();      
   } else {
       setTimeout(showHeaderAndFooter, 300);
       renderContactsDesktop();        
       document.body.style.overflow = 'hidden';
-      setTimeout(showHeaderUserInitials, 500);
-      footerInit();
+      setTimeout(showHeaderUserInitials, 500);      
   }
 }
 
