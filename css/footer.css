@@ -12,9 +12,14 @@
     z-index: 1000;    
 }
 
-.desktop-logo {
+.desktopLogoContainer {
     height: 122px;
     padding: 64px 66px 114px 66px;
+}
+
+.desktopLogo {
+    width: 100px;
+    height: 122px;
 }
 
 .menu-box {
@@ -35,6 +40,7 @@
 
 .footer-icon-box {
     height: 46px;
+    width: 232px;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -64,7 +70,7 @@
     gap: 8px;
     text-decoration: none;
     color: #a8a8a8;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     margin-left: 60px;
     cursor: pointer;
@@ -111,7 +117,7 @@
         z-index: 100;
     }
 
-    .desktop-logo {
+    .desktopLogoContainer {
         display: none;
     }
 
