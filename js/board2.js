@@ -332,6 +332,7 @@ function boardEditTask(taskId) {
         overlay.appendChild(card);
         document.body.appendChild(overlay);
     }
+    changeBackgroundOnOverlayOpen();
 }
 
 
