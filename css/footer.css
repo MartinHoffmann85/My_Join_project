@@ -175,6 +175,18 @@
     .desktop-data-box {
         display: none;
     }
+
+    #footer-icon-boxId1 { order: 1; }
+    #footer-icon-boxId2 { order: 2; }
+    #footer-icon-boxId3 { order: 3; }
+    #footer-icon-boxId4 { order: 4; }
+}
+
+@media (min-width: 950px) {    
+    #footer-icon-boxId1 { order: 1; }
+    #footer-icon-boxId2 { order: 3; }
+    #footer-icon-boxId3 { order: 2; }
+    #footer-icon-boxId4 { order: 4; }
 }
 
 
