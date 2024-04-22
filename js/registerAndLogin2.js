@@ -1,4 +1,24 @@
 /**
+ * Attempts to log in the user.
+ */
+async function login() {
+    try {
+        const loggedInUser = await authenticateUser();
+        if (loggedInUser && typeof loggedInUser === "object") {            
+            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
+            window.location.assign('./summary.html');
+            localStorage.setItem('isLoggedIn', 'true');
+            setTimeout(showHeaderUserInitials, 500);
+            checkIfUserAddedAsContact();
+            resetActiveLinkId();            
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+    }    
+}
+
+
+/**
  * Attempts to authenticate the user.
  * @returns {Promise<Object|string>} - The authenticated user object if successful, otherwise a string indicating "User not found".
  */
