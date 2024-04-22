@@ -210,6 +210,7 @@ function showHeaderUserInitials() {
 function userLogOut() {
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.removeItem('currentUser');
+    resetActiveLinkId();
 }
 
 
