@@ -24,7 +24,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .content-container {
     position: sticky;
     overflow-y: auto;
-    max-height: calc(100vh - 238px);
+    max-height: calc(100vh - 180px);
     margin-top: 80px;    
 }
 
@@ -410,9 +410,8 @@ li:active .hidden-Edit_menu {
 }
 
 @media (min-width: 761px) {
-    .content-container {
-        max-height: calc(100vh - 158px);
-        margin: 80px 0 0 calc(232px); 
+    .content-container {        
+        margin: 80px 0 0 calc(232px);        
     }
 
     .content-bottom-container {
@@ -450,6 +449,7 @@ li:active .hidden-Edit_menu {
         display: flex;
         flex-direction: column;
         align-items: center;
+        height: 100vh;
     }
 
     .bottom-btns-container {
@@ -478,6 +478,7 @@ li:active .hidden-Edit_menu {
         display: flex;
         gap: 32px;
         max-width: 1920px;
+        max-height: calc(100vh - 180px);
     }
 
     .content-top-and-left,
@@ -543,6 +544,7 @@ li:active .hidden-Edit_menu {
         display: flex;
         flex-direction: column;
         align-items: center;
+        max-height: calc(100vh - 180px);
     }
 }
 
@@ -627,7 +629,7 @@ li:active .hidden-Edit_menu {
     .content-container {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center;        
     }
 
     .bottom-btns-container {
