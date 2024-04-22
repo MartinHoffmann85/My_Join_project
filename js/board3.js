@@ -1,4 +1,26 @@
 /**
+ * Renders the assigned to HTML for editing a task.
+ * @param {Object} task - Task object.
+ * @returns {string} - Assigned to HTML content.
+ */
+function boardEditTaskAssignetTo(task) {
+    const assignedToContacts = task.assignedTo && task.assignedTo.userNames ? task.assignedTo.userNames : [];
+    const assignedToColors = task.assignedTo && task.assignedTo.colorCodes ? task.assignedTo.colorCodes : [];
+    const assignedToHTML = assignedToContacts.map((userName, index) => {
+        const user = {
+            userNames: [getFirstLettersOfName(userName)],
+            colorCodes: [assignedToColors[index]],
+        };
+        const backgroundColor = assignedToColors[index];
+        const initials = getFirstLettersOfName(userName);
+        const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
+        return `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
+    }).join('');
+    return assignedToHTML;
+}
+
+
+/**
  * Renders the priority HTML for editing a task.
  * @param {Object} task - Task object.
  */
