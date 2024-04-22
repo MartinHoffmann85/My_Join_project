@@ -1,8 +1,14 @@
+/**
+ * Initializes the footer module by setting the default color for the active link.
+ */
 function footerInit() {
     setInitialActiveLinkColor();
 }
 
 
+/**
+ * Sets the color of the initially active link in the footer.
+ */
 function setInitialActiveLinkColor() {
     const { activeLinkId, link1, link2, link3, link4 } = setInitialActiveLinkColorVariables();
     if (activeLinkId === 'footer-icon-boxId1') {
@@ -17,6 +23,10 @@ function setInitialActiveLinkColor() {
 }
 
 
+/**
+ * Retrieves the active link ID from local storage and initializes link elements.
+ * @returns {InitialActiveLinkColorVariables} Object containing active link ID and link elements.
+ */
 function setInitialActiveLinkColorVariables() {
     const activeLinkId = localStorage.getItem('activeLinkId');
     const link1 = document.getElementById('footer-icon-boxId1');
@@ -31,17 +41,27 @@ function setInitialActiveLinkColorVariables() {
 }
 
 
+/**
+ * Handles click event on a link by storing its ID in local storage.
+ * @param {string} linkId - The ID of the clicked link.
+ */
 function handleLinkClick(linkId) {
     localStorage.setItem('activeLinkId', linkId);
 }
 
 
+/**
+ * Resets the active link ID in local storage.
+ */
 function resetActiveLinkId() {
     const linkId = "";
     localStorage.setItem('activeLinkId', linkId);
 }
 
 
+/**
+ * Sets the active link ID in local storage to the first link.
+ */
 function setActiveLinkId() {
     const linkId = "footer-icon-boxId1";
     localStorage.setItem('activeLinkId', linkId);
