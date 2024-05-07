@@ -131,7 +131,7 @@ h2 {
 .input_global,
 .textarea-style { 
     position: relative;
-    width: 422px;
+    width: 440px;
     border-radius: 10px;
     border: 1px solid var(--placeholder-color);
     height: 48px;

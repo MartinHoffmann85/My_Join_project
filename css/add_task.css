@@ -202,8 +202,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .at-prio-img {
-    display: flex;    
-    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    width: 440px;
+    height: 48px;
 }
 
 .at-prio-img img {
@@ -406,7 +408,7 @@ li:active .hidden-Edit_menu {
 @media (min-width: 954px) {
     .at-prio-img {
         justify-content: center;
-        margin-left: 45px;        
+        margin-left: 20px;        
     }
 }
 
