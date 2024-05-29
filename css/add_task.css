@@ -557,6 +557,11 @@ li:active .hidden-Edit_menu {
         width: 85px;
     }
 
+    .at-prio-img {
+        height: 30px;
+        width: 220px;
+    }
+
     .content-container h1 {
         font-size: 47px;
     }
