@@ -15,3 +15,8 @@ async function includeHTML() {
         }
     }
 }
+
+
+function includeContentHTMLindex() {
+    window.location.assign("./../index.html");
+}
