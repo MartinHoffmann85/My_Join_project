@@ -15,6 +15,7 @@ let confirmPwVisibility = { pwVisibilityOn: false };
 async function init() {
     users = await loadUsersFromBackend('users');
     console.log(users);
+    localStorage.setItem('isLoggedIn', 'false');
     userLogOut();
     addPasswordVisibilityListener('login-pw-border-id', 
                                 'lock-id', 

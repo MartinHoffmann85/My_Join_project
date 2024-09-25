@@ -250,6 +250,7 @@ function checkIfLoggedIn() {
             hideFooterLinkMenu.style.display = "none";
         }
     }
+    console.log(isLoggedIn);
 }
 
 
