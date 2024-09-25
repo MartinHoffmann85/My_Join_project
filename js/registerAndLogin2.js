@@ -241,20 +241,15 @@ function userLogOut() {
 function checkIfLoggedIn() {
     isLoggedIn = localStorage.getItem('isLoggedIn');    
     let hideFooterLinkMenu = document.querySelector('.menu-box');
-    let headerProfil = document.querySelector('.header-profil');
     if (isLoggedIn === 'true') {
         if (hideFooterLinkMenu) {
             hideFooterLinkMenu.style.display = "flex";
-            headerProfil.style.display = "flex";
         }
     } else {
         if (hideFooterLinkMenu) {
             hideFooterLinkMenu.style.display = "none";
-            headerProfil.style.display = "none";
         }
     }
-    console.log(isLoggedIn);
-    console.log(hideFooterLinkMenu);
 }
 
 
