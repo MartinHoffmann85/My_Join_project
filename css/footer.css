@@ -23,11 +23,11 @@
 }
 
 .menu-box {
+    display: flex;
     height: 229px;
     margin-top: 114px;
-    display: flex;
     justify-content: center;
-    align-items: center;    
+    align-items: center;
 }
 
 .menu-content {
@@ -102,6 +102,11 @@
     transform: scaleX(1.2);
     font-size: 1rem;
 }
+
+.menu-box-hidden {
+    display: none;
+}
+
 
 @media (max-width: 949px) {
 

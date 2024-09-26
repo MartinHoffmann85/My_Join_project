@@ -9,9 +9,9 @@
             <div class="header-profil" id="headerProfilID" onclick="toggleDropdown()"></div>                
                 <div id="dropdown" style="display: none;">
                     <ul>
-                        <a class="headerDropDownMenuLinks headerDropDownLinkHelp" href="./help.html">Help</a>
-                        <a class="headerDropDownMenuLinks" href="./legal_notice.html" onclick="resetActiveLinkId()">Legal Notice</a>
-                        <a class="headerDropDownMenuLinks" href="./privacy_policy.html" onclick="resetActiveLinkId()">Privacy Police</a>
+                        <a class="headerDropDownMenuLinks headerDropDownLinkHelp" href="./help.html" onclick="resetActiveLinkId(); checkIfLoggedIn()">Help</a>
+                        <a class="headerDropDownMenuLinks" href="./legal_notice.html" onclick="resetActiveLinkId(); checkIfLoggedIn()">Legal Notice</a>
+                        <a class="headerDropDownMenuLinks" href="./privacy_policy.html" onclick="resetActiveLinkId(); checkIfLoggedIn()">Privacy Police</a>
                         <a class="headerDropDownMenuLinks" href="./index.html" onclick="userLogOut(); resetActiveLinkId()">Log out</a>
                     </ul>
                 </div>

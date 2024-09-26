@@ -10,7 +10,8 @@ async function login() {
             localStorage.setItem('isLoggedIn', 'true');
             setTimeout(showHeaderUserInitials, 500);
             checkIfUserAddedAsContact();
-            resetActiveLinkId();            
+            resetActiveLinkId();
+            checkIfLoggedIn();            
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -203,6 +204,7 @@ function guestLogin() {
     localStorage.setItem('isLoggedIn', 'true');
     login();
     setTimeout(showHeaderUserInitials, 500);
+    checkIfLoggedIn();
 }
 
 
@@ -238,18 +240,23 @@ function userLogOut() {
  * Checks if a user is logged in and adjusts the visibility of the footer link menu accordingly.
  * Retrieves the 'isLoggedIn' item from local storage and updates the display of the footer link menu based on its value.
  */
-function checkIfLoggedIn() {
-    isLoggedIn = localStorage.getItem('isLoggedIn');    
+async function checkIfLoggedIn() {
+    isLoggedIn = localStorage.getItem('isLoggedIn');
     let hideFooterLinkMenu = document.querySelector('.menu-box');
+    let headerProfil = document.querySelector('.header-profil');
     if (isLoggedIn === 'true') {
         if (hideFooterLinkMenu) {
-            hideFooterLinkMenu.style.display = "flex";
+            hideFooterLinkMenu.classList.remove('menu-box-hidden');
+            headerProfil.style.display = "flex";
         }
     } else {
         if (hideFooterLinkMenu) {
-            hideFooterLinkMenu.style.display = "none";
+            hideFooterLinkMenu.classList.add('menu-box-hidden');
+            headerProfil.style.display = "none";
         }
     }
+    console.log(isLoggedIn);
+    console.log(hideFooterLinkMenu);
 }
 
 
