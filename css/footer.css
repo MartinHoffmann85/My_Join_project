@@ -30,8 +30,12 @@
     align-items: center;
 }
 
+.menu-box-hidden {
+    display: none;
+}
+
 .menu-content {
-    display: flex;
+    /* display: none; */    
     flex-direction: column;
     justify-content: center;
     align-items: center!important;
@@ -101,10 +105,6 @@
     cursor: pointer;
     transform: scaleX(1.2);
     font-size: 1rem;
-}
-
-.menu-box-hidden {
-    display: none;
 }
 
 

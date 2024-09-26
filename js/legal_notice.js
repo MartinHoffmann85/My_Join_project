@@ -1,9 +1,14 @@
+document.addEventListener("DOMContentLoaded", function () {
+    legalNoticeInit();
+});
+
+
 /**
  * Initializes the legal notice page by showing header user initials after a delay.
  */
 function legalNoticeInit() {
     setTimeout(showHeaderUserInitials, 500);
-    setTimeout(checkIfLoggedIn, 200);    
+    checkIfLoggedIn();    
 }
 
 

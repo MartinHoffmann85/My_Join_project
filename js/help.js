@@ -1,10 +1,14 @@
+document.addEventListener("DOMContentLoaded", function () {
+    helpInit();
+});
+
+
 /**
  * Initializes the help section by showing the header user initials after a delay.
  */
 function helpInit() {
     setTimeout(showHeaderUserInitials, 500);
-    setTimeout(checkIfLoggedIn, 200);
-    resetActiveLinkId();    
+    checkIfLoggedIn();    
 }
 
 
