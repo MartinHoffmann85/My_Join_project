@@ -312,11 +312,3 @@ function showMenuIfLoggedIn() {
     headerProfil.style.display = "flex";
     hideFooterLinkMenu.style.display = "flex";
 }
-
-
-function hideMneuIfNotLoggedIn() {
-    const hideFooterLinkMenu = document.querySelector('.menu-content');
-    const headerProfil = document.querySelector('.header-profil');
-    headerProfil.style.display = "none";
-    hideFooterLinkMenu.style.display = "none";
-}
