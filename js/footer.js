@@ -2,7 +2,37 @@
  * Initializes the footer module by setting the default color for the active link.
  */
 function footerInit() {
-    setInitialActiveLinkColor();
+    setInitialActiveLinkColor();    
+    showMenuIfLoggedIn();    
+}
+
+
+async function showMenuIfLoggedIn() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    
+    const hideFooterLinkMenu = document.querySelector('.menu-content');
+    const hideFooterLinkMenu2 = document.querySelector('.menu-box');
+    const headerProfil = document.querySelector('.header-profil');
+
+    console.log('hideFooterLinkMenu:', hideFooterLinkMenu);  // Debugging
+    console.log('hideFooterLinkMenu2:', hideFooterLinkMenu2);  // Debugging
+    console.log('headerProfil:', headerProfil);  // Debugging
+
+    if (hideFooterLinkMenu && hideFooterLinkMenu2 && headerProfil) {
+        if (isLoggedIn === 'true') {
+            headerProfil.style.display = "flex";
+            hideFooterLinkMenu.style.display = "flex";
+            hideFooterLinkMenu2.style.display = "flex";
+            console.log(`isLoggedIn=`, isLoggedIn);
+        } else {
+            headerProfil.style.display = "none";
+            hideFooterLinkMenu.style.display = "none";
+            hideFooterLinkMenu2.style.display = "none";
+            console.log(`isLoggedIn=`, isLoggedIn);
+        }
+    } else {
+        console.log("Ein Element konnte nicht gefunden werden");
+    }
 }
 
 

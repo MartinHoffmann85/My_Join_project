@@ -23,19 +23,20 @@
 }
 
 .menu-box {
-    display: flex;
+    /* display: flex; */
     height: 229px;
     margin-top: 114px;
     justify-content: center;
     align-items: center;
 }
 
-.menu-box-hidden {
+/* .menu-box-hidden {
     display: none;
 }
+*/
 
 .menu-content {
-    /* display: none; */    
+    display: none;  
     flex-direction: column;
     justify-content: center;
     align-items: center!important;

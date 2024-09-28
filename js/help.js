@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    helpInit();
+    helpInit();    
 });
 
 
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
  */
 function helpInit() {
     setTimeout(showHeaderUserInitials, 500);
-    checkIfLoggedIn();    
+    setTimeout(showMenuIfLoggedIn, 1500);
 }
 
 

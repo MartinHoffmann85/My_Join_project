@@ -5,13 +5,13 @@ async function login() {
     try {
         const loggedInUser = await authenticateUser();
         if (loggedInUser && typeof loggedInUser === "object") {            
-            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
+            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));
+            loggedInLocalStorage = localStorage.setItem('isLoggedIn', 'true');
+            console.log(`loggedInLocalStorage=`, loggedInLocalStorage);
             window.location.assign('./summary.html');
-            localStorage.setItem('isLoggedIn', 'true');
             setTimeout(showHeaderUserInitials, 200);
             checkIfUserAddedAsContact();
-            resetActiveLinkId();
-            checkIfLoggedIn();            
+            resetActiveLinkId();            
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -198,13 +198,13 @@ function getPasswordInput(whichform) {
  */
 function guestLogin() {    
     const guestEmail = "guest@login.de";
-    const guestPassword = "Guest!login1";    
+    const guestPassword = "Guest!login1";
     document.getElementById("login-user-e-mail-id").value = guestEmail;
-    document.getElementById("login-user-password-id").value = guestPassword;    
+    document.getElementById("login-user-password-id").value = guestPassword;
+    loggedInLocalStorage = localStorage.setItem('isLoggedIn', 'true');
     login();
-    localStorage.setItem('isLoggedIn', 'true');
     setTimeout(showHeaderUserInitials, 200);
-    setTimeout(showMenuIfLoggedIn, 300);    
+    setTimeout(showMenuIfLoggedIn, 300);
 }
 
 
@@ -240,6 +240,7 @@ function userLogOut() {
  * Checks if a user is logged in and adjusts the visibility of the footer link menu accordingly.
  * Retrieves the 'isLoggedIn' item from local storage and updates the display of the footer link menu based on its value.
  */
+/*
 async function checkIfLoggedIn() {
     setTimeout(() => {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -254,8 +255,9 @@ async function checkIfLoggedIn() {
         }        
         console.log('isLoggedIn', isLoggedIn);
         console.log('hideFooterLinkMenu', hideFooterLinkMenu);
-    }, 500);
+    }, 1500);
 }
+*/
 
 
 /**
@@ -303,12 +305,4 @@ async function deleteUserAtIndex(index) {
     } catch (error) {
         console.error('Fehler beim Löschen des Benutzers:', error);
     }
-}
-
-
-function showMenuIfLoggedIn() {
-    const hideFooterLinkMenu = document.querySelector('.menu-content');
-    const headerProfil = document.querySelector('.header-profil');
-    headerProfil.style.display = "flex";
-    hideFooterLinkMenu.style.display = "flex";
 }

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
  */
 function legalNoticeInit() {
     setTimeout(showHeaderUserInitials, 500);
-    checkIfLoggedIn();    
+    setTimeout(showMenuIfLoggedIn, 1500);
 }
 
 

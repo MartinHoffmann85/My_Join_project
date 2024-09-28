@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
  */
 function privacyPolicyInit() {
     setTimeout(showHeaderUserInitials, 500);
-    checkIfLoggedIn();    
+    setTimeout(showMenuIfLoggedIn, 1500);
 }
 
 
