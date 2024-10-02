@@ -4,10 +4,10 @@
 async function login() {
     try {
         const loggedInUser = await authenticateUser();
-        if (loggedInUser && typeof loggedInUser === "object") {            
-            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));
-            loggedInLocalStorage = localStorage.setItem('isLoggedIn', 'true');
-            console.log(`loggedInLocalStorage=`, loggedInLocalStorage);
+        if (loggedInUser && typeof loggedInUser === "object") {
+            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
+            localStorage.setItem('isLoggedIn', 'true');
+            console.log('User logged in and isLoggedIn set to true.');            
             window.location.assign('./summary.html');
             setTimeout(showHeaderUserInitials, 200);
             checkIfUserAddedAsContact();
@@ -26,8 +26,13 @@ async function login() {
 async function authenticateUser() {
     const email = document.getElementById("login-user-e-mail-id").value;
     const password = document.getElementById("login-user-password-id").value;
-    const user = users.find(user => user.userEMail === email);
-    if (user && user.userPassword === password) {
+    if (!users || typeof users !== 'object') {
+        console.error('users is not a valid object:', users);
+        return;
+    }    
+    const usersArray = Object.values(users).flat();
+    const user = usersArray.find(user => user.userEMail === email);    
+    if (user && user.userPassword === password) {        
         return user;
     } else {
         const errorContainer = document.getElementById('login-email-error');

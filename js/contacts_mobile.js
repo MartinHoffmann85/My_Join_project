@@ -373,7 +373,10 @@ function getNewContact() {
  * @param {Object} newContact - The new contact object to be added.
  */
 async function addContactToCurrentUser(newContact) {
-  let { colorCode, textColorCode, currentUser } = addContactToCurrentUserVariables(newContact);
+  let { colorCode, textColorCode, currentUser } = addContactToCurrentUserVariables(newContact);  
+  if (!Array.isArray(currentUser.contacts)) {
+      currentUser.contacts = [];
+  }  
   if (!colorCode || !textColorCode) {      
       colorCode = getRandomColorHex();
       textColorCode = isColorLight(colorCode) ? 'white' : 'black';
