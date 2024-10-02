@@ -1,4 +1,28 @@
 /**
+ * Check if the logged-in user is added as a contact. If not, create a new contact.
+ */
+async function checkIfUserAddedAsContact() {
+    const currentUser = getLoggedInUser();    
+    if (!Array.isArray(currentUser.contacts)) {
+        currentUser.contacts = [];
+    }    
+    const isUserAdded = currentUser.contacts.some(contact => 
+        contact.name === `${currentUser.userName} (you)` && 
+        contact.email === currentUser.userEMail
+    );
+    if (!isUserAdded) {        
+        const newContact = { 
+            name: `${currentUser.userName} (you)`, 
+            email: currentUser.userEMail, 
+            phone: '0' 
+        };
+        newContact.id = generateUniqueID();
+        addContactToCurrentUser(newContact);      
+    }
+}
+
+
+/**
  * Attempts to log in the user.
  */
 async function login() {
@@ -239,30 +263,6 @@ function userLogOut() {
     localStorage.removeItem('currentUser');
     resetActiveLinkId();
 }
-
-
-/**
- * Checks if a user is logged in and adjusts the visibility of the footer link menu accordingly.
- * Retrieves the 'isLoggedIn' item from local storage and updates the display of the footer link menu based on its value.
- */
-/*
-async function checkIfLoggedIn() {
-    setTimeout(() => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const hideFooterLinkMenu = document.querySelector('.menu-content');
-        const headerProfil = document.querySelector('.header-profil');
-        if (isLoggedIn === 'true') {            
-            headerProfil.style.display = "flex";
-            hideFooterLinkMenu.style.display = "flex";
-        } else {
-            hideFooterLinkMenu.style.display = "none";
-            headerProfil.style.display = "none";
-        }        
-        console.log('isLoggedIn', isLoggedIn);
-        console.log('hideFooterLinkMenu', hideFooterLinkMenu);
-    }, 1500);
-}
-*/
 
 
 /**
