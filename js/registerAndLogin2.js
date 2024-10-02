@@ -202,8 +202,8 @@ function getPasswordInput(whichform) {
  * Logs in a guest user with predefined guest credentials.
  */
 function guestLogin() {    
-    const guestEmail = "guest@login.de";
-    const guestPassword = "Guest!login1";
+    const guestEmail = "guest@user.de";
+    const guestPassword = "!1GuestUser";
     document.getElementById("login-user-e-mail-id").value = guestEmail;
     document.getElementById("login-user-password-id").value = guestPassword;
     loggedInLocalStorage = localStorage.setItem('isLoggedIn', 'true');
