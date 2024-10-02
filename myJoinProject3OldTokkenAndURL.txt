@@ -1,0 +1,6 @@
+MyJoinProject3 old TOKKEN =
+const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471";
+
+
+MyJoinProject3 old URL =
+const STORAGE_URL = "https://remote-storage.developerakademie.org/item";

@@ -1,5 +1,5 @@
-const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471";
-const STORAGE_URL = "https://remote-storage.developerakademie.org/item";
+/* const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471"; */
+const STORAGE_URL = "https://myjoinproject3-507f7-default-rtdb.europe-west1.firebasedatabase.app";
 let rmCheckboxConfirmed = false;
 let ppCheckboxConfirmed = false;
 let users = {};
@@ -35,14 +35,15 @@ window.addEventListener('pageshow', function(event) {
 
 
 /**
- * Loads users data from the backend.
- * @param {string} key - The key to identify the data in the backend.
+ * Loads users data from the backend. 
  * @returns {Promise<Array>} - An array of user objects.
  */
-async function loadUsersFromBackend(key) {
+async function loadUsersFromBackend() {
     try {
-        const result = await getItem(key);
-        return JSON.parse(result) || [];
+        let response = await fetch(STORAGE_URL + "/users.json");
+        let responseToJson = await response.json();
+        console.log(`responseToJson` , responseToJson);
+        return responseToJson;        
     } catch (e) {
         console.error('loading error:', e);
         return [];
@@ -57,8 +58,9 @@ async function register() {
     if (!(registerValidationCheck() && ppCheckboxConfirmed)) {
         return;
     }
-    const newUser = generateNewUserObject();
-    const userExists = users.some(user => user.userEMail === newUser.userEMail);
+    const newUser = generateNewUserObject();    
+    const userArray = Object.values(users);    
+    const userExists = userArray.some(user => user.userEMail === newUser.userEMail);    
     if (userExists) {
         document.getElementById('existing-user-msg').innerText = "User with this email already exists.";
         document.getElementById('existing-user-msg').classList.remove('d-none');
@@ -66,7 +68,7 @@ async function register() {
     }
     addNewUser(newUser);
     toggleSuccessesMsg();
-    closeSignUp();    
+    closeSignUp();
 }
 
 
@@ -136,7 +138,7 @@ async function addNewUserToBackend(user) {
             existingUsers = [];
         }
         existingUsers.push(user);
-        await setItem('users', JSON.stringify(existingUsers));        
+        await setItem('users', existingUsers);
     } catch (error) {
         console.error('Error adding new user to backend:', error);
     }
@@ -301,9 +303,22 @@ function handleError(error) {
  * @returns Promise: resolved or rejected.
  */
 async function setItem(key, value) {
-    const payload = { key, value, token: STORAGE_TOKEN };
-    return fetch(STORAGE_URL, { method: 'POST', body: JSON.stringify(payload)})
-    .then(res => res.json());
+    try {        
+        const response = await fetch(`${STORAGE_URL}/${key}.json`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(value),
+        });        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }        
+        const data = await response.json();
+        console.log(`${key} added successfully:`, data);
+    } catch (error) {
+        console.error(`Error adding ${key} to backend:`, error);
+    }
 }
 
 

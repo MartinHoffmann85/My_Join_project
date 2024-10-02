@@ -8,16 +8,13 @@ function footerInit() {
 
 
 async function showMenuIfLoggedIn() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    
+    const isLoggedIn = localStorage.getItem('isLoggedIn');    
     const hideFooterLinkMenu = document.querySelector('.menu-content');
     const hideFooterLinkMenu2 = document.querySelector('.menu-box');
     const headerProfil = document.querySelector('.header-profil');
-
-    console.log('hideFooterLinkMenu:', hideFooterLinkMenu);  // Debugging
-    console.log('hideFooterLinkMenu2:', hideFooterLinkMenu2);  // Debugging
-    console.log('headerProfil:', headerProfil);  // Debugging
-
+    console.log('hideFooterLinkMenu:', hideFooterLinkMenu);
+    console.log('hideFooterLinkMenu2:', hideFooterLinkMenu2);
+    console.log('headerProfil:', headerProfil);
     if (hideFooterLinkMenu && hideFooterLinkMenu2 && headerProfil) {
         if (isLoggedIn === 'true') {
             headerProfil.style.display = "flex";
@@ -31,7 +28,7 @@ async function showMenuIfLoggedIn() {
             console.log(`isLoggedIn=`, isLoggedIn);
         }
     } else {
-        console.log("Ein Element konnte nicht gefunden werden");
+        console.log("Element could not find");
     }
 }
 
