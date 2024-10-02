@@ -4,7 +4,7 @@
 */
 function getLoggedInUser() {
     return JSON.parse(localStorage.getItem('currentUser'));
-  }
+}
   
   
 /**
@@ -35,13 +35,20 @@ function generateRandomID() {
 * Updates the current user's data in the backend.
 * @param {Object} currentUser - The current user object to be updated.
 */
-async function updateCurrentUserInBackend(currentUser) {  
+async function updateCurrentUserInBackend(currentUser) {
     try {
-        const existingUsers = await loadUsersFromBackend('users');
-        const foundUserIndex = existingUsers.findIndex(user => user.userEMail === currentUser.userEMail);
-        if (foundUserIndex !== -1) {
-            existingUsers[foundUserIndex] = currentUser;
-            await setItem('users', JSON.stringify(existingUsers));          
+        const existingUsers = await loadUsersFromBackend('users');        
+        console.log("Existing Users:", existingUsers);
+        if (typeof existingUsers !== 'object' || existingUsers === null) {
+            console.error("Error: existingUsers is not an object.");
+            return;
+        }        
+        const userKey = Object.keys(existingUsers).find(key => {            
+            const userArray = existingUsers[key];
+            return userArray[0]?.userEMail === currentUser.userEMail;
+        });
+        if (userKey) {
+            await putUser(userKey, { ...existingUsers[userKey][0], ...currentUser });
         } else {
             console.error("Error: User not found in backend.");
         }
@@ -49,7 +56,7 @@ async function updateCurrentUserInBackend(currentUser) {
         console.error("Error updating current user in backend:", error);
     }
 }
-  
+
   
 /**
 * Shows the contact overlay on mobile devices.

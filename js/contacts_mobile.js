@@ -373,19 +373,24 @@ function getNewContact() {
  * @param {Object} newContact - The new contact object to be added.
  */
 async function addContactToCurrentUser(newContact) {
-  let { colorCode, textColorCode, currentUser } = addContactToCurrentUserVariables(newContact);  
+  const currentUser = getLoggedInUser();
+  if (!currentUser) {
+      console.error("No user is currently logged in.");
+      return;
+  }
+  let { colorCode, textColorCode } = addContactToCurrentUserVariables(newContact);
   if (!Array.isArray(currentUser.contacts)) {
       currentUser.contacts = [];
-  }  
+  }
   if (!colorCode || !textColorCode) {      
       colorCode = getRandomColorHex();
       textColorCode = isColorLight(colorCode) ? 'white' : 'black';
-  }  
+  }
   newContact.colorCode = colorCode;
   newContact.textColorCode = textColorCode;
   currentUser.contacts.push(newContact);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  updateCurrentUserInBackend(currentUser);  
+  await updateCurrentUserInBackend(currentUser);  
 }
 
 

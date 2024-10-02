@@ -333,6 +333,30 @@ async function getItem(key) {
 
 
 /**
+ * Updates the user data in the backend using the PUT method.
+ * @param {string} userId - The ID of the user to update.
+ * @param {Object} userData - The data to update.
+ */
+async function putUser(userId, userData) {
+    try {
+        const response = await fetch(`${STORAGE_URL}/users/${userId}.json`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log('User updated successfully:', userData);
+    } catch (error) {
+        console.error('Error updating user:', error);
+    }
+}
+
+
+/**
  * Displays the sign-up form and initializes password visibility options.
  */
 function signUp() {
