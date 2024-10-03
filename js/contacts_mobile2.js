@@ -29,7 +29,6 @@ function generateRandomID() {
 async function updateCurrentUserInBackend(currentUser) {
     try {
         const existingUsers = await loadUsersFromBackend('users');
-        console.log("Existing Users:", existingUsers);
         if (typeof existingUsers !== 'object' || existingUsers === null) {
             console.error("Error: existingUsers is not an object.");
             return;
@@ -39,10 +38,7 @@ async function updateCurrentUserInBackend(currentUser) {
             return user && user.userEMail === currentUser.userEMail;
         });
         if (userKey) {
-            await putUser(userKey, { ...existingUsers[userKey], ...currentUser });
-            console.log("User updated successfully.");
-        } else {
-            console.error("Error: User not found in backend.");
+            await putUser(userKey, { ...existingUsers[userKey], ...currentUser });;
         }
     } catch (error) {
         console.error("Error updating current user in backend:", error);
