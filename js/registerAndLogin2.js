@@ -320,8 +320,9 @@ async function deletAllUsersInBackend() {
 }
 
 
-/** 
- * @param {number} index - Index ist for the index of the user to delete
+/**
+ * Function only for developers to clear user entrys. 
+ * @param {number} index - Index ist for the index of the user to delete 
  */
 async function deleteUserAtIndex(index) {
     try {        

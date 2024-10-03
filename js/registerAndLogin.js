@@ -40,8 +40,7 @@ window.addEventListener('pageshow', function(event) {
 async function loadUsersFromBackend() {
     try {
         let response = await fetch(STORAGE_URL + "/users.json");
-        let responseToJson = await response.json();
-        console.log(`responseToJson` , responseToJson);
+        let responseToJson = await response.json();        
         return responseToJson;        
     } catch (e) {
         console.error('loading error:', e);
