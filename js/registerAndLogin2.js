@@ -254,6 +254,32 @@ function showHeaderUserInitials() {
 }
 
 
+async function showMenuIfLoggedIn() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');    
+    const hideFooterLinkMenu = document.querySelector('.menu-content');
+    const hideFooterLinkMenu2 = document.querySelector('.menu-box');
+    const headerProfil = document.querySelector('.header-profil');
+    console.log('hideFooterLinkMenu:', hideFooterLinkMenu);
+    console.log('hideFooterLinkMenu2:', hideFooterLinkMenu2);
+    console.log('headerProfil:', headerProfil);
+    if (hideFooterLinkMenu && hideFooterLinkMenu2 && headerProfil) {
+        if (isLoggedIn === 'true') {
+            headerProfil.style.display = "flex";
+            hideFooterLinkMenu.style.display = "flex";
+            hideFooterLinkMenu2.style.display = "flex";
+            console.log(`isLoggedIn=`, isLoggedIn);
+        } else {
+            headerProfil.style.display = "none";
+            hideFooterLinkMenu.style.display = "none";
+            hideFooterLinkMenu2.style.display = "none";
+            console.log(`isLoggedIn=`, isLoggedIn);
+        }
+    } else {
+        console.log("Element could not find");
+    }
+}
+
+
 /**
  * Logs out the current user by updating the local storage items.
  * Sets the 'isLoggedIn' item to 'false' and removes the 'currentUser' item.
@@ -309,31 +335,5 @@ async function deleteUserAtIndex(index) {
         console.log('Benutzer an Index', index, 'erfolgreich gelöscht');
     } catch (error) {
         console.error('Fehler beim Löschen des Benutzers:', error);
-    }
-}
-
-
-async function showMenuIfLoggedIn() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');    
-    const hideFooterLinkMenu = document.querySelector('.menu-content');
-    const hideFooterLinkMenu2 = document.querySelector('.menu-box');
-    const headerProfil = document.querySelector('.header-profil');
-    console.log('hideFooterLinkMenu:', hideFooterLinkMenu);
-    console.log('hideFooterLinkMenu2:', hideFooterLinkMenu2);
-    console.log('headerProfil:', headerProfil);
-    if (hideFooterLinkMenu && hideFooterLinkMenu2 && headerProfil) {
-        if (isLoggedIn === 'true') {
-            headerProfil.style.display = "flex";
-            hideFooterLinkMenu.style.display = "flex";
-            hideFooterLinkMenu2.style.display = "flex";
-            console.log(`isLoggedIn=`, isLoggedIn);
-        } else {
-            headerProfil.style.display = "none";
-            hideFooterLinkMenu.style.display = "none";
-            hideFooterLinkMenu2.style.display = "none";
-            console.log(`isLoggedIn=`, isLoggedIn);
-        }
-    } else {
-        console.log("Element could not find");
     }
 }

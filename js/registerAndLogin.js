@@ -1,4 +1,3 @@
-/* const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471"; */
 const STORAGE_URL = "https://myjoinproject3-507f7-default-rtdb.europe-west1.firebasedatabase.app";
 let rmCheckboxConfirmed = false;
 let ppCheckboxConfirmed = false;
@@ -303,22 +302,17 @@ function handleError(error) {
  * @returns Promise: resolved or rejected.
  */
 async function setItem(key, value) {
-    try {        
-        const response = await fetch(`${STORAGE_URL}/${key}.json`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(value),
-        });        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }        
-        const data = await response.json();
-        console.log(`${key} added successfully:`, data);
-    } catch (error) {
-        console.error(`Error adding ${key} to backend:`, error);
+    const response = await fetch(`${STORAGE_URL}/${key}.json`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(value),
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
+    return await response.json();
 }
 
 
@@ -348,10 +342,8 @@ async function putUser(userId, userData) {
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        console.log('User updated successfully:', userData);
-    } catch (error) {
-        console.error('Error updating user:', error);
+        }        
+    } catch (error) {        
     }
 }
 
