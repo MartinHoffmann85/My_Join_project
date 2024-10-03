@@ -1,13 +1,4 @@
 /**
-* Retrieves the currently logged-in user from local storage.
-* @returns {Object} The currently logged-in user object.
-*/
-function getLoggedInUser() {
-    return JSON.parse(localStorage.getItem('currentUser'));
-}
-  
-  
-/**
 * Generates a unique ID for a contact.
 * @returns {string} The unique ID.
 */

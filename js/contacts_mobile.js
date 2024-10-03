@@ -1,5 +1,3 @@
-// Render contacts mobile view
-
 if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
   window.addEventListener('resize', contactsInit);
 } else {
@@ -250,30 +248,6 @@ function getRandomColorHex() {
 
 
 /**
-  * Hide header and footer for edit contact and create contact screen on mobile view
-  */
-function hideHeaderAndFooter() {
-    const mobileHeader = document.querySelector(".header"); 
-    const menuTemplate = document.querySelector(".footer");
-    mobileHeader.style.display = "none";
-    menuTemplate.style.display = "none";
-}
-
-
-/**
-  * Show header and footer screen on mobile view
-  */
-function showHeaderAndFooter() {
-    const mobileHeader = document.querySelector(".header");
-    const menuTemplate = document.querySelector(".footer");
-    mobileHeader.style.display = "block";
-    menuTemplate.style.display = "flex";
-}
-
-
-// Add contact screen
-
-/**
  * Displays the add contact screen for mobile view.
  */
 function addContactScreenMobile() {
@@ -405,4 +379,13 @@ newContact.id = generateUniqueID();
 let colorCode = localStorage.getItem(`color_${newContact.id}`);
 let textColorCode = localStorage.getItem(`textColor_${newContact.id}`);
 return { colorCode, textColorCode, currentUser };
+}
+
+
+/**
+* Retrieves the currently logged-in user from local storage.
+* @returns {Object} The currently logged-in user object.
+*/
+function getLoggedInUser() {
+  return JSON.parse(localStorage.getItem('currentUser'));
 }
