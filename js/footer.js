@@ -12,23 +12,16 @@ async function showMenuIfLoggedIn() {
     const hideFooterLinkMenu = document.querySelector('.menu-content');
     const hideFooterLinkMenu2 = document.querySelector('.menu-box');
     const headerProfil = document.querySelector('.header-profil');
-    console.log('hideFooterLinkMenu:', hideFooterLinkMenu);
-    console.log('hideFooterLinkMenu2:', hideFooterLinkMenu2);
-    console.log('headerProfil:', headerProfil);
     if (hideFooterLinkMenu && hideFooterLinkMenu2 && headerProfil) {
         if (isLoggedIn === 'true') {
             headerProfil.style.display = "flex";
             hideFooterLinkMenu.style.display = "flex";
-            hideFooterLinkMenu2.style.display = "flex";
-            console.log(`isLoggedIn=`, isLoggedIn);
+            hideFooterLinkMenu2.style.display = "flex";            
         } else {
             headerProfil.style.display = "none";
             hideFooterLinkMenu.style.display = "none";
-            hideFooterLinkMenu2.style.display = "none";
-            console.log(`isLoggedIn=`, isLoggedIn);
+            hideFooterLinkMenu2.style.display = "none";            
         }
-    } else {
-        console.log("Element could not find");
     }
 }
 

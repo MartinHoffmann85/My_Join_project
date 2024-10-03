@@ -30,8 +30,7 @@ async function login() {
         const loggedInUser = await authenticateUser();
         if (loggedInUser && typeof loggedInUser === "object") {
             localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
-            localStorage.setItem('isLoggedIn', 'true');
-            console.log('User logged in and isLoggedIn set to true.');            
+            localStorage.setItem('isLoggedIn', 'true');            
             window.location.assign('./summary.html');
             setTimeout(showHeaderUserInitials, 200);
             checkIfUserAddedAsContact();
@@ -307,7 +306,6 @@ async function deleteUserAtIndex(index) {
         }
         existingUsers.splice(index, 1);
         await setItem('users', JSON.stringify(existingUsers));
-        console.log('Benutzer an Index', index, 'erfolgreich gelöscht');
     } catch (error) {
         console.error('Fehler beim Löschen des Benutzers:', error);
     }

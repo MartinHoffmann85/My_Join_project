@@ -21,15 +21,15 @@
 }
 
 .header-profil {
+    display: none;
+    justify-content: center;
+    align-items: center;
     width: 40px;
     height: 40px;
     border-style: solid;
     border-width: 2px;
     border-radius: 50px;
-    border-color: var(--mockup-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border-color: var(--mockup-color);    
     font-weight: bold;
     color: var(--mockup-highlight);
     cursor: pointer;  

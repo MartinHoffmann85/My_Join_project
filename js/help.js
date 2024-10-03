@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
  */
 function helpInit() {
     setTimeout(showHeaderUserInitials, 500);
-    setTimeout(showMenuIfLoggedIn, 1500);
+    setTimeout(showMenuIfLoggedIn, 600);
 }
 
 
