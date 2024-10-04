@@ -294,11 +294,13 @@ function handleError(error) {
 
 
 /**
- * Push request to backend.
- * Either it is fulfilled successfully (resolved) or it fails (rejected).
- * @param {lokal storage key} key
- * @param {string} value
- * @returns Promise: resolved or rejected.
+ * Sends a POST request to save an item to local storage.
+ *
+ * @async
+ * @param {string} key - The key for the item to be stored in local storage.
+ * @param {any} value - The value to be stored, which can be of any type.
+ * @returns {Promise<Object>} The response from the server, parsed as JSON.
+ * @throws {Error} Throws an error if the HTTP response is not OK.
  */
 async function setItem(key, value) {
     const response = await fetch(`${STORAGE_URL}/${key}.json`, {
@@ -316,8 +318,10 @@ async function setItem(key, value) {
 
 
 /**
- * Get request to backend.
- * @param {lokal storage key} key
+ * Retrieves a value associated with the specified key from a remote server.
+ * The function constructs a URL using the key and a storage token to fetch the data. 
+ * @returns {Promise<any>} A promise that resolves to the value associated with the key.
+ *                         If the key does not exist, it may return undefined or null.
  */
 async function getItem(key) {
     const url = `${STORAGE_URL}?key=${key}&token=${STORAGE_TOKEN}`;

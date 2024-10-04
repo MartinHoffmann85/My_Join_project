@@ -26,14 +26,18 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
+            <pre class="prettyprint source linenums"><code>let draggedTaskId;
+let originalColumnId;
+
+
+/**
  * Initializes the board by loading tasks from local storage, rendering them, and showing user initials in the header.
  */
 async function initBoard() {
     const currentUser = await JSON.parse(localStorage.getItem('currentUser'));
     loadTasksFromLocalStorage(currentUser);
     renderAllTasks();
-    setTimeout(showHeaderUserInitials, 200);    
+    setTimeout(showHeaderUserInitials, 500);    
 }
 
 
@@ -49,14 +53,15 @@ function redirectToAddTask() {
  * Renders all tasks onto the board.
  */
 function renderAllTasks() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks) &amp;&amp; currentUser.tasks.length > 0) {                
-        clearTaskContainers();        
-        currentUser.tasks.forEach(task => {
-            renderTask(task);
-            addTaskClickListener();
-        });
-    }
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+  if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks) &amp;&amp; currentUser.tasks.length > 0) {                
+      clearTaskContainers();        
+      currentUser.tasks.forEach(task => {
+          renderTask(task);
+          addTaskClickListener();
+      });
+  }
+  checkEmptyColumns();
 }
 
 
@@ -86,8 +91,6 @@ function renderTask(taskData) {
         taskContainer.appendChild(taskCard);
         taskCard.addEventListener('dragstart', dragStart);
         taskCard.setAttribute('draggable', 'true');
-    } else {
-        console.error('Task container not found for column:', actualColumnId);
     }
 }
 
@@ -166,20 +169,20 @@ function createTaskCardElementHTML(taskCard, backgroundColor, category, title, d
  * @param {Object} assignedTo - The user(s) assigned to the task.
  * @returns {string} - The HTML content for the assigned to section.
  */
-function generateAssignedToHTML(assignedTo) {
-    if (assignedTo &amp;&amp; assignedTo.userNames &amp;&amp; assignedTo.userNames.length > 0) {
-      let assignedToHTML = '';
-      assignedTo.userNames.forEach((userName, index) => {
-        const user = {
-          userNames: [userName],
-          colorCodes: [assignedTo.colorCodes[index]],
-        };
-        assignedToHTML += renderUserDetails(user);
-      });
-      return assignedToHTML;
-    } else {
-      return '&lt;div>&lt;strong>Assigned to:&lt;/strong> No one assigned&lt;/div>';
-    }
+function generateAssignedToHTML(assignedTo) {  
+  if (assignedTo &amp;&amp; assignedTo.userNames &amp;&amp; assignedTo.userNames.length > 0) {
+    let assignedToHTML = '';
+    assignedTo.userNames.forEach((userName, index) => {
+      const user = {
+        userNames: [getFirstLettersOfName(userName)],
+        colorCodes: [assignedTo.colorCodes[index]],
+      };      
+      assignedToHTML += renderUserDetails(user);
+    });
+    return assignedToHTML;
+  } else {
+    return '&lt;div>&lt;strong>Assigned to:&lt;/strong> No one assigned&lt;/div>';
+  }
 }
 
 
@@ -402,660 +405,14 @@ function updateSubtaskStatus(taskId, subtaskId, isChecked) {
  * @returns {string} - The HTML content representing user details.
  */
 function renderUserDetails(user) {
-    const colorCode = user.colorCodes &amp;&amp; user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
-    const initials = user.userNames &amp;&amp; user.userNames.length > 0 ? user.userNames[0].split(' ').map(word => word[0]).join('') : '';
-    const textColor = isColorLight(colorCode) ? "black" : "white";
-    return `
-      &lt;div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
-        ${initials}
-      &lt;/div>
-    `;
-}
-
-
-/**
- * Saves the updated tasks data to localStorage.
- * @param {Object} currentUser - The current user object.
- */
-function saveTasksToLocalStorage(currentUser) {
-    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    } else {
-        console.error('Invalid currentUser data in localStorage');
-    }
-}
-
-
-/**
- * Loads tasks data from localStorage and renders tasks on the board.
- * @param {Object} currentUser - The current user object.
- */
-function loadTasksFromLocalStorage(currentUser) {
-    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
-        const tasksJSON = localStorage.getItem('currentUser.tasks');
-        if (tasksJSON) {
-            const tasks = JSON.parse(tasksJSON);
-            currentUser.tasks = tasks;
-            clearTaskContainers();
-            tasks.forEach(task => {
-                renderTask(task);
-            });
-        }
-    }    
-}
-
-
-/**
- * Handles the drag start event for task elements.
- * @param {Event} event - The dragstart event object.
- */
-function dragStart(event) {    
-    const taskId = event.target.id;
-    event.dataTransfer.setData("text/plain", taskId);
-}
-
-
-/**
- * Handles the drag event for draggable elements.
- * @param {Event} event - The drag event object.
- */
-function drag(event) {
-    event.dataTransfer.setData("text", event.target.id);
-}
-
-
-/**
- * Handles the dragover event to allow dropping elements.
- * @param {Event} event - The dragover event object.
- */
-function allowDrop(event) {
-    event.preventDefault();
-}
-
-
-/**
- * Handles the drop event when an element is dropped.
- * @param {Event} event - The drop event object.
- */
-function drop(event) {
-    event.preventDefault();
-    const taskId = event.dataTransfer.getData("text/plain");
-    const targetColumn = event.target.closest('.boardColumn');
-    if (targetColumn) {
-        const targetColumnId = targetColumn.id.split('-')[0];
-        const targetContainer = document.getElementById(targetColumnId + '-tasks');
-        const draggedTaskElement = document.getElementById(taskId);
-        if (draggedTaskElement &amp;&amp; targetContainer) {
-            targetContainer.appendChild(draggedTaskElement);
-            updateTaskColumnId(taskId, targetColumnId);
-        }
-    }
-}
-
-
-/**
- * Updates the column ID of a task and saves the changes to localStorage.
- * @param {string} taskId - The ID of the task.
- * @param {string} newColumnId - The new column ID.
- */
-async function updateTaskColumnId(taskId, newColumnId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
-        if (taskIndex !== -1) {
-            currentUser.tasks[taskIndex].columnId = newColumnId;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            await updateCurrentUserInBackend(currentUser);        
-        }
-    }
-}
-
-
-/**
- * Renders a task card as an overlay.
- * @param {string} id - Task ID.
- * @param {string} title - Task title.
- * @param {string} description - Task description.
- * @param {string} category - Task category.
- * @param {Object} assignedTo - Assigned to details.
- * @param {string} prio - Task priority.
- * @param {string} date - Task due date.
- * @param {string} columnId - Task column ID.
- * @param {Array} subtasks - Array of subtasks.
- */
-function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {    
-    const overlay = document.createElement('div');
-    overlay.classList.add('boardoverlay');    
-    const card = document.createElement('div');
-    card.classList.add('card');    
-    let assignedToHTML = renderTaskCardAsOverlayAssignetTo(assignedTo);    
-    let backgroundColor = '';
-    backgroundColor = renderTaskCardAsOverlayCategory(category, backgroundColor);
-    let prioContent = prio;
-    prioContent = renderTaskCarsAsOverlayPrio(prio, prioContent);
-    const subtasksHTML = boardRenderSubtasks(card, id);
-    renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id);
-    overlay.appendChild(card);
-    document.body.appendChild(overlay);
-}
-
-
-/**
- * Renders the HTML content of a task card overlay.
- * @param {HTMLElement} card - Task card element.
- * @param {string} backgroundColor - Background color.
- * @param {string} category - Task category.
- * @param {string} title - Task title.
- * @param {string} description - Task description.
- * @param {string} date - Task due date.
- * @param {string} prioContent - Priority content.
- * @param {string} assignedToHTML - Assigned to HTML content.
- * @param {string} subtasksHTML - Subtasks HTML content.
- * @param {string} id - Task ID.
- */
-function renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id) {
-    card.innerHTML = `
-        &lt;div class="boardOverlayCategoryAndCloseXContainer">            
-            &lt;div class="renderTaskCardOverlayCategoryDiv" style="background-color: ${backgroundColor};">${category}&lt;/div>
-            &lt;div>&lt;img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt="">&lt;/div>
-        &lt;/div>        
-        &lt;div class="renderTaskTitleOverlay">&lt;strong>${title}&lt;/strong>&lt;/div>
-        &lt;div class="renderTaskDescriptionOverlay">${description}&lt;/div>
-        &lt;div class="renderTaskDate">&lt;p class="renderTaskDatePElement">Due date:&lt;/p>&lt;p class="renderTaskOverlayDate">${date}&lt;/p>&lt;/div>               
-        &lt;div class="overlayAssignetToHTMLAndPrioContentContainer">
-            &lt;div class="boardPriorityContainer">
-                &lt;div class="renderTaskOverlayPrio">Priority:&lt;/div>
-                &lt;div class="boardPrioIcon displayFlex">${prioContent}&lt;/div>
-            &lt;/div>  
-            &lt;div class="renderTaskCardOverlayAssignetToContainer">
-                &lt;p class="renderTaskCardOverlayAssignetToPElement">Assigned To:&lt;/p>
-                &lt;p>${assignedToHTML}&lt;/p>
-            &lt;/div>            
-        &lt;/div>
-        &lt;div class="renderTasksubtaskHTML">&lt;p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks&lt;/p>${subtasksHTML}&lt;/div>
-        &lt;div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-            &lt;img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTask('${id}')">
-            &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${id}')">
-        &lt;/div>
-    `;
-}
-
-
-/**
- * Renders the priority content for the task card overlay.
- * @param {string} prio - Task priority.
- * @param {string} prioContent - Priority content.
- * @returns {string} - Rendered priority content.
- */
-function renderTaskCarsAsOverlayPrio(prio, prioContent) {
-    if (prio === 'urgent') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Urgent&lt;/strong>&lt;/p>&lt;img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
-    } else if (prio === 'medium') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Medium&lt;/strong>&lt;/p>&lt;img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
-    } else if (prio === 'low') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Low&lt;/strong>&lt;/p>&lt;img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
-    }
-    return prioContent;
-}
-
-
-/**
- * Renders the background color for the task card overlay based on the category.
- * @param {string} category - Task category.
- * @param {string} backgroundColor - Background color.
- * @returns {string} - Rendered background color.
- */
-function renderTaskCardAsOverlayCategory(category, backgroundColor) {
-    if (category === 'Technical Task') {
-        backgroundColor = 'var(--technical-task-turquoise)';
-    } else if (category === 'User Story') {
-        backgroundColor = 'var(--user-story-blue)';
-    }
-    return backgroundColor;
-}
-
-
-/**
- * Renders the HTML content for the assigned to section of the task card overlay.
- * @param {Object} assignedTo - Assigned to details.
- * @returns {string} - Rendered HTML content for the assigned to section.
- */
-function renderTaskCardAsOverlayAssignetTo(assignedTo) {
-    let assignedToHTML = '';
-    if (assignedTo &amp;&amp; assignedTo.userNames &amp;&amp; assignedTo.userNames.length > 0) {
-        assignedTo.userNames.forEach((userName, index) => {
-            const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
-            const backgroundColor = assignedTo.colorCodes[index];
-            const iconHTML = `&lt;div class="userIcon" style="background-color: ${backgroundColor};">${initials}&lt;/div>`;
-            assignedToHTML += `&lt;div class="assignedToUser">${iconHTML} &lt;p class="editAssignetToUserPElement">${userName}&lt;/p>&lt;/div>`;
-        });
-    } else {
-        assignedToHTML = '&lt;div>&lt;strong>Assigned to:&lt;/strong> No one assigned&lt;/div>';
-    }
-    return assignedToHTML;
-}
-
-
-/**
- * Adds click event listeners to task cards.
- */
-function addTaskClickListener() {
-    const taskCards = document.querySelectorAll('.task');
-    taskCards.forEach(taskCard => {        
-        taskCard.removeEventListener('click', renderTaskCardOverlay);        
-        taskCard.addEventListener('click', renderTaskCardOverlay);
-    });
-}
-
-
-/**
- * Renders the task card overlay when a task is clicked.
- * @param {Event} event - Click event.
- */
-function renderTaskCardOverlay(event) {
-    const taskId = event.currentTarget.id;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    const task = currentUser.tasks.find(task => task.id === taskId);
-    if (task) {        
-        const subtasks = task.subtasks;        
-        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, subtasks);
-    } else {
-        console.error('Task not found');
-    }
-}
-
-
-/**
- * Closes the task card overlay.
- */
-function closeOverlayBoard() {
-    const overlay = document.querySelector('.boardoverlay');
-    if (overlay) {
-        overlay.remove();
-    }
-}
-
-
-/**
- * Deletes a task.
- * @param {string} id - Task ID.
- */
-function deleteTask(id) {    
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    const stringId = id.toString();
-    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === stringId);
-        if (taskIndex !== -1) {
-            currentUser.tasks.splice(taskIndex, 1);
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));            
-            updateCurrentUserInBackend(currentUser);
-            closeOverlayBoard();
-            renderAllTasks();
-        }
-    }
-}
-
-
-/**
- * Opens an overlay to edit a task.
- * @param {string} taskId - ID of the task to be edited.
- */
-function boardEditTask(taskId) {
-    closeOverlayBoard();
-    const task = getTaskFromLocalStorage(taskId);
-    if (task) {
-        const overlay = document.createElement('div');
-        overlay.classList.add('boardoverlay');
-        const card = document.createElement('div');
-        card.classList.add('card');        
-        let backgroundColor = boardEditTaskCategory(task);
-        boardEditTaskPrio(task);
-        const assignedToHTML = boardEditTaskAssignetTo(task);
-        boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML);
-        overlay.appendChild(card);
-        document.body.appendChild(overlay);
-    }
-}
-
-
-/**
- * Renders the HTML content for editing a task.
- * @param {HTMLElement} card - Card element.
- * @param {string} backgroundColor - Background color.
- * @param {Object} task - Task object.
- * @param {string} taskId - ID of the task.
- * @param {string} assignedToHTML - HTML content for assigned to section.
- */
-function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) {
-    card.innerHTML = `
-            &lt;div class="boardOverlayCategoryAndCloseXContainer">
-                &lt;div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}&lt;/div>
-                &lt;div>&lt;img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard(); initBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt="">&lt;/div>
-            &lt;/div>
-            &lt;div class="renderTaskTitleOverlay">
-                &lt;p>Title:&lt;/p>
-                &lt;input class="boardEditTaskOverlayTitleInput" type="text" id="editTitle" value="${task.title}">
-            &lt;/div>
-            &lt;div class="renderTaskDescriptionOverlay">
-                &lt;p>Description:&lt;/p>
-                &lt;textarea class="textarea-style" id="editDescription">${task.description}&lt;/textarea>
-            &lt;/div>
-            &lt;div class="renderTaskDate" type="date">
-                &lt;p>Due date:&lt;/p>
-                &lt;input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
-            &lt;/div>
-            &lt;div class="overlayAssignetToHTMLAndPrioContentContainer">
-                &lt;div class="boardPriorityContainer">
-                &lt;p>Priority:&lt;/p>
-                    &lt;select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="low" ${task.prio === 'low' ? 'selected' : ''}>Low&lt;/option>
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium&lt;/option>
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent&lt;/option>
-                    &lt;/select>
-                &lt;/div>
-                &lt;div class="renderTaskCardOverlayAssignetToContainer">
-                    &lt;div class="editAssigntToPElementAndSelectContactsButton">
-                        &lt;p class="renderTaskCardOverlayAssignetToPElement">Assigned To:&lt;/p>
-                        &lt;div class="dropdown">
-                            &lt;button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts&lt;/button>
-                                &lt;ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
-                                ${generateAssignedToOptions(task.assignedTo, taskId)}
-                                &lt;/ul>                        
-                        &lt;/div>
-                    &lt;/div>
-                    ${assignedToHTML.length > 0 ? assignedToHTML : '&lt;p>No one assigned&lt;/p>'}
-                &lt;/div>
-            &lt;/div>
-            &lt;div class="renderTasksubtaskHTML">
-                &lt;p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks&lt;/p>
-                ${boardRenderSubtasks(card, taskId)}
-                &lt;div class="subtaskInput">
-                    &lt;input class="boardEditSubtaskInput" type="text" id="newSubtaskInput" placeholder="Enter subtask">
-                    &lt;button class="boardEditSubtaskButton" onclick="addSubtask('${taskId}')">Add subtask&lt;/button>
-                &lt;/div>
-            &lt;/div>
-            &lt;div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-                &lt;img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTaskUpdate('${taskId}')">
-                &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
-            &lt;/div>
-        `;
-}
-
-
-/**
- * Renders the assigned to HTML for editing a task.
- * @param {Object} task - Task object.
- * @returns {string} - Assigned to HTML content.
- */
-function boardEditTaskAssignetTo(task) {
-    const assignedToContacts = task.assignedTo &amp;&amp; task.assignedTo.userNames ? task.assignedTo.userNames : [];
-    const assignedToColors = task.assignedTo &amp;&amp; task.assignedTo.colorCodes ? task.assignedTo.colorCodes : [];
-    const assignedToHTML = assignedToContacts.map((userName, index) => {
-        const user = {
-            userNames: [userName],
-            colorCodes: [assignedToColors[index]],
-        };
-        const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
-        const backgroundColor = assignedToColors[index];
-        const iconHTML = `&lt;div class="userIcon" style="background-color: ${backgroundColor};">${initials}&lt;/div>`;
-        return `&lt;div class="assignedToUser">${iconHTML} &lt;p class="editAssignetToUserPElement">${userName}&lt;/p>&lt;/div>`;
-    }).join('');
-    return assignedToHTML;
-}
-
-
-/**
- * Renders the priority HTML for editing a task.
- * @param {Object} task - Task object.
- */
-function boardEditTaskPrio(task) {
-    let prioContent = task.prio;
-    if (task.prio === 'urgent') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Urgent&lt;/strong>&lt;/p>&lt;img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
-    } else if (task.prio === 'medium') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Medium&lt;/strong>&lt;/p>&lt;img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
-    } else if (task.prio === 'low') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Low&lt;/strong>&lt;/p>&lt;img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
-    }
-}
-
-
-/**
- * Renders the category background color for editing a task.
- * @param {Object} task - Task object.
- * @returns {string} - Background color.
- */
-function boardEditTaskCategory(task) {
-    let backgroundColor = '';
-    if (task.category === 'Technical Task') {
-        backgroundColor = 'var(--technical-task-turquoise)';
-    } else if (task.category === 'User Story') {
-        backgroundColor = 'var(--user-story-blue)';
-    }
-    return backgroundColor;
-}
-
-
-/**
- * Generates the HTML options for selecting assigned contacts.
- * @param {Object} assignedTo - Assigned contacts object.
- * @param {string} taskId - ID of the task.
- * @returns {string} - HTML content for the options.
- */
-function generateAssignedToOptions(assignedTo, taskId) {        
-    const currentUserContacts = JSON.parse(localStorage.getItem('currentUser')).contacts;
-    if (!currentUserContacts || currentUserContacts.length === 0) {
-        return '&lt;li>No contacts available&lt;/li>';
-    }
-    return currentUserContacts.map(contact => {
-        const selected = assignedTo &amp;&amp; assignedTo.userNames &amp;&amp; assignedTo.userNames.includes(contact.name) ? 'selected' : '';        
-        return `&lt;li class="contact-option ${selected}" onclick="selectContact(this, '${taskId}')">${contact.name}&lt;/li>`;
-    }).join('');    
-}
-
-
-/**
- * Toggles the visibility of the dropdown menu for selecting contacts.
- */
-function boardToggleDropdownMenu() {
-    const dropdown = document.getElementById('boardContactDropDownmenuID');
-    dropdown.classList.toggle('show');
-    if (dropdown.classList.contains('show')) {
-        dropdown.style.display = 'block';
-    } else {
-        dropdown.style.display = 'none';
-    }
-}
-
-
-/**
- * Handles the selection of a contact and updates the assigned contacts.
- * @param {HTMLElement} contactElement - Selected contact element.
- * @param {string} taskId - ID of the task.
- */
-function selectContact(contactElement, taskId) {
-    contactElement.classList.toggle('selected');
-    editUpdateAssignedTo(taskId);
-}
-
-
-/**
- * Retrieves a task from local storage based on its ID.
- * @param {string} taskId - ID of the task to retrieve.
- * @returns {Object} - Task object.
- */
-function getTaskFromLocalStorage(taskId) {
-    const tasks = JSON.parse(localStorage.getItem('currentUser')).tasks;
-    return tasks.find(task => task.id === taskId);
-}
-
-
-/**
- * Updates the assigned contacts for a task after editing.
- * @param {string} taskId - ID of the task.
- */
-function editUpdateAssignedTo(taskId) {
-    const selectedContacts = Array.from(document.querySelectorAll('.contact-option.selected')).map(contact => contact.textContent.trim());
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
-    if (taskIndex !== -1) {
-      const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo || { userNames: [], colorCodes: [] };
-      userNames.length = 0;
-      colorCodes.length = 0;
-      selectedContacts.forEach(contactName => {
-        userNames.push(contactName);
-        colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
-      });
-      saveTasksToLocalStorage(currentUser);
-      updateCurrentUserInBackend(currentUser);
-      boardEditTask(taskId);
-    }
-}
-
-
-/**
- * Retrieves the color code for a given contact name from the contacts list.
- * @param {Array} contacts - List of contacts.
- * @param {string} contactName - Name of the contact to retrieve the color code for.
- * @returns {string} - Color code associated with the contact.
- */
-function getColorCodeForContact(contacts, contactName) {
-    const contact = contacts.find(contact => contact.name === contactName);
-    if (contact) {
-        return contact.colorCode;
-    }
-}
-
-
-/**
- * Updates the task in local storage and backend after editing.
- * @param {string} taskId - ID of the task.
- */
-function boardEditTaskUpdate(taskId) {
-    const { task, updatedTitle, updatedDescription, updatedDate, updatedPriority } = boardEditTaskUpdateVariables(taskId);    
-    if (task) {        
-        task.title = updatedTitle;
-        task.description = updatedDescription;
-        task.date = updatedDate;
-        task.prio = updatedPriority;        
-        updateTaskInLocalStorageAndBackend(taskId, task);        
-        closeOverlayBoard();
-        initBoard();
-    }
-}
-
-
-/**
- * Collects the updated task information from the edit task form.
- * @param {string} taskId - ID of the task.
- * @returns {Object} - Object containing the task and updated information.
- */
-function boardEditTaskUpdateVariables(taskId) {
-    const editTitleInput = document.getElementById('editTitle');
-    const editDescriptionTextarea = document.getElementById('editDescription');
-    const editDateInput = document.getElementById('editDate');
-    const editPrioritySelect = document.getElementById('editPriority');
-    const updatedTitle = editTitleInput.value;
-    const updatedDescription = editDescriptionTextarea.value;
-    const updatedDate = editDateInput.value;
-    const updatedPriority = editPrioritySelect.value;
-    const task = getTaskFromLocalStorage(taskId);
-    return { task, updatedTitle, updatedDescription, updatedDate, updatedPriority };
-}
-
-
-/**
- * Updates the task in local storage and backend.
- * @param {string} taskId - ID of the task.
- * @param {Object} updatedTask - Updated task object.
- */
-function updateTaskInLocalStorageAndBackend(taskId, updatedTask) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
-        if (taskIndex !== -1) {
-            currentUser.tasks[taskIndex] = updatedTask;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            updateCurrentUserInBackend(currentUser);
-        }
-    }
-}
-
-
-/**
- * Searches tasks based on the input provided in the search input field.
- */
-function searchTasks() {
-    const searchInput = document.getElementById('boardSearchInputID').value.toLowerCase();
-    const taskCards = document.querySelectorAll('.task');    
-    taskCards.forEach(taskCard => {
-        const taskTitle = taskCard.querySelector('.renderTaskTitlePElement').textContent.toLowerCase();
-        const taskDescription = taskCard.querySelector('.renderTaskDescription').textContent.toLowerCase();        
-        if (taskTitle.includes(searchInput) || taskDescription.includes(searchInput)) {
-            taskCard.style.display = 'block';
-        } else {
-            taskCard.style.display = 'none';
-        }
-    });
-}
-
-
-/**
- * Adds a new subtask to the specified task.
- * @param {string} taskId - ID of the task to which the subtask is added.
- */
-function addSubtask(taskId) {
-    const newSubtaskInput = document.getElementById('newSubtaskInput');
-    const subtaskTitle = newSubtaskInput.value.trim();
-    if (subtaskTitle !== '') {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
-        if (taskIndex !== -1) {            
-            if (!currentUser.tasks[taskIndex].subtasks) {
-                currentUser.tasks[taskIndex].subtasks = [];
-            }            
-            addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId);
-        }
-    }
-}
-
-
-/**
- * Saves the new subtask to local storage, updates the backend, and redirects to edit task view.
- * @param {string} subtaskTitle - Title of the new subtask.
- * @param {Object} currentUser - Current user object.
- * @param {number} taskIndex - Index of the task in the user's tasks array.
- * @param {string} taskId - ID of the task to which the subtask is added.
- */
-function addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId) {
-    const newSubtask = addSubtaskNewSubtask(subtaskTitle);
-    currentUser.tasks[taskIndex].subtasks.push(newSubtask);
-    saveTasksToLocalStorage(currentUser);
-    updateCurrentUserInBackend(currentUser);
-    boardEditTask(taskId);
-}
-
-
-/**
- * Creates a new subtask object with a random ID.
- * @param {string} subtaskTitle - Title of the new subtask.
- * @returns {Object} - New subtask object.
- */
-function addSubtaskNewSubtask(subtaskTitle) {
-    return {
-        id: boardGenerateRandomID(),
-        title: subtaskTitle,
-        completed: false
-    };
-}
-
-
-/**
- * Generates a random alphanumeric ID.
- * @returns {string} - Random alphanumeric ID.
- */
-function boardGenerateRandomID() {    
-    return Math.random().toString(36).substring(2, 11);
+  const colorCode = user.colorCodes &amp;&amp; user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
+  const initials = user.userNames &amp;&amp; user.userNames.length > 0 ? user.userNames[0].slice(0, 2) : '';
+  const textColor = isColorLight(colorCode) ? "black" : "white";
+  return `
+    &lt;div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
+      ${initials}
+    &lt;/div>
+  `;
 }</code></pre>
         </article>
     </section>
@@ -1066,13 +423,13 @@ function boardGenerateRandomID() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addSubtaskNewSubtask">addSubtaskNewSubtask</a></li><li><a href="global.html#addSubtaskSaveAndRedirectToBoardEditTask">addSubtaskSaveAndRedirectToBoardEditTask</a></li><li><a href="global.html#addTaskClickListener">addTaskClickListener</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#appendCountElement">appendCountElement</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#boardEditTaskAssignetTo">boardEditTaskAssignetTo</a></li><li><a href="global.html#boardEditTaskCategory">boardEditTaskCategory</a></li><li><a href="global.html#boardEditTaskPrio">boardEditTaskPrio</a></li><li><a href="global.html#boardEditTaskUpdate">boardEditTaskUpdate</a></li><li><a href="global.html#boardEditTaskUpdateVariables">boardEditTaskUpdateVariables</a></li><li><a href="global.html#boardGenerateRandomID">boardGenerateRandomID</a></li><li><a href="global.html#boardRenderSubtaskForEach">boardRenderSubtaskForEach</a></li><li><a href="global.html#boardRenderSubtasks">boardRenderSubtasks</a></li><li><a href="global.html#boardRenderSubtasksCount">boardRenderSubtasksCount</a></li><li><a href="global.html#boardTaskEditHTML">boardTaskEditHTML</a></li><li><a href="global.html#boardToggleDropdownMenu">boardToggleDropdownMenu</a></li><li><a href="global.html#calculateProgress">calculateProgress</a></li><li><a href="global.html#clearTaskContainers">clearTaskContainers</a></li><li><a href="global.html#closeOverlayBoard">closeOverlayBoard</a></li><li><a href="global.html#countCheckedSubtasks">countCheckedSubtasks</a></li><li><a href="global.html#createTaskCardElement">createTaskCardElement</a></li><li><a href="global.html#createTaskCardElementHTML">createTaskCardElementHTML</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#determineBackgroundColor">determineBackgroundColor</a></li><li><a href="global.html#determinePriorityContent">determinePriorityContent</a></li><li><a href="global.html#drag">drag</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#drop">drop</a></li><li><a href="global.html#editUpdateAssignedTo">editUpdateAssignedTo</a></li><li><a href="global.html#generateAssignedToHTML">generateAssignedToHTML</a></li><li><a href="global.html#generateAssignedToOptions">generateAssignedToOptions</a></li><li><a href="global.html#generateCheckboxAttributes">generateCheckboxAttributes</a></li><li><a href="global.html#generateProgressBarContainer">generateProgressBarContainer</a></li><li><a href="global.html#generateSubtaskHTML">generateSubtaskHTML</a></li><li><a href="global.html#getColorCodeForContact">getColorCodeForContact</a></li><li><a href="global.html#getCurrentUserTask">getCurrentUserTask</a></li><li><a href="global.html#getTaskFromLocalStorage">getTaskFromLocalStorage</a></li><li><a href="global.html#initBoard">initBoard</a></li><li><a href="global.html#loadTasksFromLocalStorage">loadTasksFromLocalStorage</a></li><li><a href="global.html#redirectToAddTask">redirectToAddTask</a></li><li><a href="global.html#renderAllTasks">renderAllTasks</a></li><li><a href="global.html#renderTask">renderTask</a></li><li><a href="global.html#renderTaskCard">renderTaskCard</a></li><li><a href="global.html#renderTaskCardAsOverlay">renderTaskCardAsOverlay</a></li><li><a href="global.html#renderTaskCardAsOverlayAssignetTo">renderTaskCardAsOverlayAssignetTo</a></li><li><a href="global.html#renderTaskCardAsOverlayCardHTML">renderTaskCardAsOverlayCardHTML</a></li><li><a href="global.html#renderTaskCardAsOverlayCategory">renderTaskCardAsOverlayCategory</a></li><li><a href="global.html#renderTaskCardOverlay">renderTaskCardOverlay</a></li><li><a href="global.html#renderTaskCarsAsOverlayPrio">renderTaskCarsAsOverlayPrio</a></li><li><a href="global.html#renderUserDetails">renderUserDetails</a></li><li><a href="global.html#saveTasksToLocalStorage">saveTasksToLocalStorage</a></li><li><a href="global.html#searchTasks">searchTasks</a></li><li><a href="global.html#selectContact">selectContact</a></li><li><a href="global.html#updateSubtaskStatus">updateSubtaskStatus</a></li><li><a href="global.html#updateTaskColumnId">updateTaskColumnId</a></li><li><a href="global.html#updateTaskInLocalStorageAndBackend">updateTaskInLocalStorageAndBackend</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#appendCountElement">appendCountElement</a></li><li><a href="global.html#boardRenderSubtaskForEach">boardRenderSubtaskForEach</a></li><li><a href="global.html#boardRenderSubtasks">boardRenderSubtasks</a></li><li><a href="global.html#boardRenderSubtasksCount">boardRenderSubtasksCount</a></li><li><a href="global.html#calculateProgress">calculateProgress</a></li><li><a href="global.html#clearTaskContainers">clearTaskContainers</a></li><li><a href="global.html#countCheckedSubtasks">countCheckedSubtasks</a></li><li><a href="global.html#createTaskCardElement">createTaskCardElement</a></li><li><a href="global.html#createTaskCardElementHTML">createTaskCardElementHTML</a></li><li><a href="global.html#determineBackgroundColor">determineBackgroundColor</a></li><li><a href="global.html#determinePriorityContent">determinePriorityContent</a></li><li><a href="global.html#generateAssignedToHTML">generateAssignedToHTML</a></li><li><a href="global.html#generateCheckboxAttributes">generateCheckboxAttributes</a></li><li><a href="global.html#generateProgressBarContainer">generateProgressBarContainer</a></li><li><a href="global.html#generateSubtaskHTML">generateSubtaskHTML</a></li><li><a href="global.html#getCurrentUserTask">getCurrentUserTask</a></li><li><a href="global.html#initBoard">initBoard</a></li><li><a href="global.html#redirectToAddTask">redirectToAddTask</a></li><li><a href="global.html#renderAllTasks">renderAllTasks</a></li><li><a href="global.html#renderTask">renderTask</a></li><li><a href="global.html#renderTaskCard">renderTaskCard</a></li><li><a href="global.html#renderUserDetails">renderUserDetails</a></li><li><a href="global.html#updateSubtaskStatus">updateSubtaskStatus</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 09 2024 17:35:47 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:50:17 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

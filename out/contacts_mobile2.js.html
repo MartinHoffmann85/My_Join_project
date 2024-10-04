@@ -27,15 +27,6 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
-* Retrieves the currently logged-in user from local storage.
-* @returns {Object} The currently logged-in user object.
-*/
-function getLoggedInUser() {
-    return JSON.parse(localStorage.getItem('currentUser'));
-  }
-  
-  
-/**
 * Generates a unique ID for a contact.
 * @returns {string} The unique ID.
 */
@@ -63,21 +54,25 @@ function generateRandomID() {
 * Updates the current user's data in the backend.
 * @param {Object} currentUser - The current user object to be updated.
 */
-async function updateCurrentUserInBackend(currentUser) {  
+async function updateCurrentUserInBackend(currentUser) {
     try {
         const existingUsers = await loadUsersFromBackend('users');
-        const foundUserIndex = existingUsers.findIndex(user => user.userEMail === currentUser.userEMail);
-        if (foundUserIndex !== -1) {
-            existingUsers[foundUserIndex] = currentUser;
-            await setItem('users', JSON.stringify(existingUsers));          
-        } else {
-            console.error("Error: User not found in backend.");
+        if (typeof existingUsers !== 'object' || existingUsers === null) {
+            console.error("Error: existingUsers is not an object.");
+            return;
+        }
+        const userKey = Object.keys(existingUsers).find(key => {
+            const user = existingUsers[key];
+            return user &amp;&amp; user.userEMail === currentUser.userEMail;
+        });
+        if (userKey) {
+            await putUser(userKey, { ...existingUsers[userKey], ...currentUser });;
         }
     } catch (error) {
         console.error("Error updating current user in backend:", error);
     }
 }
-  
+
   
 /**
 * Shows the contact overlay on mobile devices.
@@ -94,10 +89,11 @@ function showContactOverlayMobile(contactId) {
   
   
 /**
-* Finds the selected contact object from the current user's contacts list.
-* @param {string} contactId - The ID of the selected contact.
-* @returns {Object} The selected contact object.
-*/
+ * Finds the selected contact from the logged-in user's contacts list using the provided contact ID.
+ * 
+ * @param {string} contactId - The ID of the contact to find.
+ * @returns {Object | null} The selected contact object, or null if no logged-in user is found or the contact is not found.
+ */
 function findSelectedContactMobile(contactId) {    
     const loggedInUser = getLoggedInUser();    
     if (!loggedInUser) {
@@ -434,13 +430,13 @@ function updateContactMobile(contactId) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addDropDownMenuClickListenerDropDownTrigger">addDropDownMenuClickListenerDropDownTrigger</a></li><li><a href="global.html#addDropdownMenuClickListener">addDropdownMenuClickListener</a></li><li><a href="global.html#adjustDocumentClickListener">adjustDocumentClickListener</a></li><li><a href="global.html#closeAllDropdowns">closeAllDropdowns</a></li><li><a href="global.html#closeContactOverlay">closeContactOverlay</a></li><li><a href="global.html#closeDropdownMenu">closeDropdownMenu</a></li><li><a href="global.html#closeOverlay">closeOverlay</a></li><li><a href="global.html#createContactOverlayContent">createContactOverlayContent</a></li><li><a href="global.html#createEditContactHTML">createEditContactHTML</a></li><li><a href="global.html#deleteContactMobile">deleteContactMobile</a></li><li><a href="global.html#editContactOverlayMobile">editContactOverlayMobile</a></li><li><a href="global.html#editContactOverlayMobileVariables">editContactOverlayMobileVariables</a></li><li><a href="global.html#findSelectedContactMobile">findSelectedContactMobile</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generateUniqueID">generateUniqueID</a></li><li><a href="global.html#getLoggedInUser">getLoggedInUser</a></li><li><a href="global.html#handleDocumentClick">handleDocumentClick</a></li><li><a href="global.html#openOverlay">openOverlay</a></li><li><a href="global.html#showContactOverlayMobile">showContactOverlayMobile</a></li><li><a href="global.html#singleMemberToHTML">singleMemberToHTML</a></li><li><a href="global.html#toggleDropdownMenu">toggleDropdownMenu</a></li><li><a href="global.html#toggleDropdownVisibility">toggleDropdownVisibility</a></li><li><a href="global.html#updateContactMobile">updateContactMobile</a></li><li><a href="global.html#updateCurrentUserInBackend">updateCurrentUserInBackend</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addDropDownMenuClickListenerDropDownTrigger">addDropDownMenuClickListenerDropDownTrigger</a></li><li><a href="global.html#addDropdownMenuClickListener">addDropdownMenuClickListener</a></li><li><a href="global.html#adjustDocumentClickListener">adjustDocumentClickListener</a></li><li><a href="global.html#closeAllDropdowns">closeAllDropdowns</a></li><li><a href="global.html#closeContactOverlay">closeContactOverlay</a></li><li><a href="global.html#closeDropdownMenu">closeDropdownMenu</a></li><li><a href="global.html#closeOverlay">closeOverlay</a></li><li><a href="global.html#createContactOverlayContent">createContactOverlayContent</a></li><li><a href="global.html#createEditContactHTML">createEditContactHTML</a></li><li><a href="global.html#deleteContactMobile">deleteContactMobile</a></li><li><a href="global.html#editContactOverlayMobile">editContactOverlayMobile</a></li><li><a href="global.html#editContactOverlayMobileVariables">editContactOverlayMobileVariables</a></li><li><a href="global.html#findSelectedContactMobile">findSelectedContactMobile</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generateUniqueID">generateUniqueID</a></li><li><a href="global.html#handleDocumentClick">handleDocumentClick</a></li><li><a href="global.html#openOverlay">openOverlay</a></li><li><a href="global.html#showContactOverlayMobile">showContactOverlayMobile</a></li><li><a href="global.html#singleMemberToHTML">singleMemberToHTML</a></li><li><a href="global.html#toggleDropdownMenu">toggleDropdownMenu</a></li><li><a href="global.html#toggleDropdownVisibility">toggleDropdownVisibility</a></li><li><a href="global.html#updateContactMobile">updateContactMobile</a></li><li><a href="global.html#updateCurrentUserInBackend">updateCurrentUserInBackend</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 14 2024 20:32:05 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:51:19 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -308,17 +308,6 @@ function boardRenderSubtaskForEach(task, checkedCount, subtasksHTML, taskId) {
 
 
 /**
- * Retrieves the task data of the current user by task ID.
- * @param {string} taskId - The ID of the task.
- * @returns {Object|null} - The task data or null if not found.
- */
-function getCurrentUserTask(taskId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    return currentUser.tasks.find(task => task.id === taskId);
-}
-
-
-/**
  * Generates the attributes for the subtask checkbox.
  * @param {Object} subtask - The subtask object.
  * @returns {Object} - Object containing checkbox attributes.

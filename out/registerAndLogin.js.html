@@ -26,8 +26,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471";
-const STORAGE_URL = "https://remote-storage.developerakademie.org/item";
+            <pre class="prettyprint source linenums"><code>const STORAGE_URL = "https://myjoinproject3-507f7-default-rtdb.europe-west1.firebasedatabase.app";
 let rmCheckboxConfirmed = false;
 let ppCheckboxConfirmed = false;
 let users = {};
@@ -43,6 +42,7 @@ let confirmPwVisibility = { pwVisibilityOn: false };
 async function init() {
     users = await loadUsersFromBackend('users');
     console.log(users);
+    userLogOut();
     addPasswordVisibilityListener('login-pw-border-id', 
                                 'lock-id', 
                                 'login-pw-visibility-off-id',
@@ -52,14 +52,24 @@ async function init() {
 
 
 /**
- * Loads users data from the backend.
- * @param {string} key - The key to identify the data in the backend.
+ * If site refreshed than User logout.
+ */
+window.addEventListener('pageshow', function(event) {    
+    if (event.persisted) {        
+        userLogOut();
+    }
+});
+
+
+/**
+ * Loads users data from the backend. 
  * @returns {Promise&lt;Array>} - An array of user objects.
  */
-async function loadUsersFromBackend(key) {
+async function loadUsersFromBackend() {
     try {
-        const result = await getItem(key);
-        return JSON.parse(result) || [];
+        let response = await fetch(STORAGE_URL + "/users.json");
+        let responseToJson = await response.json();        
+        return responseToJson;        
     } catch (e) {
         console.error('loading error:', e);
         return [];
@@ -68,22 +78,31 @@ async function loadUsersFromBackend(key) {
 
 
 /**
- * Registers a new user if validation checks pass and privacy policy checkbox is confirmed.
+ * Registers a new user if validation checks pass, the privacy policy checkbox is confirmed, and the user does not already exist.
  */
-function register() {
-    if (!(registerValidationCheck() &amp;&amp; ppCheckboxConfirmed))
+async function register() {
+    if (!(registerValidationCheck() &amp;&amp; ppCheckboxConfirmed)) {
         return;
-    addNewUser();
+    }
+    const newUser = generateNewUserObject();    
+    const userArray = Object.values(users);    
+    const userExists = userArray.some(user => user.userEMail === newUser.userEMail);    
+    if (userExists) {
+        document.getElementById('existing-user-msg').innerText = "User with this email already exists.";
+        document.getElementById('existing-user-msg').classList.remove('d-none');
+        return;
+    }
+    addNewUser(newUser);
     toggleSuccessesMsg();
-    closeSignUp();    
+    closeSignUp();
 }
 
 
 /**
  * Adds a new user to the application.
+ * @param {Object} newUser - The new user object to be added.
  */
-async function addNewUser() {
-    const newUser = generateNewUserObject();
+async function addNewUser(newUser) {
     newUserArray.push(newUser);
     try {
         await addNewUserToBackend(newUser);
@@ -145,7 +164,7 @@ async function addNewUserToBackend(user) {
             existingUsers = [];
         }
         existingUsers.push(user);
-        await setItem('users', JSON.stringify(existingUsers));        
+        await setItem('users', existingUsers);
     } catch (error) {
         console.error('Error adding new user to backend:', error);
     }
@@ -303,26 +322,60 @@ function handleError(error) {
 
 
 /**
- * Push request to backend.
- * Either it is fulfilled successfully (resolved) or it fails (rejected).
- * @param {lokal storage key} key
- * @param {string} value
- * @returns Promise: resolved or rejected.
+ * Sends a POST request to save an item to local storage.
+ *
+ * @async
+ * @param {string} key - The key for the item to be stored in local storage.
+ * @param {any} value - The value to be stored, which can be of any type.
+ * @returns {Promise&lt;Object>} The response from the server, parsed as JSON.
+ * @throws {Error} Throws an error if the HTTP response is not OK.
  */
 async function setItem(key, value) {
-    const payload = { key, value, token: STORAGE_TOKEN };
-    return fetch(STORAGE_URL, { method: 'POST', body: JSON.stringify(payload)})
-    .then(res => res.json());
+    const response = await fetch(`${STORAGE_URL}/${key}.json`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(value),
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
 }
 
 
 /**
- * Get request to backend.
- * @param {lokal storage key} key
+ * Retrieves a value associated with the specified key from a remote server.
+ * The function constructs a URL using the key and a storage token to fetch the data. 
+ * @returns {Promise&lt;any>} A promise that resolves to the value associated with the key.
+ *                         If the key does not exist, it may return undefined or null.
  */
 async function getItem(key) {
     const url = `${STORAGE_URL}?key=${key}&amp;token=${STORAGE_TOKEN}`;
     return fetch(url).then(res => res.json()).then(res => res.data.value);
+}
+
+
+/**
+ * Updates the user data in the backend using the PUT method.
+ * @param {string} userId - The ID of the user to update.
+ * @param {Object} userData - The data to update.
+ */
+async function putUser(userId, userData) {
+    try {
+        const response = await fetch(`${STORAGE_URL}/users/${userId}.json`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }        
+    } catch (error) {        
+    }
 }
 
 
@@ -373,41 +426,6 @@ function closeSignUp() {
     toggleVisibility('login-id', true);
     document.getElementById('sign-up-popup-id').innerHTML = "";
     ppCheckboxConfirmed = false;
-}
-
-
-/**
- * Check if the logged-in user is added as a contact. If not, create a new contact.
- */
-async function checkIfUserAddedAsContact() {
-    const currentUser = getLoggedInUser();
-    const isUserAdded = currentUser.contacts.some(contact => contact.name === `${currentUser.userName} (you)` &amp;&amp; contact.email === currentUser.userEMail);  
-    if (!isUserAdded) {      
-      const newContact = { name: `${currentUser.userName} (you)`, email: currentUser.userEMail, phone: '0' };
-      newContact.id = generateUniqueID();
-      addContactToCurrentUser(newContact);      
-    }
-}
-
-
-/**
- * Attempts to log in the user.
- */
-async function login() {
-    try {
-        const loggedInUser = await authenticateUser();
-        if (loggedInUser) {
-            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
-            window.location.assign('./summary.html');
-            localStorage.setItem('isLoggedIn', 'true');
-            setTimeout(showHeaderUserInitials, 500);
-            checkIfUserAddedAsContact();
-        } else {
-            console.error('Error: Unable to log in user.');
-        }
-    } catch (error) {
-        console.error('Error during login:', error);
-    }
 }</code></pre>
         </article>
     </section>
@@ -418,13 +436,13 @@ async function login() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addNewUser">addNewUser</a></li><li><a href="global.html#addNewUserToBackend">addNewUserToBackend</a></li><li><a href="global.html#addPasswordVisibilityOption">addPasswordVisibilityOption</a></li><li><a href="global.html#checkIfUserAddedAsContact">checkIfUserAddedAsContact</a></li><li><a href="global.html#closeSignUp">closeSignUp</a></li><li><a href="global.html#generateNewUserObject">generateNewUserObject</a></li><li><a href="global.html#generateNewUserObjectConstructor">generateNewUserObjectConstructor</a></li><li><a href="global.html#getItem">getItem</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handlerFieldValidationRegister">handlerFieldValidationRegister</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loadUsersFromBackend">loadUsersFromBackend</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#registerValidationCheck">registerValidationCheck</a></li><li><a href="global.html#resetLoginInputs">resetLoginInputs</a></li><li><a href="global.html#setItem">setItem</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleSuccessesMsg">toggleSuccessesMsg</a></li><li><a href="global.html#validateCheckBoxClicked">validateCheckBoxClicked</a></li><li><a href="global.html#validateConfirmPassword">validateConfirmPassword</a></li><li><a href="global.html#validateName">validateName</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#validateRegisterEmail">validateRegisterEmail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addNewUser">addNewUser</a></li><li><a href="global.html#addNewUserToBackend">addNewUserToBackend</a></li><li><a href="global.html#addPasswordVisibilityOption">addPasswordVisibilityOption</a></li><li><a href="global.html#closeSignUp">closeSignUp</a></li><li><a href="global.html#generateNewUserObject">generateNewUserObject</a></li><li><a href="global.html#generateNewUserObjectConstructor">generateNewUserObjectConstructor</a></li><li><a href="global.html#getItem">getItem</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handlerFieldValidationRegister">handlerFieldValidationRegister</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loadUsersFromBackend">loadUsersFromBackend</a></li><li><a href="global.html#putUser">putUser</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#registerValidationCheck">registerValidationCheck</a></li><li><a href="global.html#resetLoginInputs">resetLoginInputs</a></li><li><a href="global.html#setItem">setItem</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleSuccessesMsg">toggleSuccessesMsg</a></li><li><a href="global.html#validateCheckBoxClicked">validateCheckBoxClicked</a></li><li><a href="global.html#validateConfirmPassword">validateConfirmPassword</a></li><li><a href="global.html#validateName">validateName</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#validateRegisterEmail">validateRegisterEmail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 14 2024 22:06:39 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 21:04:48 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

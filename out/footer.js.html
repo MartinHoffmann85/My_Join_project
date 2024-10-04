@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: footer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: footer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Initializes the footer module by setting the default color for the active link.
+ */
+function footerInit() {
+    setInitialActiveLinkColor();    
+    showMenuIfLoggedIn();    
+}
+
+/**
+ * Displays or hides the menu and profile section based on the user's login status.
+ * This function checks if the user is logged in by retrieving the login status from local storage
+ * and adjusts the visibility of the profile and menu elements accordingly.
+ * 
+ * @returns {Promise&lt;void>} This function is asynchronous and returns a promise that resolves to void.
+ */
+async function showMenuIfLoggedIn() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');    
+    const hideFooterLinkMenu = document.querySelector('.menu-content');
+    const hideFooterLinkMenu2 = document.querySelector('.menu-box');
+    const headerProfil = document.querySelector('.header-profil');
+    if (hideFooterLinkMenu &amp;&amp; hideFooterLinkMenu2 &amp;&amp; headerProfil) {
+        if (isLoggedIn === 'true') {
+            headerProfil.style.display = "flex";
+            hideFooterLinkMenu.style.display = "flex";
+            hideFooterLinkMenu2.style.display = "flex";            
+        } else {
+            headerProfil.style.display = "none";
+            hideFooterLinkMenu.style.display = "none";
+            hideFooterLinkMenu2.style.display = "none";            
+        }
+    }
+}
+
+
+/**
+ * Sets the color of the initially active link in the footer.
+ */
+function setInitialActiveLinkColor() {
+    const { activeLinkId, link1, link2, link3, link4 } = setInitialActiveLinkColorVariables();
+    if (activeLinkId === 'footer-icon-boxId1') {
+        link1.classList.add('footer-icon-box-hover');
+    } else if (activeLinkId === 'footer-icon-boxId2') {
+        link2.classList.add('footer-icon-box-hover');
+    } else if (activeLinkId === 'footer-icon-boxId3') {
+        link3.classList.add('footer-icon-box-hover');
+    } else if (activeLinkId === 'footer-icon-boxId4') {
+        link4.classList.add('footer-icon-box-hover');
+    }
+}
+
+
+/**
+ * Initializes the active link color variables by retrieving the active link ID from local storage
+ * and removing the hover effect from all footer link elements. It then returns an object containing
+ * the active link ID and references to the footer link elements. 
+ * @returns {Object} An object containing the active link ID and references to the footer link elements.
+ * @property {string | null} activeLinkId - The ID of the currently active link, or null if not set.
+ * @property {HTMLElement} link1 - The DOM element for the first footer link.
+ * @property {HTMLElement} link2 - The DOM element for the second footer link.
+ * @property {HTMLElement} link3 - The DOM element for the third footer link.
+ * @property {HTMLElement} link4 - The DOM element for the fourth footer link.
+ */
+function setInitialActiveLinkColorVariables() {
+    const activeLinkId = localStorage.getItem('activeLinkId');
+    const link1 = document.getElementById('footer-icon-boxId1');
+    const link2 = document.getElementById('footer-icon-boxId2');
+    const link3 = document.getElementById('footer-icon-boxId3');
+    const link4 = document.getElementById('footer-icon-boxId4');
+    link1.classList.remove('footer-icon-box-hover');
+    link2.classList.remove('footer-icon-box-hover');
+    link3.classList.remove('footer-icon-box-hover');
+    link4.classList.remove('footer-icon-box-hover');
+    return { activeLinkId, link1, link2, link3, link4 };
+}
+
+
+/**
+ * Handles click event on a link by storing its ID in local storage.
+ * @param {string} linkId - The ID of the clicked link.
+ */
+function handleLinkClick(linkId) {
+    localStorage.setItem('activeLinkId', linkId);
+}
+
+
+/**
+ * Resets the active link ID in local storage.
+ */
+function resetActiveLinkId() {
+    const linkId = "";
+    localStorage.setItem('activeLinkId', linkId);
+}
+
+
+/**
+ * Sets the active link ID in local storage to the first link.
+ */
+function setActiveLinkId() {
+    const linkId = "footer-icon-boxId1";
+    localStorage.setItem('activeLinkId', linkId);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#footerInit">footerInit</a></li><li><a href="global.html#handleLinkClick">handleLinkClick</a></li><li><a href="global.html#resetActiveLinkId">resetActiveLinkId</a></li><li><a href="global.html#setActiveLinkId">setActiveLinkId</a></li><li><a href="global.html#setInitialActiveLinkColor">setInitialActiveLinkColor</a></li><li><a href="global.html#setInitialActiveLinkColorVariables">setInitialActiveLinkColorVariables</a></li><li><a href="global.html#showMenuIfLoggedIn">showMenuIfLoggedIn</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:51:50 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

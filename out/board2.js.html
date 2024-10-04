@@ -33,8 +33,6 @@
 function saveTasksToLocalStorage(currentUser) {
     if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    } else {
-        console.error('Invalid currentUser data in localStorage');
     }
 }
 
@@ -137,7 +135,9 @@ async function updateTaskColumnId(taskId, newColumnId) {
  * @param {string} columnId - Task column ID.
  * @param {Array} subtasks - Array of subtasks.
  */
-function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {    
+function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {
+    closeOverlayBoard();
+    restoreBackgroundOnOverlayClose();
     const overlay = document.createElement('div');
     overlay.classList.add('boardoverlay');    
     const card = document.createElement('div');
@@ -151,6 +151,38 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id);
     overlay.appendChild(card);
     document.body.appendChild(overlay);
+    changeBackgroundOnOverlayOpen();
+}
+
+
+/**
+ * Creates an overlay with a semi-transparent background.
+ * @returns {HTMLElement} The created overlay element.
+ */
+function changeBackgroundOnOverlayOpen() {
+    const fullscreenOverlay = document.createElement('div');
+    fullscreenOverlay.classList.add('fullscreen-overlay');
+    fullscreenOverlay.style.display = 'flex';
+    fullscreenOverlay.style.position = 'fixed';
+    fullscreenOverlay.style.top = '0';
+    fullscreenOverlay.style.left = '0';
+    fullscreenOverlay.style.width = '100%';
+    fullscreenOverlay.style.height = '100%';
+    fullscreenOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    fullscreenOverlay.style.zIndex = '999';
+    document.body.appendChild(fullscreenOverlay);
+    return fullscreenOverlay;
+}
+
+
+/**
+ * Removes the overlay with the semi-transparent background.
+ */
+function restoreBackgroundOnOverlayClose() {    
+    const fullscreenOverlay = document.querySelector('.fullscreen-overlay');
+    if (fullscreenOverlay) {
+        fullscreenOverlay.remove();
+    }
 }
 
 
@@ -173,7 +205,7 @@ function renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title,
             &lt;div class="renderTaskCardOverlayCategoryDiv" style="background-color: ${backgroundColor};">${category}&lt;/div>
             &lt;div>&lt;img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt="">&lt;/div>
         &lt;/div>        
-        &lt;div class="renderTaskTitleOverlay">&lt;strong>${title}&lt;/strong>&lt;/div>
+        &lt;div class="renderTaskTitleOverlay">${title}&lt;/div>
         &lt;div class="renderTaskDescriptionOverlay">${description}&lt;/div>
         &lt;div class="renderTaskDate">&lt;p class="renderTaskDatePElement">Due date:&lt;/p>&lt;p class="renderTaskOverlayDate">${date}&lt;/p>&lt;/div>               
         &lt;div class="overlayAssignetToHTMLAndPrioContentContainer">
@@ -203,11 +235,11 @@ function renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title,
  */
 function renderTaskCarsAsOverlayPrio(prio, prioContent) {
     if (prio === 'urgent') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Urgent&lt;/strong>&lt;/p>&lt;img src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">`;
+        prioContent = `&lt;p class="boardOverlayUrgentPElement">Urgent&lt;/p>&lt;div class="boardOverlayPriorityIcon">&lt;img class="boardOverlayPriorityIcon" src="./assets/img/prioUrgentIcon.svg" alt="Urgent Priority">&lt;/div>`;
     } else if (prio === 'medium') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Medium&lt;/strong>&lt;/p>&lt;img src="./assets/img/mediumCategory.svg" alt="Medium Priority">`;
+        prioContent = `&lt;p class="boardOverlayUrgentPElement">Medium&lt;/p>&lt;div class="boardOverlayPriorityIcon">&lt;img class="boardOverlayPriorityIcon" src="./assets/img/mediumCategory.svg" alt="Medium Priority">&lt;/div>`;
     } else if (prio === 'low') {
-        prioContent = `&lt;p class="boardOverlayUrgentPElement">&lt;strong>Low&lt;/strong>&lt;/p>&lt;img src="./assets/img/lowPrio.svg" alt="Low Priority">`;
+        prioContent = `&lt;p class="boardOverlayUrgentPElement">Low&lt;/p>&lt;div class="boardOverlayPriorityIcon">&lt;img class="boardOverlayPriorityIcon" src="./assets/img/lowPrio.svg" alt="Low Priority">&lt;/div>`;
     }
     return prioContent;
 }
@@ -238,7 +270,7 @@ function renderTaskCardAsOverlayAssignetTo(assignedTo) {
     let assignedToHTML = '';
     if (assignedTo &amp;&amp; assignedTo.userNames &amp;&amp; assignedTo.userNames.length > 0) {
         assignedTo.userNames.forEach((userName, index) => {
-            const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
+            const initials = getFirstLettersOfName(userName);
             const backgroundColor = assignedTo.colorCodes[index];
             const iconHTML = `&lt;div class="userIcon" style="background-color: ${backgroundColor};">${initials}&lt;/div>`;
             assignedToHTML += `&lt;div class="assignedToUser">${iconHTML} &lt;p class="editAssignetToUserPElement">${userName}&lt;/p>&lt;/div>`;
@@ -273,8 +305,6 @@ function renderTaskCardOverlay(event) {
     if (task) {        
         const subtasks = task.subtasks;        
         renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, subtasks);
-    } else {
-        console.error('Task not found');
     }
 }
 
@@ -287,6 +317,7 @@ function closeOverlayBoard() {
     if (overlay) {
         overlay.remove();
     }
+    restoreBackgroundOnOverlayClose();
 }
 
 
@@ -329,6 +360,7 @@ function boardEditTask(taskId) {
         overlay.appendChild(card);
         document.body.appendChild(overlay);
     }
+    changeBackgroundOnOverlayOpen();
 }
 
 
@@ -393,28 +425,6 @@ function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) 
                 &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
             &lt;/div>
         `;
-}
-
-
-/**
- * Renders the assigned to HTML for editing a task.
- * @param {Object} task - Task object.
- * @returns {string} - Assigned to HTML content.
- */
-function boardEditTaskAssignetTo(task) {
-    const assignedToContacts = task.assignedTo &amp;&amp; task.assignedTo.userNames ? task.assignedTo.userNames : [];
-    const assignedToColors = task.assignedTo &amp;&amp; task.assignedTo.colorCodes ? task.assignedTo.colorCodes : [];
-    const assignedToHTML = assignedToContacts.map((userName, index) => {
-        const user = {
-            userNames: [userName],
-            colorCodes: [assignedToColors[index]],
-        };
-        const initials = userName.split(' ').map(word => word[0]).join('').toUpperCase();
-        const backgroundColor = assignedToColors[index];
-        const iconHTML = `&lt;div class="userIcon" style="background-color: ${backgroundColor};">${initials}&lt;/div>`;
-        return `&lt;div class="assignedToUser">${iconHTML} &lt;p class="editAssignetToUserPElement">${userName}&lt;/p>&lt;/div>`;
-    }).join('');
-    return assignedToHTML;
 }</code></pre>
         </article>
     </section>
@@ -425,13 +435,13 @@ function boardEditTaskAssignetTo(task) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addTaskClickListener">addTaskClickListener</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#boardEditTaskAssignetTo">boardEditTaskAssignetTo</a></li><li><a href="global.html#boardTaskEditHTML">boardTaskEditHTML</a></li><li><a href="global.html#closeOverlayBoard">closeOverlayBoard</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#drag">drag</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#drop">drop</a></li><li><a href="global.html#loadTasksFromLocalStorage">loadTasksFromLocalStorage</a></li><li><a href="global.html#renderTaskCardAsOverlay">renderTaskCardAsOverlay</a></li><li><a href="global.html#renderTaskCardAsOverlayAssignetTo">renderTaskCardAsOverlayAssignetTo</a></li><li><a href="global.html#renderTaskCardAsOverlayCardHTML">renderTaskCardAsOverlayCardHTML</a></li><li><a href="global.html#renderTaskCardAsOverlayCategory">renderTaskCardAsOverlayCategory</a></li><li><a href="global.html#renderTaskCardOverlay">renderTaskCardOverlay</a></li><li><a href="global.html#renderTaskCarsAsOverlayPrio">renderTaskCarsAsOverlayPrio</a></li><li><a href="global.html#saveTasksToLocalStorage">saveTasksToLocalStorage</a></li><li><a href="global.html#updateTaskColumnId">updateTaskColumnId</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addTaskClickListener">addTaskClickListener</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#boardTaskEditHTML">boardTaskEditHTML</a></li><li><a href="global.html#changeBackgroundOnOverlayOpen">changeBackgroundOnOverlayOpen</a></li><li><a href="global.html#closeOverlayBoard">closeOverlayBoard</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#drag">drag</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#drop">drop</a></li><li><a href="global.html#loadTasksFromLocalStorage">loadTasksFromLocalStorage</a></li><li><a href="global.html#renderTaskCardAsOverlay">renderTaskCardAsOverlay</a></li><li><a href="global.html#renderTaskCardAsOverlayAssignetTo">renderTaskCardAsOverlayAssignetTo</a></li><li><a href="global.html#renderTaskCardAsOverlayCardHTML">renderTaskCardAsOverlayCardHTML</a></li><li><a href="global.html#renderTaskCardAsOverlayCategory">renderTaskCardAsOverlayCategory</a></li><li><a href="global.html#renderTaskCardOverlay">renderTaskCardOverlay</a></li><li><a href="global.html#renderTaskCarsAsOverlayPrio">renderTaskCarsAsOverlayPrio</a></li><li><a href="global.html#restoreBackgroundOnOverlayClose">restoreBackgroundOnOverlayClose</a></li><li><a href="global.html#saveTasksToLocalStorage">saveTasksToLocalStorage</a></li><li><a href="global.html#updateTaskColumnId">updateTaskColumnId</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 14 2024 20:30:04 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:50:31 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -26,9 +26,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// Render contacts mobile view
-
-if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
+            <pre class="prettyprint source linenums"><code>if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
   window.addEventListener('resize', contactsInit);
 } else {
   window.removeEventListener('resize', contactsInit);
@@ -47,12 +45,12 @@ function contactsInit() {
       renderContacts();
       renderAddContactButtonMobile();
       setTimeout(showHeaderUserInitials, 500);
-      contactsInitVariables();
+      contactsInitVariables();      
   } else {
       setTimeout(showHeaderAndFooter, 300);
       renderContactsDesktop();        
       document.body.style.overflow = 'hidden';
-      setTimeout(showHeaderUserInitials, 200);
+      setTimeout(showHeaderUserInitials, 500);      
   }
 }
 
@@ -225,15 +223,19 @@ function renderSingleMemberToHTMLMobile(oneContact, colorCode, textColor) {
 
 
 /**
-* Retrieves the first letters of a name to generate initials.
+* Retrieves the first letters of the first name and last name to generate initials.
 * @param {string} name - The name of the contact.
 * @returns {string} The initials of the name.
 */
 function getFirstLettersOfName(name) {
   let words = name.replace(/\s+/g, ' ').trim().split(" ");
   let initials = "";
+  let namesProcessed = 0;  
   for (let word of words) {
-    initials += word[0].toUpperCase();
+    if (namesProcessed &lt; 2 &amp;&amp; word) {
+      initials += word[0].toUpperCase();
+      namesProcessed++;
+    }
   }  
   return initials;
 }
@@ -272,30 +274,6 @@ function getRandomColorHex() {
   return colorHex;
 }
 
-
-/**
-  * Hide header and footer for edit contact and create contact screen on mobile view
-  */
-function hideHeaderAndFooter() {
-    const mobileHeader = document.querySelector(".header"); 
-    const menuTemplate = document.querySelector(".footer");
-    mobileHeader.style.display = "none";
-    menuTemplate.style.display = "none";
-}
-
-
-/**
-  * Show header and footer screen on mobile view
-  */
-function showHeaderAndFooter() {
-    const mobileHeader = document.querySelector(".header");
-    const menuTemplate = document.querySelector(".footer");
-    mobileHeader.style.display = "block";
-    menuTemplate.style.display = "flex";
-}
-
-
-// Add contact screen
 
 /**
  * Displays the add contact screen for mobile view.
@@ -397,16 +375,24 @@ function getNewContact() {
  * @param {Object} newContact - The new contact object to be added.
  */
 async function addContactToCurrentUser(newContact) {
-  let { colorCode, textColorCode, currentUser } = addContactToCurrentUserVariables(newContact);
+  const currentUser = getLoggedInUser();
+  if (!currentUser) {
+      console.error("No user is currently logged in.");
+      return;
+  }
+  let { colorCode, textColorCode } = addContactToCurrentUserVariables(newContact);
+  if (!Array.isArray(currentUser.contacts)) {
+      currentUser.contacts = [];
+  }
   if (!colorCode || !textColorCode) {      
       colorCode = getRandomColorHex();
       textColorCode = isColorLight(colorCode) ? 'white' : 'black';
-  }  
+  }
   newContact.colorCode = colorCode;
   newContact.textColorCode = textColorCode;
   currentUser.contacts.push(newContact);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  updateCurrentUserInBackend(currentUser);  
+  await updateCurrentUserInBackend(currentUser);  
 }
 
 
@@ -421,6 +407,15 @@ newContact.id = generateUniqueID();
 let colorCode = localStorage.getItem(`color_${newContact.id}`);
 let textColorCode = localStorage.getItem(`textColor_${newContact.id}`);
 return { colorCode, textColorCode, currentUser };
+}
+
+
+/**
+* Retrieves the currently logged-in user from local storage.
+* @returns {Object} The currently logged-in user object.
+*/
+function getLoggedInUser() {
+  return JSON.parse(localStorage.getItem('currentUser'));
 }</code></pre>
         </article>
     </section>
@@ -431,13 +426,13 @@ return { colorCode, textColorCode, currentUser };
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactFormMobileHTML">addContactFormMobileHTML</a></li><li><a href="global.html#addContactScreenMobile">addContactScreenMobile</a></li><li><a href="global.html#addContactToCurrentUser">addContactToCurrentUser</a></li><li><a href="global.html#addContactToCurrentUserVariables">addContactToCurrentUserVariables</a></li><li><a href="global.html#contactsInit">contactsInit</a></li><li><a href="global.html#contactsInitVariables">contactsInitVariables</a></li><li><a href="global.html#createContactMobile">createContactMobile</a></li><li><a href="global.html#createLetterAndContactsContainer">createLetterAndContactsContainer</a></li><li><a href="global.html#createOneContactContainer">createOneContactContainer</a></li><li><a href="global.html#createOneContactContainerHTML">createOneContactContainerHTML</a></li><li><a href="global.html#getFirstLettersOfName">getFirstLettersOfName</a></li><li><a href="global.html#getNewContact">getNewContact</a></li><li><a href="global.html#getRandomColorHex">getRandomColorHex</a></li><li><a href="global.html#hideHeaderAndFooter">hideHeaderAndFooter</a></li><li><a href="global.html#isColorLight">isColorLight</a></li><li><a href="global.html#redirectToContacts">redirectToContacts</a></li><li><a href="global.html#registerContactClickHandlers">registerContactClickHandlers</a></li><li><a href="global.html#renderAddContactButtonMobile">renderAddContactButtonMobile</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderContactsByFirstLetter">renderContactsByFirstLetter</a></li><li><a href="global.html#renderContactsVariables">renderContactsVariables</a></li><li><a href="global.html#renderSingleMemberToHTMLMobile">renderSingleMemberToHTMLMobile</a></li><li><a href="global.html#showHeaderAndFooter">showHeaderAndFooter</a></li><li><a href="global.html#showSuccessfullyContactCreatedImageMobile">showSuccessfullyContactCreatedImageMobile</a></li><li><a href="global.html#updateContactsByFirstLetter">updateContactsByFirstLetter</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactFormMobileHTML">addContactFormMobileHTML</a></li><li><a href="global.html#addContactScreenMobile">addContactScreenMobile</a></li><li><a href="global.html#addContactToCurrentUser">addContactToCurrentUser</a></li><li><a href="global.html#addContactToCurrentUserVariables">addContactToCurrentUserVariables</a></li><li><a href="global.html#contactsInit">contactsInit</a></li><li><a href="global.html#contactsInitVariables">contactsInitVariables</a></li><li><a href="global.html#createContactMobile">createContactMobile</a></li><li><a href="global.html#createLetterAndContactsContainer">createLetterAndContactsContainer</a></li><li><a href="global.html#createOneContactContainer">createOneContactContainer</a></li><li><a href="global.html#createOneContactContainerHTML">createOneContactContainerHTML</a></li><li><a href="global.html#getFirstLettersOfName">getFirstLettersOfName</a></li><li><a href="global.html#getLoggedInUser">getLoggedInUser</a></li><li><a href="global.html#getNewContact">getNewContact</a></li><li><a href="global.html#getRandomColorHex">getRandomColorHex</a></li><li><a href="global.html#isColorLight">isColorLight</a></li><li><a href="global.html#redirectToContacts">redirectToContacts</a></li><li><a href="global.html#registerContactClickHandlers">registerContactClickHandlers</a></li><li><a href="global.html#renderAddContactButtonMobile">renderAddContactButtonMobile</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderContactsByFirstLetter">renderContactsByFirstLetter</a></li><li><a href="global.html#renderContactsVariables">renderContactsVariables</a></li><li><a href="global.html#renderSingleMemberToHTMLMobile">renderSingleMemberToHTMLMobile</a></li><li><a href="global.html#showSuccessfullyContactCreatedImageMobile">showSuccessfullyContactCreatedImageMobile</a></li><li><a href="global.html#updateContactsByFirstLetter">updateContactsByFirstLetter</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 14 2024 20:32:01 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:51:09 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
