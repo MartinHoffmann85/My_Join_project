@@ -61,10 +61,11 @@ function showContactOverlayMobile(contactId) {
   
   
 /**
-* Finds the selected contact object from the current user's contacts list.
-* @param {string} contactId - The ID of the selected contact.
-* @returns {Object} The selected contact object.
-*/
+ * Finds the selected contact from the logged-in user's contacts list using the provided contact ID.
+ * 
+ * @param {string} contactId - The ID of the contact to find.
+ * @returns {Object | null} The selected contact object, or null if no logged-in user is found or the contact is not found.
+ */
 function findSelectedContactMobile(contactId) {    
     const loggedInUser = getLoggedInUser();    
     if (!loggedInUser) {

@@ -6,7 +6,13 @@ function footerInit() {
     showMenuIfLoggedIn();    
 }
 
-
+/**
+ * Displays or hides the menu and profile section based on the user's login status.
+ * This function checks if the user is logged in by retrieving the login status from local storage
+ * and adjusts the visibility of the profile and menu elements accordingly.
+ * 
+ * @returns {Promise<void>} This function is asynchronous and returns a promise that resolves to void.
+ */
 async function showMenuIfLoggedIn() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');    
     const hideFooterLinkMenu = document.querySelector('.menu-content');
@@ -44,8 +50,15 @@ function setInitialActiveLinkColor() {
 
 
 /**
- * Retrieves the active link ID from local storage and initializes link elements.
- * @returns {InitialActiveLinkColorVariables} Object containing active link ID and link elements.
+ * Initializes the active link color variables by retrieving the active link ID from local storage
+ * and removing the hover effect from all footer link elements. It then returns an object containing
+ * the active link ID and references to the footer link elements. 
+ * @returns {Object} An object containing the active link ID and references to the footer link elements.
+ * @property {string | null} activeLinkId - The ID of the currently active link, or null if not set.
+ * @property {HTMLElement} link1 - The DOM element for the first footer link.
+ * @property {HTMLElement} link2 - The DOM element for the second footer link.
+ * @property {HTMLElement} link3 - The DOM element for the third footer link.
+ * @property {HTMLElement} link4 - The DOM element for the fourth footer link.
  */
 function setInitialActiveLinkColorVariables() {
     const activeLinkId = localStorage.getItem('activeLinkId');
