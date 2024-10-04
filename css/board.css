@@ -799,6 +799,6 @@ body {
 
 @media only screen and (max-width: 375px) and (min-width: 320px) {
     .boardContentContainer {        
-        height: 80dvh;
+        max-height: calc(100vh - 170px);
     }
 }
