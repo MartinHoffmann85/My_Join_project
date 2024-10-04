@@ -1,3 +1,9 @@
+/**
+ * Adds an event listener that triggers when the DOM content is fully loaded. 
+ * Once the DOM is ready, the function `privacyPolicyInit` is called to initialize 
+ * any necessary setup related to the privacy policy section of the page.
+ * This ensures that `privacyPolicyInit` is executed only after the HTML content has been completely loaded and parsed.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     privacyPolicyInit();
 });

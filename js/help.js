@@ -1,3 +1,8 @@
+/**
+ * Adds an event listener that triggers when the DOM content is fully loaded. 
+ * Once the DOM is ready, the function `helpInit` is called to initialize any necessary setup.
+ * This ensures that `helpInit` is executed only after the HTML content has been completely loaded and parsed.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     helpInit();    
 });
