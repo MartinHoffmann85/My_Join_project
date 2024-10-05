@@ -333,68 +333,33 @@ function boardEditTask(taskId) {
         document.body.appendChild(overlay);
     }
     changeBackgroundOnOverlayOpen();
+    activateSubtaskListener(taskId);
 }
 
 
 /**
- * Renders the HTML content for editing a task.
- * @param {HTMLElement} card - Card element.
- * @param {string} backgroundColor - Background color.
- * @param {Object} task - Task object.
- * @param {string} taskId - ID of the task.
- * @param {string} assignedToHTML - HTML content for assigned to section.
+ * Activates a listener for adding a subtask when the Enter key is pressed.
+ * The function retrieves the input field for the new subtask and sets up
+ * an event listener that listens for a 'keydown' event. If the Enter key 
+ * is pressed and the input field is not empty, the subtask is added using
+ * the `addSubtask` function, and the input field is cleared.
+ *
+ * @param {string} taskId - The ID of the task to which the subtask will be added.
  */
-function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) {
-    card.innerHTML = `
-            <div class="boardOverlayCategoryAndCloseXContainer">
-                <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}</div>
-                <div><img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard(); initBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt=""></div>
-            </div>
-            <div class="renderTaskTitleOverlay">
-                <p>Title:</p>
-                <input class="boardEditTaskOverlayTitleInput" type="text" id="editTitle" value="${task.title}">
-            </div>
-            <div class="renderTaskDescriptionOverlay">
-                <p>Description:</p>
-                <textarea class="textarea-style" id="editDescription">${task.description}</textarea>
-            </div>
-            <div class="renderTaskDate" type="date">
-                <p>Due date:</p>
-                <input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
-            </div>
-            <div class="overlayAssignetToHTMLAndPrioContentContainer">
-                <div class="boardPriorityContainer">
-                <p>Priority:</p>
-                    <select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
-                        <option class="editTaskCardoverlayPriorityDropDownMenuOption" value="low" ${task.prio === 'low' ? 'selected' : ''}>Low</option>
-                        <option class="editTaskCardoverlayPriorityDropDownMenuOption" value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium</option>
-                        <option class="editTaskCardoverlayPriorityDropDownMenuOption" value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent</option>
-                    </select>
-                </div>
-                <div class="renderTaskCardOverlayAssignetToContainer">
-                    <div class="editAssigntToPElementAndSelectContactsButton">
-                        <p class="renderTaskCardOverlayAssignetToPElement">Assigned To:</p>
-                        <div class="dropdown">
-                            <button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts</button>
-                                <ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
-                                ${generateAssignedToOptions(task.assignedTo, taskId)}
-                                </ul>                        
-                        </div>
-                    </div>
-                    ${assignedToHTML.length > 0 ? assignedToHTML : '<p>No one assigned</p>'}
-                </div>
-            </div>
-            <div class="renderTasksubtaskHTML">
-                <p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks</p>
-                ${boardRenderSubtasks(card, taskId)}
-                <div class="subtaskInput">
-                    <input class="boardEditSubtaskInput" type="text" id="newSubtaskInput" placeholder="Enter subtask">
-                    <button class="boardEditSubtaskButton" onclick="addSubtask('${taskId}')">Add subtask</button>
-                </div>
-            </div>
-            <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-                <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTaskUpdate('${taskId}')">
-                <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
-            </div>
-        `;
+function activateSubtaskListener(taskId) {
+    const subtaskInput = document.getElementById('newSubtaskInput');
+    if (!subtaskInput) {
+        console.error('Subtask input field not found.');
+        return;
+    }
+    subtaskInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const subtaskTitle = subtaskInput.value.trim();
+            if (subtaskTitle) {
+                addSubtask(taskId, subtaskTitle);
+                subtaskInput.value = '';
+            }
+        }
+    });
 }

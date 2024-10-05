@@ -104,7 +104,7 @@
     
 
     
-    <h4 class="name" id="templateAssignedToContainerHTML"><span class="type-signature"></span>templateAssignedToContainerHTML<span class="signature">(contact, index, iconColor, initials, textColor, isSelected)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="addSubtask"><span class="type-signature"></span>addSubtask<span class="signature">(taskId)</span><span class="type-signature"></span></h4>
     
 
     
@@ -112,7 +112,7 @@
 
 
 <div class="description">
-    Generates HTML template for an assigned-to container.
+    Adds a new subtask to the specified task.
 </div>
 
 
@@ -148,7 +148,7 @@
 
         <tr>
             
-                <td class="name"><code>contact</code></td>
+                <td class="name"><code>taskId</code></td>
             
 
             <td class="type">
@@ -164,122 +164,7 @@
 
             
 
-            <td class="description last">Contact name.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Index of the assigned-to container.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>iconColor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Color of the icon.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>initials</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Initials of the contact.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>textColor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Text color.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>isSelected</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Whether the contact is selected.</td>
+            <td class="description last">ID of the task to which the subtask is added.</td>
         </tr>
 
     
@@ -320,7 +205,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line87">line 87</a>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line287">line 287</a>
     </li></ul></dd>
     
 
@@ -345,28 +230,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for assigned-to container.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -378,7 +241,7 @@
     
 
     
-    <h4 class="name" id="templateSignUpPopup"><span class="type-signature"></span>templateSignUpPopup<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="addSubtaskNewSubtask"><span class="type-signature"></span>addSubtaskNewSubtask<span class="signature">(subtaskTitle)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -386,117 +249,7 @@
 
 
 <div class="description">
-    Generates HTML template for the sign-up popup.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line5">line 5</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for sign-up popup.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="templateSubtaskHTML"><span class="type-signature"></span>templateSubtaskHTML<span class="signature">(index, subtask)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Generates HTML template for a subtask.
+    Creates a new subtask object with a random ID.
 </div>
 
 
@@ -532,30 +285,7 @@
 
         <tr>
             
-                <td class="name"><code>index</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Index of the subtask.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>subtask</code></td>
+                <td class="name"><code>subtaskTitle</code></td>
             
 
             <td class="type">
@@ -571,7 +301,7 @@
 
             
 
-            <td class="description last">Subtask content.</td>
+            <td class="description last">Title of the new subtask.</td>
         </tr>
 
     
@@ -612,7 +342,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line164">line 164</a>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line324">line 324</a>
     </li></ul></dd>
     
 
@@ -641,7 +371,7 @@
 
         
 <div class="param-desc">
-    - HTML template for a subtask.
+    - New subtask object.
 </div>
 
 
@@ -652,7 +382,7 @@
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type">Object</span>
 
 
     </dd>
@@ -670,7 +400,7 @@
     
 
     
-    <h4 class="name" id="templateSvgCheckboxConfirmedHTML"><span class="type-signature"></span>templateSvgCheckboxConfirmedHTML<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="addSubtaskSaveAndRedirectToBoardEditTask"><span class="type-signature"></span>addSubtaskSaveAndRedirectToBoardEditTask<span class="signature">(subtaskTitle, currentUser, taskIndex, taskId)</span><span class="type-signature"></span></h4>
     
 
     
@@ -678,227 +408,7 @@
 
 
 <div class="description">
-    Generates HTML template for a confirmed checkbox SVG.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line111">line 111</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for confirmed checkbox SVG.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="templateSvgDefaultCheckboxHTML"><span class="type-signature"></span>templateSvgDefaultCheckboxHTML<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Generates HTML template for a default checkbox SVG.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line125">line 125</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - HTML template for default checkbox SVG.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="templateaddedContactsHTML"><span class="type-signature"></span>templateaddedContactsHTML<span class="signature">(index, iconColor, initials, textColor)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Generates HTML template for added contacts.
+    Saves the new subtask to local storage, updates the backend, and redirects to edit task view.
 </div>
 
 
@@ -934,7 +444,53 @@
 
         <tr>
             
-                <td class="name"><code>index</code></td>
+                <td class="name"><code>subtaskTitle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Title of the new subtask.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>currentUser</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Current user object.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>taskIndex</code></td>
             
 
             <td class="type">
@@ -950,14 +506,14 @@
 
             
 
-            <td class="description last">Index of the contact.</td>
+            <td class="description last">Index of the task in the user's tasks array.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>iconColor</code></td>
+                <td class="name"><code>taskId</code></td>
             
 
             <td class="type">
@@ -973,53 +529,7 @@
 
             
 
-            <td class="description last">Color of the icon.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>initials</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Initials of the contact.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>textColor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Text color.</td>
+            <td class="description last">ID of the task to which the subtask is added.</td>
         </tr>
 
     
@@ -1060,7 +570,144 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="template.js.html">template.js</a>, <a href="template.js.html#line142">line 142</a>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line310">line 310</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="boardEditTaskAssignetTo"><span class="type-signature"></span>boardEditTaskAssignetTo<span class="signature">(task)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders the assigned to HTML for editing a task.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>task</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Task object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -1089,7 +736,7 @@
 
         
 <div class="param-desc">
-    - HTML template for added contacts.
+    - Assigned to HTML content.
 </div>
 
 
@@ -1107,6 +754,2181 @@
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="boardEditTaskCategory"><span class="type-signature"></span>boardEditTaskCategory<span class="signature">(task)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders the category background color for editing a task.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>task</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Task object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line108">line 108</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Background color.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="boardEditTaskPrio"><span class="type-signature"></span>boardEditTaskPrio<span class="signature">(task)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders the priority HTML for editing a task.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>task</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Task object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line91">line 91</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="boardEditTaskUpdate"><span class="type-signature"></span>boardEditTaskUpdate<span class="signature">(taskId)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates the task in local storage and backend after editing.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>taskId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the task.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line214">line 214</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="boardEditTaskUpdateVariables"><span class="type-signature"></span>boardEditTaskUpdateVariables<span class="signature">(taskId)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Collects the updated task information from the edit task form.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>taskId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the task.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line233">line 233</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Object containing the task and updated information.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="boardGenerateRandomID"><span class="type-signature"></span>boardGenerateRandomID<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Generates a random alphanumeric ID.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line337">line 337</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Random alphanumeric ID.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="boardTaskEditHTML"><span class="type-signature"></span>boardTaskEditHTML<span class="signature">(card, backgroundColor, task, taskId, assignedToHTML)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders the HTML content for editing a task.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>card</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Card element.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>backgroundColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Background color.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>task</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Task object.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>taskId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the task.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>assignedToHTML</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">HTML content for assigned to section.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line9">line 9</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="boardToggleDropdownMenu"><span class="type-signature"></span>boardToggleDropdownMenu<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Toggles the visibility of the dropdown menu for selecting contacts.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line140">line 140</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkEmptyColumns"><span class="type-signature"></span>checkEmptyColumns<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Checks if any column is empty and displays "No tasks in this line" if so.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line345">line 345</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="editUpdateAssignedTo"><span class="type-signature"></span>editUpdateAssignedTo<span class="signature">(taskId)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates the assigned contacts for a task after editing.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>taskId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the task.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line177">line 177</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="generateAssignedToOptions"><span class="type-signature"></span>generateAssignedToOptions<span class="signature">(assignedTo, taskId)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Generates the HTML options for selecting assigned contacts.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>assignedTo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Assigned contacts object.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>taskId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the task.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line125">line 125</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - HTML content for the options.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getColorCodeForContact"><span class="type-signature"></span>getColorCodeForContact<span class="signature">(contacts, contactName)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Retrieves the color code for a given contact name from the contacts list.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>contacts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">List of contacts.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>contactName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Name of the contact to retrieve the color code for.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line202">line 202</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Color code associated with the contact.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getTaskFromLocalStorage"><span class="type-signature"></span>getTaskFromLocalStorage<span class="signature">(taskId)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Retrieves a task from local storage based on its ID.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>taskId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the task to retrieve.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line167">line 167</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Task object.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="searchTasks"><span class="type-signature"></span>searchTasks<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Searches tasks based on the input provided in the search input field.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line268">line 268</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="selectContact"><span class="type-signature"></span>selectContact<span class="signature">(contactElement, taskId)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Handles the selection of a contact and updates the assigned contacts.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>contactElement</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Selected contact element.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>taskId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the task.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line156">line 156</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="updateTaskInLocalStorageAndBackend"><span class="type-signature"></span>updateTaskInLocalStorageAndBackend<span class="signature">(taskId, updatedTask)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Updates the task in local storage and backend.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>taskId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ID of the task.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>updatedTask</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Updated task object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="board3.js.html">board3.js</a>, <a href="board3.js.html#line252">line 252</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1128,13 +2950,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#templateAssignedToContainerHTML">templateAssignedToContainerHTML</a></li><li><a href="global.html#templateSignUpPopup">templateSignUpPopup</a></li><li><a href="global.html#templateSubtaskHTML">templateSubtaskHTML</a></li><li><a href="global.html#templateSvgCheckboxConfirmedHTML">templateSvgCheckboxConfirmedHTML</a></li><li><a href="global.html#templateSvgDefaultCheckboxHTML">templateSvgDefaultCheckboxHTML</a></li><li><a href="global.html#templateaddedContactsHTML">templateaddedContactsHTML</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addSubtaskNewSubtask">addSubtaskNewSubtask</a></li><li><a href="global.html#addSubtaskSaveAndRedirectToBoardEditTask">addSubtaskSaveAndRedirectToBoardEditTask</a></li><li><a href="global.html#boardEditTaskAssignetTo">boardEditTaskAssignetTo</a></li><li><a href="global.html#boardEditTaskCategory">boardEditTaskCategory</a></li><li><a href="global.html#boardEditTaskPrio">boardEditTaskPrio</a></li><li><a href="global.html#boardEditTaskUpdate">boardEditTaskUpdate</a></li><li><a href="global.html#boardEditTaskUpdateVariables">boardEditTaskUpdateVariables</a></li><li><a href="global.html#boardGenerateRandomID">boardGenerateRandomID</a></li><li><a href="global.html#boardTaskEditHTML">boardTaskEditHTML</a></li><li><a href="global.html#boardToggleDropdownMenu">boardToggleDropdownMenu</a></li><li><a href="global.html#checkEmptyColumns">checkEmptyColumns</a></li><li><a href="global.html#editUpdateAssignedTo">editUpdateAssignedTo</a></li><li><a href="global.html#generateAssignedToOptions">generateAssignedToOptions</a></li><li><a href="global.html#getColorCodeForContact">getColorCodeForContact</a></li><li><a href="global.html#getTaskFromLocalStorage">getTaskFromLocalStorage</a></li><li><a href="global.html#searchTasks">searchTasks</a></li><li><a href="global.html#selectContact">selectContact</a></li><li><a href="global.html#updateTaskInLocalStorageAndBackend">updateTaskInLocalStorageAndBackend</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 21:05:39 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 00:30:33 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -100,7 +100,7 @@ async function createTask() {
     showSuccessfullyTaskCreatedImage();
     setTimeout(() => {
       redirectToAddBoard();
-    }, 2000);  
+    }, 500);  
 }
   
   

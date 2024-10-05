@@ -361,70 +361,35 @@ function boardEditTask(taskId) {
         document.body.appendChild(overlay);
     }
     changeBackgroundOnOverlayOpen();
+    activateSubtaskListener(taskId);
 }
 
 
 /**
- * Renders the HTML content for editing a task.
- * @param {HTMLElement} card - Card element.
- * @param {string} backgroundColor - Background color.
- * @param {Object} task - Task object.
- * @param {string} taskId - ID of the task.
- * @param {string} assignedToHTML - HTML content for assigned to section.
+ * Activates a listener for adding a subtask when the Enter key is pressed.
+ * The function retrieves the input field for the new subtask and sets up
+ * an event listener that listens for a 'keydown' event. If the Enter key 
+ * is pressed and the input field is not empty, the subtask is added using
+ * the `addSubtask` function, and the input field is cleared.
+ *
+ * @param {string} taskId - The ID of the task to which the subtask will be added.
  */
-function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) {
-    card.innerHTML = `
-            &lt;div class="boardOverlayCategoryAndCloseXContainer">
-                &lt;div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}&lt;/div>
-                &lt;div>&lt;img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard(); initBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt="">&lt;/div>
-            &lt;/div>
-            &lt;div class="renderTaskTitleOverlay">
-                &lt;p>Title:&lt;/p>
-                &lt;input class="boardEditTaskOverlayTitleInput" type="text" id="editTitle" value="${task.title}">
-            &lt;/div>
-            &lt;div class="renderTaskDescriptionOverlay">
-                &lt;p>Description:&lt;/p>
-                &lt;textarea class="textarea-style" id="editDescription">${task.description}&lt;/textarea>
-            &lt;/div>
-            &lt;div class="renderTaskDate" type="date">
-                &lt;p>Due date:&lt;/p>
-                &lt;input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
-            &lt;/div>
-            &lt;div class="overlayAssignetToHTMLAndPrioContentContainer">
-                &lt;div class="boardPriorityContainer">
-                &lt;p>Priority:&lt;/p>
-                    &lt;select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="low" ${task.prio === 'low' ? 'selected' : ''}>Low&lt;/option>
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium&lt;/option>
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent&lt;/option>
-                    &lt;/select>
-                &lt;/div>
-                &lt;div class="renderTaskCardOverlayAssignetToContainer">
-                    &lt;div class="editAssigntToPElementAndSelectContactsButton">
-                        &lt;p class="renderTaskCardOverlayAssignetToPElement">Assigned To:&lt;/p>
-                        &lt;div class="dropdown">
-                            &lt;button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts&lt;/button>
-                                &lt;ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
-                                ${generateAssignedToOptions(task.assignedTo, taskId)}
-                                &lt;/ul>                        
-                        &lt;/div>
-                    &lt;/div>
-                    ${assignedToHTML.length > 0 ? assignedToHTML : '&lt;p>No one assigned&lt;/p>'}
-                &lt;/div>
-            &lt;/div>
-            &lt;div class="renderTasksubtaskHTML">
-                &lt;p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks&lt;/p>
-                ${boardRenderSubtasks(card, taskId)}
-                &lt;div class="subtaskInput">
-                    &lt;input class="boardEditSubtaskInput" type="text" id="newSubtaskInput" placeholder="Enter subtask">
-                    &lt;button class="boardEditSubtaskButton" onclick="addSubtask('${taskId}')">Add subtask&lt;/button>
-                &lt;/div>
-            &lt;/div>
-            &lt;div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-                &lt;img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTaskUpdate('${taskId}')">
-                &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
-            &lt;/div>
-        `;
+function activateSubtaskListener(taskId) {
+    const subtaskInput = document.getElementById('newSubtaskInput');
+    if (!subtaskInput) {
+        console.error('Subtask input field not found.');
+        return;
+    }
+    subtaskInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const subtaskTitle = subtaskInput.value.trim();
+            if (subtaskTitle) {
+                addSubtask(taskId, subtaskTitle);
+                subtaskInput.value = '';
+            }
+        }
+    });
 }</code></pre>
         </article>
     </section>
@@ -435,13 +400,13 @@ function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) 
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addTaskClickListener">addTaskClickListener</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#boardTaskEditHTML">boardTaskEditHTML</a></li><li><a href="global.html#changeBackgroundOnOverlayOpen">changeBackgroundOnOverlayOpen</a></li><li><a href="global.html#closeOverlayBoard">closeOverlayBoard</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#drag">drag</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#drop">drop</a></li><li><a href="global.html#loadTasksFromLocalStorage">loadTasksFromLocalStorage</a></li><li><a href="global.html#renderTaskCardAsOverlay">renderTaskCardAsOverlay</a></li><li><a href="global.html#renderTaskCardAsOverlayAssignetTo">renderTaskCardAsOverlayAssignetTo</a></li><li><a href="global.html#renderTaskCardAsOverlayCardHTML">renderTaskCardAsOverlayCardHTML</a></li><li><a href="global.html#renderTaskCardAsOverlayCategory">renderTaskCardAsOverlayCategory</a></li><li><a href="global.html#renderTaskCardOverlay">renderTaskCardOverlay</a></li><li><a href="global.html#renderTaskCarsAsOverlayPrio">renderTaskCarsAsOverlayPrio</a></li><li><a href="global.html#restoreBackgroundOnOverlayClose">restoreBackgroundOnOverlayClose</a></li><li><a href="global.html#saveTasksToLocalStorage">saveTasksToLocalStorage</a></li><li><a href="global.html#updateTaskColumnId">updateTaskColumnId</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateSubtaskListener">activateSubtaskListener</a></li><li><a href="global.html#addTaskClickListener">addTaskClickListener</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#changeBackgroundOnOverlayOpen">changeBackgroundOnOverlayOpen</a></li><li><a href="global.html#closeOverlayBoard">closeOverlayBoard</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#drag">drag</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#drop">drop</a></li><li><a href="global.html#loadTasksFromLocalStorage">loadTasksFromLocalStorage</a></li><li><a href="global.html#renderTaskCardAsOverlay">renderTaskCardAsOverlay</a></li><li><a href="global.html#renderTaskCardAsOverlayAssignetTo">renderTaskCardAsOverlayAssignetTo</a></li><li><a href="global.html#renderTaskCardAsOverlayCardHTML">renderTaskCardAsOverlayCardHTML</a></li><li><a href="global.html#renderTaskCardAsOverlayCategory">renderTaskCardAsOverlayCategory</a></li><li><a href="global.html#renderTaskCardOverlay">renderTaskCardOverlay</a></li><li><a href="global.html#renderTaskCarsAsOverlayPrio">renderTaskCarsAsOverlayPrio</a></li><li><a href="global.html#restoreBackgroundOnOverlayClose">restoreBackgroundOnOverlayClose</a></li><li><a href="global.html#saveTasksToLocalStorage">saveTasksToLocalStorage</a></li><li><a href="global.html#updateTaskColumnId">updateTaskColumnId</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:50:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 00:30:29 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
