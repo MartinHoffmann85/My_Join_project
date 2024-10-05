@@ -26,7 +26,69 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>
+            <pre class="prettyprint source linenums"><code>/**
+ * Sets up the process for creating a new contact in the desktop view.
+ * This function retrieves new contact information, assigns a unique ID to the contact, 
+ * adds the contact to the current user's contact list, hides the overlay, 
+ * initializes the contact list display, and shows a success message.
+ */
+function createContactDesktopSetup() {
+  const newContact = getNewContactDesktop();
+  newContact.id = generateUniqueID();
+  addContactToCurrentUser(newContact);
+  hideOverlay();
+  contactsInit();
+  showSuccessfullyContactCreatedImageDesktop();
+}
+
+
+/**
+ * Validates and retrieves the contact information from the input fields in the add contact overlay.
+ * This function trims the input values for name, email, and phone, 
+ * and returns an object containing the contact information. 
+ * @returns {Object} An object containing the contact details with the following properties:
+ * - {string} contactName - The name of the new contact.
+ * - {string} contactEmail - The email address of the new contact.
+ * - {string} contactPhone - The phone number of the new contact.
+ */
+function validateCreateContactDesktop() {
+  const contactName = document.getElementById("add-contact-input-name-desktop-id").value.trim();
+  const contactEmail = document.getElementById("add-contact-input-mail-addresss-desktop-id").value.trim();
+  const contactPhone = document.getElementById("add-contact-input-phone-desktop-id").value.trim();
+  return { contactName, contactEmail, contactPhone };
+}
+
+
+/**
+* Retrieves the new contact details from the input fields in the desktop view.
+* @returns {Object} - The new contact object with name, email, and phone.
+*/
+function getNewContactDesktop() {
+  const contactName = document.getElementById("add-contact-input-name-desktop-id").value;
+  const contactEmail = document.getElementById("add-contact-input-mail-addresss-desktop-id").value;
+  const contactPhone = document.getElementById("add-contact-input-phone-desktop-id").value;
+  return { name: contactName, email: contactEmail, phone: contactPhone };
+}
+
+
+/**
+ * Show overlay for editing a contact at desktop view
+ * @param {string} lastClickedContactId - The ID of the last clicked contact
+ */
+function editContactDestop(lastClickedContactId) {
+    const currentUser = getLoggedInUser();
+    const selectedContact = currentUser.contacts.find(contact => contact.id === lastClickedContactId);    
+    const overlayContainer = document.createElement("div");
+    overlayContainer.classList.add("overlay-container");
+    document.body.appendChild(overlayContainer);  
+    const overlayContent = document.createElement("div");
+    overlayContent.classList.add("overlay-content");
+    overlayContainer.appendChild(overlayContent);  
+    generateHTMLEditContactDesktop(overlayContent, selectedContact);  
+    overlayContainer.style.animation = "slide-in-menu 0.5s ease-out";
+}
+
+
 /**
  * Generate HTML for editContactDestop
  * @param {string} overlayContent - Overlay div container
@@ -176,13 +238,13 @@ function showHeaderAndFooter() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#clearAddContactDesktopRightSideContainer">clearAddContactDesktopRightSideContainer</a></li><li><a href="global.html#generateHTMLEditContactDesktop">generateHTMLEditContactDesktop</a></li><li><a href="global.html#hideHeaderAndFooter">hideHeaderAndFooter</a></li><li><a href="global.html#showHeaderAndFooter">showHeaderAndFooter</a></li><li><a href="global.html#showSuccessfullyContactCreatedImageDesktop">showSuccessfullyContactCreatedImageDesktop</a></li><li><a href="global.html#singleMemberToHTMLOpenContactDesktop2">singleMemberToHTMLOpenContactDesktop2</a></li><li><a href="global.html#updateContactsDataDesktop">updateContactsDataDesktop</a></li><li><a href="global.html#updateContactsDataDesktopVariables">updateContactsDataDesktopVariables</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#clearAddContactDesktopRightSideContainer">clearAddContactDesktopRightSideContainer</a></li><li><a href="global.html#createContactDesktopSetup">createContactDesktopSetup</a></li><li><a href="global.html#editContactDestop">editContactDestop</a></li><li><a href="global.html#generateHTMLEditContactDesktop">generateHTMLEditContactDesktop</a></li><li><a href="global.html#getNewContactDesktop">getNewContactDesktop</a></li><li><a href="global.html#hideHeaderAndFooter">hideHeaderAndFooter</a></li><li><a href="global.html#showHeaderAndFooter">showHeaderAndFooter</a></li><li><a href="global.html#showSuccessfullyContactCreatedImageDesktop">showSuccessfullyContactCreatedImageDesktop</a></li><li><a href="global.html#singleMemberToHTMLOpenContactDesktop2">singleMemberToHTMLOpenContactDesktop2</a></li><li><a href="global.html#updateContactsDataDesktop">updateContactsDataDesktop</a></li><li><a href="global.html#updateContactsDataDesktopVariables">updateContactsDataDesktopVariables</a></li><li><a href="global.html#validateCreateContactDesktop">validateCreateContactDesktop</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:50:57 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 01:16:13 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
