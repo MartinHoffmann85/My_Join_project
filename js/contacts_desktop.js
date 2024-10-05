@@ -251,8 +251,6 @@ function deleteContactDesktop(contactId) {
 }
 
 
-// Add contact screen overlay desktop
-
 /**
  * Show overlay for add contact at desktop view
  */
@@ -328,13 +326,46 @@ function createContactDesktop() {
   if (!currentUser) {
       console.error("No user logged in.");
       return;
-  }    
+  }
+  const { contactName, contactEmail, contactPhone } = validateCreateContactDesktop();
+  if (!contactName || !contactEmail || !contactPhone) {
+      alert("Bitte füllen Sie alle Felder aus.");
+      return;
+  }
+  createContactDesktopSetup();
+}
+
+
+/**
+ * Sets up the process for creating a new contact in the desktop view.
+ * This function retrieves new contact information, assigns a unique ID to the contact, 
+ * adds the contact to the current user's contact list, hides the overlay, 
+ * initializes the contact list display, and shows a success message.
+ */
+function createContactDesktopSetup() {
   const newContact = getNewContactDesktop();
-  newContact.id = generateUniqueID();    
+  newContact.id = generateUniqueID();
   addContactToCurrentUser(newContact);
   hideOverlay();
   contactsInit();
   showSuccessfullyContactCreatedImageDesktop();
+}
+
+
+/**
+ * Validates and retrieves the contact information from the input fields in the add contact overlay.
+ * This function trims the input values for name, email, and phone, 
+ * and returns an object containing the contact information. 
+ * @returns {Object} An object containing the contact details with the following properties:
+ * - {string} contactName - The name of the new contact.
+ * - {string} contactEmail - The email address of the new contact.
+ * - {string} contactPhone - The phone number of the new contact.
+ */
+function validateCreateContactDesktop() {
+  const contactName = document.getElementById("add-contact-input-name-desktop-id").value.trim();
+  const contactEmail = document.getElementById("add-contact-input-mail-addresss-desktop-id").value.trim();
+  const contactPhone = document.getElementById("add-contact-input-phone-desktop-id").value.trim();
+  return { contactName, contactEmail, contactPhone };
 }
 
 
@@ -349,8 +380,6 @@ function getNewContactDesktop() {
   return { name: contactName, email: contactEmail, phone: contactPhone };
 }
 
-
-// Edit contact screen overlay desktop
 
 /**
  * Show overlay for editing a contact at desktop view
