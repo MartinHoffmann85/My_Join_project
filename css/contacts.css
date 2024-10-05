@@ -587,7 +587,7 @@
 /* Desktop view */
 /*-----------------------------------------------------------------------------------------------------------------------*/
 
-@media only screen and (max-width: 2500px) and (min-width: 950px) {
+@media only screen and (max-width: 3500px) and (min-width: 950px) {
     .allContacts {        
         position: relative;
         overflow-y: auto;
