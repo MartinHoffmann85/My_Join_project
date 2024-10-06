@@ -390,7 +390,7 @@ function validateCreateContactMobile() {
 function displayErrorMessage(inputField, message) {
   const errorMessage = document.createElement("div");
   errorMessage.textContent = message;
-  errorMessage.style.color = "red"; // Set the text color to red
-  errorMessage.classList.add("error-message"); // Optional: add a class for further styling
+  errorMessage.style.color = "red";
+  errorMessage.classList.add("error-message");
   inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
 }
