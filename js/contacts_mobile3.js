@@ -42,28 +42,32 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
     const { name, email, phone } = selectedContact;  
     return /*html*/ `
       <div class="editContactContainerHeader">
-        <div class="addContactCloseXContainer">
-          <button class="addContactCloseXButtonMobile" onclick="redirectToContacts()">X</button>
+    <div class="addContactCloseXContainer">
+        <button class="addContactCloseXButtonMobile" onclick="redirectToContacts()">X</button>
+    </div>
+    <div class="addContactBlockHeader">
+        <p class="addContactH1">Edit contact</p>
+        <img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">          
+    </div>
+    </div>
+    <div class="addContactBlankUserImg">        
+        ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
+    </div>
+        <form id="editcontactFormMobileID" onsubmit="updateContactMobile(${selectedContact.id})">
+            <div class="addContactContainerFooter">
+                <input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z]+" placeholder="Name" value="${name}">
+                <input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
+                <input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
+                <div>
+                    <button type="button" class="createContactButtonImg" onclick="deleteContactMobile('${selectedContact.id}')">
+                    <img src="./assets/img/contacts/editContactDeleteButtonImg.svg" alt="">
+                </button>
+                <button type="submit" class="createContactButtonImg">
+                    <img src="./assets/img/contacts/editContactSaveButtonImg.svg" alt="">
+                </button>
+            </div>
         </div>
-        <div class="addContactBlockHeader">
-          <p class="addContactH1">Edit contact</p>
-          <img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">          
-        </div>
-      </div>
-      <div class="addContactBlankUserImg">        
-          ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
-      </div>
-      <form id="editcontactFormMobileID" onsubmit="updateContactMobile(${selectedContact.id})">
-        <div class="addContactContainerFooter">
-          <input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z]+" placeholder="Name" value="${name}">
-          <input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
-          <input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
-          <div>
-            <img class="createContactButtonImg" src="./assets/img/contacts/editContactDeleteButtonImg.svg" alt="" onclick="deleteContactMobile('${selectedContact.id}')">
-            <img class="createContactButtonImg" src="./assets/img/contacts/editContactSaveButtonImg.svg" alt="" onclick="updateContactMobile('${selectedContact.id}')">
-          </div>
-        </div>
-      </form>
+    </form>
     `;
 }
 
