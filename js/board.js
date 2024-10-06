@@ -1,5 +1,6 @@
 let draggedTaskId;
 let originalColumnId;
+let searchTimeout;
 
 
 /**

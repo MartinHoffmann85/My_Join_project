@@ -267,16 +267,45 @@ function updateTaskInLocalStorageAndBackend(taskId, updatedTask) {
  */
 function searchTasks() {
     const searchInput = document.getElementById('boardSearchInputID').value.toLowerCase();
-    const taskCards = document.querySelectorAll('.task');    
+    const taskCards = document.querySelectorAll('.task');
+    const foundTask = displayTasks(taskCards, searchInput);
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        checkForTasks(foundTask);
+    }, 2000);
+}
+
+
+/**
+ * Displays tasks based on the search input.
+ * @param {NodeList} taskCards - The list of task elements.
+ * @param {string} searchInput - The search query.
+ * @returns {boolean} - Returns true if at least one task is found, otherwise false.
+ */
+function displayTasks(taskCards, searchInput) {
+    let foundTask = false;
     taskCards.forEach(taskCard => {
         const taskTitle = taskCard.querySelector('.renderTaskTitlePElement').textContent.toLowerCase();
         const taskDescription = taskCard.querySelector('.renderTaskDescription').textContent.toLowerCase();        
         if (taskTitle.includes(searchInput) || taskDescription.includes(searchInput)) {
             taskCard.style.display = 'block';
+            foundTask = true;
         } else {
             taskCard.style.display = 'none';
         }
     });
+    return foundTask;
+}
+
+
+/**
+ * Checks if any tasks were found and displays an alert if none were found.
+ * @param {boolean} foundTask - Indicates whether any tasks were found.
+ */
+function checkForTasks(foundTask) {
+    if (!foundTask) {
+        alert('No task was found'); // Alert anzeigen, wenn kein Task gefunden wurde
+    }
 }
 
 
