@@ -1,4 +1,13 @@
 /**
+ * Clears previous error messages from the input fields.
+ */
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll(".error-message");
+    errorMessages.forEach((message) => message.remove());
+}
+
+
+/**
  * Show successfully contact created image.
  */
 function showSuccessfullyContactCreatedImageMobile() {  

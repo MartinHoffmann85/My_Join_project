@@ -1,3 +1,11 @@
+/**
+ * Initializes or removes the 'resize' event listener for the 'contactsInit' function 
+ * based on the current page's URL path. 
+ * - If the current page is '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' or '/contacts.html',
+ *   the 'contactsInit' function will be called on window resize.
+ * - If the current page is not one of the specified paths, the 'resize' event listener will be removed. 
+ * Additionally, the 'contactsInit' function is called when the page is fully loaded.
+ */
 if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
   window.addEventListener('resize', contactsInit);
 } else {
@@ -383,13 +391,4 @@ function displayErrorMessage(inputField, message) {
   errorMessage.style.color = "red"; // Set the text color to red
   errorMessage.classList.add("error-message"); // Optional: add a class for further styling
   inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
-}
-
-
-/**
- * Clears previous error messages from the input fields.
- */
-function clearErrorMessages() {
-  const errorMessages = document.querySelectorAll(".error-message");
-  errorMessages.forEach((message) => message.remove());
 }

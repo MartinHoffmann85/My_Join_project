@@ -14,7 +14,7 @@
     overflow-y: auto;
     overflow-x: hidden; 
     padding-bottom: 60px;
-    max-height: calc(100vh - 170px);
+    max-height: 100vh;
     width: 100vw;
     margin-top: 80px;    
 }
@@ -466,8 +466,7 @@
     align-items: center;
     flex-direction: column;
     height: 50vh;
-    background-color: var(--mockup-color);
-    
+    background-color: var(--mockup-color);    
 }
 
 .editContactCloseXContainer {
@@ -507,7 +506,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 50vh;
+    margin-top: 70px;    
     background-color: var(--white-color);
     gap: 20px;
 }
@@ -1135,5 +1134,11 @@
 
     .task-container {
         margin-bottom: 50px;
+    }
+}
+
+@media only screen and (max-height: 700px) {
+    .addContactContainerFooter {    
+        margin-top: 40px;
     }
 }

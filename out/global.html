@@ -104,7 +104,7 @@
     
 
     
-    <h4 class="name" id="clearAddContactDesktopRightSideContainer"><span class="type-signature"></span>clearAddContactDesktopRightSideContainer<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="closeContactOverlay"><span class="type-signature"></span>closeContactOverlay<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -112,7 +112,7 @@
 
 
 <div class="description">
-    Clear add contact desktop right side container
+    Closes the contact overlay.
 </div>
 
 
@@ -156,7 +156,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line178">line 178</a>
+        <a href="contacts_mobile3.js.html">contacts_mobile3.js</a>, <a href="contacts_mobile3.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -192,7 +192,7 @@
     
 
     
-    <h4 class="name" id="createContactDesktopSetup"><span class="type-signature"></span>createContactDesktopSetup<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createEditContactHTML"><span class="type-signature"></span>createEditContactHTML<span class="signature">(selectedContact, colorCode, textColor)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
     
@@ -200,95 +200,7 @@
 
 
 <div class="description">
-    Sets up the process for creating a new contact in the desktop view.This function retrieves new contact information, assigns a unique ID to the contact, adds the contact to the current user's contact list, hides the overlay, initializes the contact list display, and shows a success message.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="editContactDestop"><span class="type-signature"></span>editContactDestop<span class="signature">(lastClickedContactId)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Show overlay for editing a contact at desktop view
+    Generates HTML for editing contact information.
 </div>
 
 
@@ -320,166 +232,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>lastClickedContactId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The ID of the last clicked contact</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line50">line 50</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="generateHTMLEditContactDesktop"><span class="type-signature"></span>generateHTMLEditContactDesktop<span class="signature">(overlayContent, selectedContact)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Generate HTML for editContactDestop
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>overlayContent</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Overlay div container</td>
-        </tr>
-
     
 
         <tr>
@@ -490,6 +242,29 @@
             <td class="type">
             
                 
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The contact object to be edited.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>colorCode</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type">string</span>
 
 
@@ -500,7 +275,30 @@
 
             
 
-            <td class="description last">This is the selected contact to open</td>
+            <td class="description last">The background color code.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>textColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The text color.</td>
         </tr>
 
     
@@ -541,95 +339,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line69">line 69</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="getNewContactDesktop"><span class="type-signature"></span>getNewContactDesktop<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Retrieves the new contact details from the input fields in the desktop view.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line38">line 38</a>
+        <a href="contacts_mobile3.js.html">contacts_mobile3.js</a>, <a href="contacts_mobile3.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -658,453 +368,7 @@
 
         
 <div class="param-desc">
-    - The new contact object with name, email, and phone.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="hideHeaderAndFooter"><span class="type-signature"></span>hideHeaderAndFooter<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Hide header and footer for edit contact and create contact screen on mobile view
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line187">line 187</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="showHeaderAndFooter"><span class="type-signature"></span>showHeaderAndFooter<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Show header and footer screen on mobile view
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line198">line 198</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="showSuccessfullyContactCreatedImageDesktop"><span class="type-signature"></span>showSuccessfullyContactCreatedImageDesktop<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Show successfully contact created image.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line145">line 145</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="singleMemberToHTMLOpenContactDesktop2"><span class="type-signature"></span>singleMemberToHTMLOpenContactDesktop2<span class="signature">(member, index)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Converts a single member object to HTML markup for displaying in the open contact desktop view.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>member</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The member object containing details like name and color code.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The index of the member.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line113">line 113</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - The HTML markup representing the member.
+    The HTML code for editing the contact.
 </div>
 
 
@@ -1133,7 +397,7 @@
     
 
     
-    <h4 class="name" id="updateContactsDataDesktop"><span class="type-signature"></span>updateContactsDataDesktop<span class="signature">(contactId)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="editContactOverlayMobileVariables"><span class="type-signature"></span>editContactOverlayMobileVariables<span class="signature">(contactId)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -1141,7 +405,7 @@
 
 
 <div class="description">
-    Overwrite the old contact data with the new contact data
+    Prepares variables required for editing a contact overlay on mobile.
 </div>
 
 
@@ -1193,7 +457,7 @@
 
             
 
-            <td class="description last">This is the contact ID example "5"</td>
+            <td class="description last">The ID of the contact to be edited.</td>
         </tr>
 
     
@@ -1234,7 +498,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line129">line 129</a>
+        <a href="contacts_mobile3.js.html">contacts_mobile3.js</a>, <a href="contacts_mobile3.js.html#line6">line 6</a>
     </li></ul></dd>
     
 
@@ -1259,6 +523,28 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An object containing references to the content element and the HTML code for editing the contact.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1270,7 +556,7 @@
     
 
     
-    <h4 class="name" id="updateContactsDataDesktopVariables"><span class="type-signature"></span>updateContactsDataDesktopVariables<span class="signature">(contactId)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="updateContactMobile"><span class="type-signature"></span>updateContactMobile<span class="signature">(contactId)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1278,7 +564,7 @@
 
 
 <div class="description">
-    Retrieves variables required for updating contact data on desktop.
+    Updates contact information on mobile.
 </div>
 
 
@@ -1371,7 +657,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line165">line 165</a>
+        <a href="contacts_mobile3.js.html">contacts_mobile3.js</a>, <a href="contacts_mobile3.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
@@ -1396,138 +682,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - Object containing updated contact data and related variables.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="validateCreateContactDesktop"><span class="type-signature"></span>validateCreateContactDesktop<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Validates and retrieves the contact information from the input fields in the add contact overlay.This function trims the input values for name, email, and phone, and returns an object containing the contact information.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contacts_desktop2.js.html">contacts_desktop2.js</a>, <a href="contacts_desktop2.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    An object containing the contact details with the following properties:- {string} contactName - The name of the new contact.- {string} contactEmail - The email address of the new contact.- {string} contactPhone - The phone number of the new contact.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -1549,13 +703,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#clearAddContactDesktopRightSideContainer">clearAddContactDesktopRightSideContainer</a></li><li><a href="global.html#createContactDesktopSetup">createContactDesktopSetup</a></li><li><a href="global.html#editContactDestop">editContactDestop</a></li><li><a href="global.html#generateHTMLEditContactDesktop">generateHTMLEditContactDesktop</a></li><li><a href="global.html#getNewContactDesktop">getNewContactDesktop</a></li><li><a href="global.html#hideHeaderAndFooter">hideHeaderAndFooter</a></li><li><a href="global.html#showHeaderAndFooter">showHeaderAndFooter</a></li><li><a href="global.html#showSuccessfullyContactCreatedImageDesktop">showSuccessfullyContactCreatedImageDesktop</a></li><li><a href="global.html#singleMemberToHTMLOpenContactDesktop2">singleMemberToHTMLOpenContactDesktop2</a></li><li><a href="global.html#updateContactsDataDesktop">updateContactsDataDesktop</a></li><li><a href="global.html#updateContactsDataDesktopVariables">updateContactsDataDesktopVariables</a></li><li><a href="global.html#validateCreateContactDesktop">validateCreateContactDesktop</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#closeContactOverlay">closeContactOverlay</a></li><li><a href="global.html#createEditContactHTML">createEditContactHTML</a></li><li><a href="global.html#editContactOverlayMobileVariables">editContactOverlayMobileVariables</a></li><li><a href="global.html#updateContactMobile">updateContactMobile</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 01:16:13 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 22:22:17 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
