@@ -300,11 +300,22 @@ function redirectToContacts() {
 
 
 /**
-* Creates a new contact in mobile view.
-*/
+ * Creates a new contact in mobile view.
+ */
 async function createContactMobile() {
   const currentUser = getLoggedInUser();
-  const newContact = getNewContact();
+  if (!currentUser) {
+    console.error("No user logged in.");
+    return;
+  }  
+  const { contactName, contactEmail, contactPhone } = validateCreateContactMobile();
+  const inputs = getInputElementsMobile();
+  clearErrorMessages();
+  const hasError = validateInputsMobile(inputs, { contactName, contactEmail, contactPhone });
+  if (hasError) {
+    return;
+  }
+  const newContact = { name: contactName, email: contactEmail, phone: contactPhone };
   newContact.id = generateUniqueID();
   addContactToCurrentUser(newContact);
   contactsInit();
@@ -313,79 +324,72 @@ async function createContactMobile() {
 
 
 /**
- * Show successfully contact created image.
+ * Retrieves the input elements for mobile contact information.
+ * @returns {Object} - An object containing the input elements for name, email, and phone.
  */
-function showSuccessfullyContactCreatedImageMobile() {  
-  const imageElement = document.createElement("img");
-  imageElement.src = './assets/img/contacts/contactSuccessfullyCreatedOverlay.svg';
-  imageElement.style.position = "fixed";
-  imageElement.style.top = "50%";
-  imageElement.style.left = "50%";
-  imageElement.style.transform = "translate(-50%, -50%)";
-  imageElement.style.zIndex = "9999";  
-  document.body.appendChild(imageElement);
-  setTimeout(() => {
-      document.body.removeChild(imageElement);
-  }, 2000);
+function getInputElementsMobile() {
+  return {
+    nameInput: document.getElementById("add-contact-input-name-mobile-id"),
+    emailInput: document.getElementById("add-contact-input-mail-addresss-mobile-id"),
+    phoneInput: document.getElementById("add-contact-input-phone-mobile-id"),
+  };
 }
 
 
 /**
-* Retrieves the data for a new contact.
-* @returns {Object} The new contact object.
-*/
-function getNewContact() {
+ * Validates the input fields for the mobile view.
+ * @param {Object} inputs - An object containing the input elements.
+ * @param {Object} contactInfo - An object containing contact information.
+ * @returns {boolean} - Returns true if there is an error, otherwise false.
+ */
+function validateInputsMobile(inputs, contactInfo) {
+  let hasError = false;  
+  if (!contactInfo.contactName) {
+    displayErrorMessage(inputs.nameInput, "Line cannot be empty, please fill it out.");
+    hasError = true;
+  }  
+  if (!contactInfo.contactEmail) {
+    displayErrorMessage(inputs.emailInput, "Line cannot be empty, please fill it out.");
+    hasError = true;
+  }  
+  if (!contactInfo.contactPhone) {
+    displayErrorMessage(inputs.phoneInput, "Line cannot be empty, please fill it out.");
+    hasError = true;
+  }
+  return hasError;
+}
+
+
+/**
+ * Retrieves the contact information from mobile input fields.
+ * @returns {Object} An object containing the contact name, email, and phone.
+ */
+function validateCreateContactMobile() {
   const contactName = document.getElementById("add-contact-input-name-mobile-id").value;
   const contactEmail = document.getElementById("add-contact-input-mail-addresss-mobile-id").value;
   const contactPhone = document.getElementById("add-contact-input-phone-mobile-id").value;
-  return { name: contactName, email: contactEmail, phone: contactPhone };
+  return { contactName, contactEmail, contactPhone };
 }
 
 
 /**
- * Adds a new contact to the current user's contacts list.
- * @param {Object} newContact - The new contact object to be added.
+ * Displays an error message below the input field.
+ * @param {HTMLElement} inputField - The input field where the error message should be displayed.
+ * @param {string} message - The error message to be displayed.
  */
-async function addContactToCurrentUser(newContact) {
-  const currentUser = getLoggedInUser();
-  if (!currentUser) {
-      console.error("No user is currently logged in.");
-      return;
-  }
-  let { colorCode, textColorCode } = addContactToCurrentUserVariables(newContact);
-  if (!Array.isArray(currentUser.contacts)) {
-      currentUser.contacts = [];
-  }
-  if (!colorCode || !textColorCode) {      
-      colorCode = getRandomColorHex();
-      textColorCode = isColorLight(colorCode) ? 'white' : 'black';
-  }
-  newContact.colorCode = colorCode;
-  newContact.textColorCode = textColorCode;
-  currentUser.contacts.push(newContact);
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  await updateCurrentUserInBackend(currentUser);  
+function displayErrorMessage(inputField, message) {
+  const errorMessage = document.createElement("div");
+  errorMessage.textContent = message;
+  errorMessage.style.color = "red"; // Set the text color to red
+  errorMessage.classList.add("error-message"); // Optional: add a class for further styling
+  inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
 }
 
 
 /**
-* Retrieves the variables needed for adding a contact to the current user.
-* @param {Object} newContact - The new contact object.
-* @returns {Object} An object containing the color code, text color code, and current user.
-*/
-function addContactToCurrentUserVariables(newContact) {
-const currentUser = getLoggedInUser();
-newContact.id = generateUniqueID();
-let colorCode = localStorage.getItem(`color_${newContact.id}`);
-let textColorCode = localStorage.getItem(`textColor_${newContact.id}`);
-return { colorCode, textColorCode, currentUser };
-}
-
-
-/**
-* Retrieves the currently logged-in user from local storage.
-* @returns {Object} The currently logged-in user object.
-*/
-function getLoggedInUser() {
-  return JSON.parse(localStorage.getItem('currentUser'));
+ * Clears previous error messages from the input fields.
+ */
+function clearErrorMessages() {
+  const errorMessages = document.querySelectorAll(".error-message");
+  errorMessages.forEach((message) => message.remove());
 }
