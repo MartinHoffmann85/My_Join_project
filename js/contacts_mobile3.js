@@ -73,6 +73,42 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
 
 
 /**
+ * Sets the max-height of the element with the class 'allContacts' to 100vh (full viewport height).
+ * This function ensures that the element occupies the entire vertical space of the viewport.
+ */
+function setMaxHeightFull() {
+    const allContacts = document.querySelector('.allContacts');
+    if (allContacts) {
+        allContacts.style.maxHeight = '100vh';
+    }
+}
+
+
+/**
+ * Sets the max-height of the element with the class 'allContacts' to a calculated value of 100vh minus 170px.
+ * This function allows for a reduced height to account for other UI elements (e.g., header or footer).
+ */
+function setMaxHeightReduced() {
+    const allContacts = document.querySelector('.allContacts');
+    if (allContacts) {
+        allContacts.style.maxHeight = 'calc(100vh - 170px)';
+    }
+}
+
+
+/**
+ * Removes the max-height restriction of the element with the class 'allContacts' by setting its max-height to 'none'.
+ * This effectively removes any height limitation, allowing the element to expand freely.
+ */
+function removeMaxHeight() {
+    const allContacts = document.querySelector('.allContacts');
+    if (allContacts) {
+        allContacts.style.maxHeight = 'none';
+    }
+}
+
+
+/**
 * Updates contact information on mobile.
 * @param {string} contactId - The ID of the contact to be updated.
 */

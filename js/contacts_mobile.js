@@ -25,7 +25,8 @@ function contactsInit() {
       renderContacts();
       renderAddContactButtonMobile();
       setTimeout(showHeaderUserInitials, 500);
-      contactsInitVariables();      
+      contactsInitVariables();
+      setMaxHeightReduced();
   } else {
       setTimeout(showHeaderAndFooter, 300);
       renderContactsDesktop();        
@@ -265,6 +266,7 @@ function addContactScreenMobile() {
   content.style.overflow = 'hidden';
   content.style.height = '100dvh';
   hideHeaderAndFooter();
+  setMaxHeightFull();
 }
 
 

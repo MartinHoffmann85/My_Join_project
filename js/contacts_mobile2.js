@@ -386,8 +386,8 @@ function deleteContactMobile(contactId) {
 function editContactOverlayMobile(contactId) {  
     let { content, editContactHTML } = editContactOverlayMobileVariables(contactId);  
     content.innerHTML = editContactHTML;  
-    hideHeaderAndFooter();
-    content.style.height = '100dvh';
+    hideHeaderAndFooter();    
     content.style.marginTop = '0px';
     content.style.overflow = 'hidden';
+    removeMaxHeight();
 }
