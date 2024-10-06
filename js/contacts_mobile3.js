@@ -53,9 +53,9 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
     <div class="addContactBlankUserImg">        
         ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
     </div>
-        <form id="editcontactFormMobileID" onsubmit="updateContactMobile(${selectedContact.id})">
+            <form id="editcontactFormMobileID" onsubmit="updateContactMobile(event, '${selectedContact.id}')">
             <div class="addContactContainerFooter">
-                <input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z]+" placeholder="Name" value="${name}">
+                <input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required placeholder="Name" value="${name}">
                 <input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
                 <input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
                 <div>
@@ -112,7 +112,8 @@ function removeMaxHeight() {
 * Updates contact information on mobile.
 * @param {string} contactId - The ID of the contact to be updated.
 */
-function updateContactMobile(contactId) {  
+function updateContactMobile(event, contactId) {
+    event.preventDefault();  
     const updatedName = document.getElementById('editContactInputNameMobileID').value;
     const updatedEmail = document.getElementById('editContactInputMailAddresssMobileID').value;
     const updatedPhone = document.getElementById('editContactInputPhoneMobileID').value;  
