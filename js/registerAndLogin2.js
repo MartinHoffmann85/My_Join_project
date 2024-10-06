@@ -59,13 +59,13 @@ async function authenticateUser() {
         return user;
     } else {
         const errorContainer = document.getElementById('login-email-error');
-        errorContainer.innerText = "User not found";
+        errorContainer.innerText = "User not found or wrong password";
         errorContainer.style.color = "red";
         setTimeout(() => {
             errorContainer.innerText = "";
             resetLoginInputs();
         }, 2000);
-        return "User not found";
+        return "User not found or wrong password";
     }
 }
 
