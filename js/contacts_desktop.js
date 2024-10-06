@@ -360,15 +360,15 @@ function getInputElements() {
 function validateInputs(inputs, contactInfo) {
     let hasError = false;
     if (!contactInfo.contactName) {
-        displayErrorMessage(inputs.nameInput, "Zeile darf nicht leer sein, bitte ausfüllen.");
+        displayErrorMessage(inputs.nameInput, "Line cannot be empty, please fill it out.");
         hasError = true;
     }
     if (!contactInfo.contactEmail) {
-        displayErrorMessage(inputs.emailInput, "Zeile darf nicht leer sein, bitte ausfüllen.");
+        displayErrorMessage(inputs.emailInput, "Line cannot be empty, please fill it out.");
         hasError = true;
     }
     if (!contactInfo.contactPhone) {
-        displayErrorMessage(inputs.phoneInput, "Zeile darf nicht leer sein, bitte ausfüllen.");
+        displayErrorMessage(inputs.phoneInput, "Line cannot be empty, please fill it out.");
         hasError = true;
     }
     return hasError;
