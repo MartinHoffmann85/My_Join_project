@@ -27,6 +27,15 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
+ * Clears previous error messages from the input fields.
+ */
+function clearErrorMessages() {
+    const errorMessages = document.querySelectorAll(".error-message");
+    errorMessages.forEach((message) => message.remove());
+}
+
+
+/**
  * Show successfully contact created image.
  */
 function showSuccessfullyContactCreatedImageMobile() {  
@@ -405,10 +414,10 @@ function deleteContactMobile(contactId) {
 function editContactOverlayMobile(contactId) {  
     let { content, editContactHTML } = editContactOverlayMobileVariables(contactId);  
     content.innerHTML = editContactHTML;  
-    hideHeaderAndFooter();
-    content.style.height = '100dvh';
+    hideHeaderAndFooter();    
     content.style.marginTop = '0px';
     content.style.overflow = 'hidden';
+    removeMaxHeight();
 }</code></pre>
         </article>
     </section>
@@ -419,13 +428,13 @@ function editContactOverlayMobile(contactId) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactToCurrentUser">addContactToCurrentUser</a></li><li><a href="global.html#addContactToCurrentUserVariables">addContactToCurrentUserVariables</a></li><li><a href="global.html#addDropDownMenuClickListenerDropDownTrigger">addDropDownMenuClickListenerDropDownTrigger</a></li><li><a href="global.html#addDropdownMenuClickListener">addDropdownMenuClickListener</a></li><li><a href="global.html#adjustDocumentClickListener">adjustDocumentClickListener</a></li><li><a href="global.html#closeAllDropdowns">closeAllDropdowns</a></li><li><a href="global.html#closeDropdownMenu">closeDropdownMenu</a></li><li><a href="global.html#closeOverlay">closeOverlay</a></li><li><a href="global.html#createContactOverlayContent">createContactOverlayContent</a></li><li><a href="global.html#deleteContactMobile">deleteContactMobile</a></li><li><a href="global.html#editContactOverlayMobile">editContactOverlayMobile</a></li><li><a href="global.html#findSelectedContactMobile">findSelectedContactMobile</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generateUniqueID">generateUniqueID</a></li><li><a href="global.html#getLoggedInUser">getLoggedInUser</a></li><li><a href="global.html#getNewContact">getNewContact</a></li><li><a href="global.html#handleDocumentClick">handleDocumentClick</a></li><li><a href="global.html#openOverlay">openOverlay</a></li><li><a href="global.html#showContactOverlayMobile">showContactOverlayMobile</a></li><li><a href="global.html#showSuccessfullyContactCreatedImageMobile">showSuccessfullyContactCreatedImageMobile</a></li><li><a href="global.html#singleMemberToHTML">singleMemberToHTML</a></li><li><a href="global.html#toggleDropdownMenu">toggleDropdownMenu</a></li><li><a href="global.html#toggleDropdownVisibility">toggleDropdownVisibility</a></li><li><a href="global.html#updateCurrentUserInBackend">updateCurrentUserInBackend</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactToCurrentUser">addContactToCurrentUser</a></li><li><a href="global.html#addContactToCurrentUserVariables">addContactToCurrentUserVariables</a></li><li><a href="global.html#addDropDownMenuClickListenerDropDownTrigger">addDropDownMenuClickListenerDropDownTrigger</a></li><li><a href="global.html#addDropdownMenuClickListener">addDropdownMenuClickListener</a></li><li><a href="global.html#adjustDocumentClickListener">adjustDocumentClickListener</a></li><li><a href="global.html#clearErrorMessages">clearErrorMessages</a></li><li><a href="global.html#closeAllDropdowns">closeAllDropdowns</a></li><li><a href="global.html#closeDropdownMenu">closeDropdownMenu</a></li><li><a href="global.html#closeOverlay">closeOverlay</a></li><li><a href="global.html#createContactOverlayContent">createContactOverlayContent</a></li><li><a href="global.html#deleteContactMobile">deleteContactMobile</a></li><li><a href="global.html#editContactOverlayMobile">editContactOverlayMobile</a></li><li><a href="global.html#findSelectedContactMobile">findSelectedContactMobile</a></li><li><a href="global.html#generateRandomID">generateRandomID</a></li><li><a href="global.html#generateUniqueID">generateUniqueID</a></li><li><a href="global.html#getLoggedInUser">getLoggedInUser</a></li><li><a href="global.html#getNewContact">getNewContact</a></li><li><a href="global.html#handleDocumentClick">handleDocumentClick</a></li><li><a href="global.html#openOverlay">openOverlay</a></li><li><a href="global.html#showContactOverlayMobile">showContactOverlayMobile</a></li><li><a href="global.html#showSuccessfullyContactCreatedImageMobile">showSuccessfullyContactCreatedImageMobile</a></li><li><a href="global.html#singleMemberToHTML">singleMemberToHTML</a></li><li><a href="global.html#toggleDropdownMenu">toggleDropdownMenu</a></li><li><a href="global.html#toggleDropdownVisibility">toggleDropdownVisibility</a></li><li><a href="global.html#updateCurrentUserInBackend">updateCurrentUserInBackend</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 22:22:12 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 23:41:41 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

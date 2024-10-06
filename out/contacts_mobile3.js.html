@@ -70,29 +70,69 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
     const { name, email, phone } = selectedContact;  
     return /*html*/ `
       &lt;div class="editContactContainerHeader">
-        &lt;div class="addContactCloseXContainer">
-          &lt;button class="addContactCloseXButtonMobile" onclick="redirectToContacts()">X&lt;/button>
+    &lt;div class="addContactCloseXContainer">
+        &lt;button class="addContactCloseXButtonMobile" onclick="redirectToContacts()">X&lt;/button>
+    &lt;/div>
+    &lt;div class="addContactBlockHeader">
+        &lt;p class="addContactH1">Edit contact&lt;/p>
+        &lt;img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">          
+    &lt;/div>
+    &lt;/div>
+    &lt;div class="addContactBlankUserImg">        
+        ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
+    &lt;/div>
+        &lt;form id="editcontactFormMobileID" onsubmit="updateContactMobile(${selectedContact.id})">
+            &lt;div class="addContactContainerFooter">
+                &lt;input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z]+" placeholder="Name" value="${name}">
+                &lt;input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
+                &lt;input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
+                &lt;div>
+                    &lt;button type="button" class="createContactButtonImg" onclick="deleteContactMobile('${selectedContact.id}')">
+                    &lt;img src="./assets/img/contacts/editContactDeleteButtonImg.svg" alt="">
+                &lt;/button>
+                &lt;button type="submit" class="createContactButtonImg">
+                    &lt;img src="./assets/img/contacts/editContactSaveButtonImg.svg" alt="">
+                &lt;/button>
+            &lt;/div>
         &lt;/div>
-        &lt;div class="addContactBlockHeader">
-          &lt;p class="addContactH1">Edit contact&lt;/p>
-          &lt;img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">          
-        &lt;/div>
-      &lt;/div>
-      &lt;div class="addContactBlankUserImg">        
-          ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
-      &lt;/div>
-      &lt;form id="editcontactFormMobileID" onsubmit="updateContactMobile(${selectedContact.id})">
-        &lt;div class="addContactContainerFooter">
-          &lt;input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z]+" placeholder="Name" value="${name}">
-          &lt;input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
-          &lt;input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
-          &lt;div>
-            &lt;img class="createContactButtonImg" src="./assets/img/contacts/editContactDeleteButtonImg.svg" alt="" onclick="deleteContactMobile('${selectedContact.id}')">
-            &lt;img class="createContactButtonImg" src="./assets/img/contacts/editContactSaveButtonImg.svg" alt="" onclick="updateContactMobile('${selectedContact.id}')">
-          &lt;/div>
-        &lt;/div>
-      &lt;/form>
+    &lt;/form>
     `;
+}
+
+
+/**
+ * Sets the max-height of the element with the class 'allContacts' to 100vh (full viewport height).
+ * This function ensures that the element occupies the entire vertical space of the viewport.
+ */
+function setMaxHeightFull() {
+    const allContacts = document.querySelector('.allContacts');
+    if (allContacts) {
+        allContacts.style.maxHeight = '100vh';
+    }
+}
+
+
+/**
+ * Sets the max-height of the element with the class 'allContacts' to a calculated value of 100vh minus 170px.
+ * This function allows for a reduced height to account for other UI elements (e.g., header or footer).
+ */
+function setMaxHeightReduced() {
+    const allContacts = document.querySelector('.allContacts');
+    if (allContacts) {
+        allContacts.style.maxHeight = 'calc(100vh - 170px)';
+    }
+}
+
+
+/**
+ * Removes the max-height restriction of the element with the class 'allContacts' by setting its max-height to 'none'.
+ * This effectively removes any height limitation, allowing the element to expand freely.
+ */
+function removeMaxHeight() {
+    const allContacts = document.querySelector('.allContacts');
+    if (allContacts) {
+        allContacts.style.maxHeight = 'none';
+    }
 }
 
 
@@ -123,13 +163,13 @@ function updateContactMobile(contactId) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#closeContactOverlay">closeContactOverlay</a></li><li><a href="global.html#createEditContactHTML">createEditContactHTML</a></li><li><a href="global.html#editContactOverlayMobileVariables">editContactOverlayMobileVariables</a></li><li><a href="global.html#updateContactMobile">updateContactMobile</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#closeContactOverlay">closeContactOverlay</a></li><li><a href="global.html#createEditContactHTML">createEditContactHTML</a></li><li><a href="global.html#editContactOverlayMobileVariables">editContactOverlayMobileVariables</a></li><li><a href="global.html#removeMaxHeight">removeMaxHeight</a></li><li><a href="global.html#setMaxHeightFull">setMaxHeightFull</a></li><li><a href="global.html#setMaxHeightReduced">setMaxHeightReduced</a></li><li><a href="global.html#updateContactMobile">updateContactMobile</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 22:22:17 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 23:41:45 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

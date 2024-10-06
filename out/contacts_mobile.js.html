@@ -26,7 +26,15 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
+            <pre class="prettyprint source linenums"><code>/**
+ * Initializes or removes the 'resize' event listener for the 'contactsInit' function 
+ * based on the current page's URL path. 
+ * - If the current page is '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' or '/contacts.html',
+ *   the 'contactsInit' function will be called on window resize.
+ * - If the current page is not one of the specified paths, the 'resize' event listener will be removed. 
+ * Additionally, the 'contactsInit' function is called when the page is fully loaded.
+ */
+if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
   window.addEventListener('resize', contactsInit);
 } else {
   window.removeEventListener('resize', contactsInit);
@@ -45,7 +53,8 @@ function contactsInit() {
       renderContacts();
       renderAddContactButtonMobile();
       setTimeout(showHeaderUserInitials, 500);
-      contactsInitVariables();      
+      contactsInitVariables();
+      setMaxHeightReduced();
   } else {
       setTimeout(showHeaderAndFooter, 300);
       renderContactsDesktop();        
@@ -285,6 +294,7 @@ function addContactScreenMobile() {
   content.style.overflow = 'hidden';
   content.style.height = '100dvh';
   hideHeaderAndFooter();
+  setMaxHeightFull();
 }
 
 
@@ -411,15 +421,6 @@ function displayErrorMessage(inputField, message) {
   errorMessage.style.color = "red"; // Set the text color to red
   errorMessage.classList.add("error-message"); // Optional: add a class for further styling
   inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
-}
-
-
-/**
- * Clears previous error messages from the input fields.
- */
-function clearErrorMessages() {
-  const errorMessages = document.querySelectorAll(".error-message");
-  errorMessages.forEach((message) => message.remove());
 }</code></pre>
         </article>
     </section>
@@ -430,13 +431,13 @@ function clearErrorMessages() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactFormMobileHTML">addContactFormMobileHTML</a></li><li><a href="global.html#addContactScreenMobile">addContactScreenMobile</a></li><li><a href="global.html#clearErrorMessages">clearErrorMessages</a></li><li><a href="global.html#contactsInit">contactsInit</a></li><li><a href="global.html#contactsInitVariables">contactsInitVariables</a></li><li><a href="global.html#createContactMobile">createContactMobile</a></li><li><a href="global.html#createLetterAndContactsContainer">createLetterAndContactsContainer</a></li><li><a href="global.html#createOneContactContainer">createOneContactContainer</a></li><li><a href="global.html#createOneContactContainerHTML">createOneContactContainerHTML</a></li><li><a href="global.html#displayErrorMessage">displayErrorMessage</a></li><li><a href="global.html#getFirstLettersOfName">getFirstLettersOfName</a></li><li><a href="global.html#getInputElementsMobile">getInputElementsMobile</a></li><li><a href="global.html#getRandomColorHex">getRandomColorHex</a></li><li><a href="global.html#isColorLight">isColorLight</a></li><li><a href="global.html#redirectToContacts">redirectToContacts</a></li><li><a href="global.html#registerContactClickHandlers">registerContactClickHandlers</a></li><li><a href="global.html#renderAddContactButtonMobile">renderAddContactButtonMobile</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderContactsByFirstLetter">renderContactsByFirstLetter</a></li><li><a href="global.html#renderContactsVariables">renderContactsVariables</a></li><li><a href="global.html#renderSingleMemberToHTMLMobile">renderSingleMemberToHTMLMobile</a></li><li><a href="global.html#updateContactsByFirstLetter">updateContactsByFirstLetter</a></li><li><a href="global.html#validateCreateContactMobile">validateCreateContactMobile</a></li><li><a href="global.html#validateInputsMobile">validateInputsMobile</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactFormMobileHTML">addContactFormMobileHTML</a></li><li><a href="global.html#addContactScreenMobile">addContactScreenMobile</a></li><li><a href="global.html#contactsInit">contactsInit</a></li><li><a href="global.html#contactsInitVariables">contactsInitVariables</a></li><li><a href="global.html#createContactMobile">createContactMobile</a></li><li><a href="global.html#createLetterAndContactsContainer">createLetterAndContactsContainer</a></li><li><a href="global.html#createOneContactContainer">createOneContactContainer</a></li><li><a href="global.html#createOneContactContainerHTML">createOneContactContainerHTML</a></li><li><a href="global.html#displayErrorMessage">displayErrorMessage</a></li><li><a href="global.html#getFirstLettersOfName">getFirstLettersOfName</a></li><li><a href="global.html#getInputElementsMobile">getInputElementsMobile</a></li><li><a href="global.html#getRandomColorHex">getRandomColorHex</a></li><li><a href="global.html#isColorLight">isColorLight</a></li><li><a href="global.html#redirectToContacts">redirectToContacts</a></li><li><a href="global.html#registerContactClickHandlers">registerContactClickHandlers</a></li><li><a href="global.html#renderAddContactButtonMobile">renderAddContactButtonMobile</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderContactsByFirstLetter">renderContactsByFirstLetter</a></li><li><a href="global.html#renderContactsVariables">renderContactsVariables</a></li><li><a href="global.html#renderSingleMemberToHTMLMobile">renderSingleMemberToHTMLMobile</a></li><li><a href="global.html#updateContactsByFirstLetter">updateContactsByFirstLetter</a></li><li><a href="global.html#validateCreateContactMobile">validateCreateContactMobile</a></li><li><a href="global.html#validateInputsMobile">validateInputsMobile</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 22:22:07 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 06 2024 23:41:36 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
