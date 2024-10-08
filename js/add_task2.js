@@ -5,6 +5,7 @@
 function editSubtask(index) {
     const ListElement = document.getElementById(`substask-content-id${index}`);
     handleFirstSubtaskEdit(index, ListElement);
+    toggleEditMode(index, true); // Haken Icon anzeigen
     document.addEventListener('click', function(event) {
       const clickedElement = event.target;
       const isSubtaskContent = clickedElement.closest(`[id^="substask-content-id${index}"]`);
@@ -13,9 +14,28 @@ function editSubtask(index) {
       if (!isSubtaskContent && !isSubtaskDefaultContainer && !isSubtaskEditedContainer)
         ListElement.classList.add('red-line-highlight');
     });
+    console.log("function editSubtask(index) wurde ausgeführt");
 }
-  
-  
+
+
+/**
+ * Toggles the edit mode by showing/hiding icons.
+ * @param {number} index - The index of the subtask.
+ * @param {boolean} isEditing - Whether the subtask is in edit mode.
+ */
+function toggleEditMode(index, isEditing) {
+    const editIconContainer = document.getElementById(`subtask-default-container-id${index}`);
+    const saveIconContainer = document.getElementById(`subtask-edited-container-id${index}`);
+    if (isEditing) {
+        editIconContainer.classList.add('d-none'); // Stift-Icon ausblenden
+        saveIconContainer.classList.remove('d-none'); // Haken-Icon anzeigen
+    } else {
+        editIconContainer.classList.remove('d-none'); // Stift-Icon anzeigen
+        saveIconContainer.classList.add('d-none'); // Haken-Icon ausblenden
+    }
+}
+
+
 /**
 * Handles the first edit of a subtask.
 * @param {number} index - The index of the subtask being edited.
