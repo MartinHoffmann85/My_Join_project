@@ -84,26 +84,109 @@ function deleteSubtask(index) {
   
   
 /**
-* Creates a new task with user-provided inputs and updates the current user's data.
-* Then redirects the user to the add board page.
-*/
+ * Creates a new task with user-provided inputs and updates the current user's data.
+ * Then redirects the user to the add board page.
+ */
 async function createTask() {
-    const titleInput = document.getElementById('title-input-id').value;
-    const textareaInput = document.getElementById('textarea-input-id').value;
-    const dateInput = document.getElementById('date-input-id').value;
-    const categoryInput = document.getElementById('category-input-id').value;
+    const titleInput = getInputValue('title-input-id');
+    const textareaInput = getInputValue('textarea-input-id');
+    const dateInput = getInputValue('date-input-id');
+    const categoryInput = getInputValue('category-input-id');
+    if (!validateInputsCreateTask(titleInput, textareaInput, dateInput, categoryInput)) {
+        return;
+    }
     const columnId = localStorage.getItem('selectedColumnId') || 'todo';
     const priority = prio[prioIndex];
-    const taskID = generateTaskID();
+    const taskID = generateTaskID();    
+    await saveTask(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority);
+    showSuccessfullyTaskCreatedImage();
+    redirectAfterDelay(500);
+}
+
+
+/**
+ * Gets the trimmed value of an input field by ID.
+ * @param {string} inputId - The ID of the input element.
+ * @returns {string} The trimmed value of the input.
+ */
+function getInputValue(inputId) {
+    return document.getElementById(inputId).value.trim();
+}
+
+
+/**
+ * Validates the user inputs.
+ * @param {string} titleInput - The title input value.
+ * @param {string} textareaInput - The description input value.
+ * @param {string} dateInput - The date input value.
+ * @param {string} categoryInput - The category input value.
+ * @returns {boolean} True if all inputs are valid; otherwise, false.
+ */
+function validateInputsCreateTask(titleInput, textareaInput, dateInput, categoryInput) {
+    if (!titleInput) {
+        showErrorMessage('empty-title-id', 'at-title-border-id');
+        return false;
+    }    
+    const descriptionError = document.getElementById('empty-description-id');
+    if (!textareaInput) {
+        descriptionError.classList.remove('d-none');
+        return false;
+    } else {
+        descriptionError.classList.add('d-none');
+    }    
+    if (!dateInput) {
+        showErrorMessage('empty-date-id', 'at-date-border-id');
+        return false;
+    }    
+    if (!categoryInput) {
+        showErrorMessage('empty-category-id', 'category-container-id');
+        return false;
+    }
+    return true;
+}
+
+
+/**
+ * Displays an error message and highlights the input field.
+ * This function makes the specified error message visible and adds an error
+ * border to the corresponding input field to indicate that there is an issue
+ * with the user's input.
+ * @param {string} errorMessageId - The ID of the error message element to be displayed.
+ * @param {string} inputBorderId - The ID of the input field to be highlighted with an error border.
+ */
+function showErrorMessage(errorMessageId, inputBorderId) {
+    toggleVisibility(errorMessageId, true);
+    toggleVisibility(inputBorderId, true, 'error-border');
+}
+
+
+/**
+ * Saves the new task to the current user's data.
+ * @param {string} taskID - The ID of the task.
+ * @param {string} titleInput - The title of the task.
+ * @param {string} textareaInput - The description of the task.
+ * @param {string} dateInput - The due date of the task.
+ * @param {string} categoryInput - The category of the task.
+ * @param {string} columnId - The ID of the column where the task will be added.
+ * @param {string} priority - The priority of the task.
+ */
+async function saveTask(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority) {
     await updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo);
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    showSuccessfullyTaskCreatedImage();
-    setTimeout(() => {
-      redirectToAddBoard();
-    }, 500);  
 }
-  
-  
+
+
+/**
+ * Redirects the user after a specified delay.
+ * @param {number} delay - The delay in milliseconds before redirecting.
+ */
+function redirectAfterDelay(delay) {
+    setTimeout(() => {
+        redirectToAddBoard();
+    }, delay);
+}
+
+
 /**
 * Show successfully contact created image.
 */
