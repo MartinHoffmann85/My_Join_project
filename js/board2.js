@@ -78,6 +78,31 @@ function drop(event) {
 
 
 /**
+ * Highlights the target column when a task is dragged over it.
+ * @param {Event} event - The dragover event object.
+ */
+function highlightColumn(event) {
+    event.preventDefault();
+    const targetColumn = event.target.closest('.boardColumn');
+    if (targetColumn) {
+        targetColumn.classList.add('highlight');
+    }
+}
+
+
+/**
+ * Removes the highlight from the target column when dragging leaves it.
+ * @param {Event} event - The dragleave event object.
+ */
+function removeHighlight(event) {
+    const targetColumn = event.target.closest('.boardColumn');
+    if (targetColumn) {
+        targetColumn.classList.remove('highlight');
+    }
+}
+
+
+/**
  * Updates the column ID of a task and saves the changes to localStorage.
  * @param {string} taskId - The ID of the task.
  * @param {string} newColumnId - The new column ID.
