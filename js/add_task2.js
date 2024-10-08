@@ -92,7 +92,7 @@ async function createTask() {
     const textareaInput = document.getElementById('textarea-input-id').value;
     const dateInput = document.getElementById('date-input-id').value;
     const categoryInput = document.getElementById('category-input-id').value;
-    const columnId = 'todo';
+    const columnId = localStorage.getItem('selectedColumnId') || 'todo';
     const priority = prio[prioIndex];
     const taskID = generateTaskID();
     await updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo);

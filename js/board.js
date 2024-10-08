@@ -17,7 +17,8 @@ async function initBoard() {
 /**
  * Redirects the user to the add task page.
  */
-function redirectToAddTask() {
+function redirectToAddTask(columnId) {
+    localStorage.setItem('selectedColumnId', columnId);
     window.location.assign("./add_task.html");
 }
 

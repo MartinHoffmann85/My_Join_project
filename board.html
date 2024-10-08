@@ -65,21 +65,21 @@
             <div class="boardColumn" id="todo-column" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <div class="boardTaskH2AndPlusTaskButtonContainer">
                     <h2 class="boardTodoH2GreyColor">To Do</h2>
-                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" onclick="redirectToAddTask()">
+                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" class="boardPlusTaskButtonToDo" onclick="redirectToAddTask('todo')">
                 </div>                
                 <div id="todo-tasks" class="task-container"></div>
             </div>
             <div class="boardColumn" id="inprogress-column" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <div class="boardTaskH2AndPlusTaskButtonContainer">
                     <h2 class="boardTodoH2GreyColor">In Progress</h2>
-                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" onclick="redirectToAddTask()">
+                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" class="boardPlusTaskButtonInProgress" onclick="redirectToAddTask('inprogress')">
                 </div>                
                 <div id="inprogress-tasks" class="task-container"></div>
             </div>
             <div class="boardColumn" id="awaitfeedback-column" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <div class="boardTaskH2AndPlusTaskButtonContainer">
                     <h2 class="boardTodoH2GreyColor">Await Feedback</h2>
-                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" onclick="redirectToAddTask()">
+                    <img src="./assets/svg/boardPlusTaskButton.svg" alt="boardPlusTaskButton" class="boardPlusTaskButtonAwaitFeedback" onclick="redirectToAddTask('awaitfeedback')">
                 </div>                
                 <div id="awaitfeedback-tasks" class="task-container"></div>
             </div>
