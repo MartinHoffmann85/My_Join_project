@@ -69,11 +69,14 @@ function drop(event) {
         const targetContainer = document.getElementById(targetColumnId + '-tasks');
         const draggedTaskElement = document.getElementById(taskId);
         if (draggedTaskElement && targetContainer) {
-            targetContainer.appendChild(draggedTaskElement);
-            updateTaskColumnId(taskId, targetColumnId);
+            if (targetContainer.contains(draggedTaskElement) === false) {
+                targetContainer.appendChild(draggedTaskElement);
+                updateTaskColumnId(taskId, targetColumnId);
+            }
         }
     }
     renderAllTasks();
+    removeHighlight(event);
 }
 
 
