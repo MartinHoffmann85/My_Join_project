@@ -5,7 +5,7 @@
 function editSubtask(index) {
     const ListElement = document.getElementById(`substask-content-id${index}`);
     handleFirstSubtaskEdit(index, ListElement);
-    toggleEditMode(index, true); // Haken Icon anzeigen
+    toggleEditMode(index, true);
     document.addEventListener('click', function(event) {
       const clickedElement = event.target;
       const isSubtaskContent = clickedElement.closest(`[id^="substask-content-id${index}"]`);
@@ -13,8 +13,7 @@ function editSubtask(index) {
       const isSubtaskEditedContainer = clickedElement.closest(`[id^="subtask-edited-container-id${index}"]`);
       if (!isSubtaskContent && !isSubtaskDefaultContainer && !isSubtaskEditedContainer)
         ListElement.classList.add('red-line-highlight');
-    });
-    console.log("function editSubtask(index) wurde ausgeführt");
+    });    
 }
 
 
@@ -27,11 +26,11 @@ function toggleEditMode(index, isEditing) {
     const editIconContainer = document.getElementById(`subtask-default-container-id${index}`);
     const saveIconContainer = document.getElementById(`subtask-edited-container-id${index}`);
     if (isEditing) {
-        editIconContainer.classList.add('d-none'); // Stift-Icon ausblenden
-        saveIconContainer.classList.remove('d-none'); // Haken-Icon anzeigen
+        editIconContainer.classList.add('d-none');
+        saveIconContainer.classList.remove('d-none');
     } else {
-        editIconContainer.classList.remove('d-none'); // Stift-Icon anzeigen
-        saveIconContainer.classList.add('d-none'); // Haken-Icon ausblenden
+        editIconContainer.classList.remove('d-none');
+        saveIconContainer.classList.add('d-none');
     }
 }
 
