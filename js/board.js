@@ -121,9 +121,22 @@ function createTaskCardElement(id, title, description, category, assignedTo, pri
  * @returns {HTMLElement} - The task card element with HTML content.
  */
 function createTaskCardElementHTML(taskCard, backgroundColor, category, title, description, id, assignedToHTML, prioContent) {
-    taskCard.innerHTML = `
+  taskCard.innerHTML = `
+      <div class="boardDropdown">
+          <button class="boardDropdown-toggle" onclick="toggleBoardDropdown(event, '${id}')">
+              <img src="./assets/svg/arrow_drop_down.svg" alt="Toggle Dropdown" />
+          </button>
+          <div class="boardDropdown-menu" id="dropdown-menu-${id}">
+              <ul>
+                  <li onclick="handleDropdownOptionClick(event, '${id}', 'todo')">To Do</li>
+                  <li onclick="handleDropdownOptionClick(event, '${id}', 'inprogress')">In Progress</li>
+                  <li onclick="handleDropdownOptionClick(event, '${id}', 'awaitfeedback')">Await Feedback</li>
+                  <li onclick="handleDropdownOptionClick(event, '${id}', 'done')">Done</li>
+              </ul>
+          </div>
+      </div>
       <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
-      <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
+      <div class="renderTaskTitle" onclick="openTask('${id}')"><p class="renderTaskTitlePElement">${title}</p></div>
       <div class="renderTaskDescription">${description}</div>        
       <div class="subtaskCountContainer">
           <div class="boardRenderSubtaskContainer"></div>
@@ -132,9 +145,9 @@ function createTaskCardElementHTML(taskCard, backgroundColor, category, title, d
       <div class="assignetToHTMLAndPrioContentContainer">   
           <div class="renderTaskCardAssignetToContainer">${assignedToHTML}</div>
           <div class="renderTaskToHTMLPrioContainer">${prioContent}</div>
-      </div>        
-    `;
-    return taskCard;
+      </div>
+  `;
+  return taskCard;
 }
 
 
