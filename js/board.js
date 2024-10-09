@@ -136,7 +136,7 @@ function createTaskCardElementHTML(taskCard, backgroundColor, category, title, d
           </div>
       </div>
       <div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}</div>
-      <div class="renderTaskTitle" onclick="openTask('${id}')"><p class="renderTaskTitlePElement">${title}</p></div>
+      <div class="renderTaskTitle"><p class="renderTaskTitlePElement">${title}</p></div>
       <div class="renderTaskDescription">${description}</div>        
       <div class="subtaskCountContainer">
           <div class="boardRenderSubtaskContainer"></div>

@@ -14,11 +14,11 @@ function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) 
             </div>
             <div class="renderTaskTitleOverlay">
                 <p>Title:</p>
-                <input class="boardEditTaskOverlayTitleInput" type="text" id="editTitle" value="${task.title}">
+                <textarea class="boardEditTaskOverlayTitleInput" id="editTitle">${task.title}</textarea>
             </div>
             <div class="renderTaskDescriptionOverlay">
                 <p>Description:</p>
-                <textarea class="textarea-style" id="editDescription">${task.description}</textarea>
+                <textarea class="boardTextAreaStyle" id="editDescription">${task.description}</textarea>
             </div>
             <div class="renderTaskDate" type="date">
                 <p>Due date:</p>

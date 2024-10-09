@@ -167,6 +167,7 @@ body {
 .renderTaskTitlePElement {
     font-size: 16px;
     font-weight: 700;
+    word-wrap: break-word;
 }
 
 .renderTaskDescription {
@@ -279,7 +280,8 @@ body {
     font-size: 61px;
     font-weight: 700;
     margin-left: 20px;
-    margin-right: 20px;    
+    margin-right: 20px;
+    word-wrap: break-word;    
 }
 
 .renderTaskDescriptionOverlay {
@@ -409,20 +411,17 @@ body {
     height: 100%;
 }
 
-.boardEditTaskOverlayTitleInput {
-    position: relative;    
+.boardEditTaskOverlayTitleInput {    
+    height: 100%;
+    width: 100%;
+    padding: 12px 21px;
     border-radius: 10px;
     border: 1px solid var(--placeholder-color);
-    height: 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 21px;
     font-size: 18px;
-    line-height: 24px;
-    width: 100%;
+    line-height: 24px;    
     outline: none;
     cursor: pointer;
+    word-wrap: break-word;
 }
 
 .boardEditTaskOverlayTitleInput:focus {
@@ -491,6 +490,26 @@ body {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.boardTextAreaStyle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 90px;    
+    width: 100%;
+    padding: 18px 21px;
+    border-radius: 10px;
+    border: 1px solid var(--placeholder-color);
+    font-size: 18px;
+    line-height: 24px;
+    cursor: pointer;
+    resize: none;
+    outline: none;
+}
+
+.boardTextAreaStyle:focus-within{
+    border-color: var(--mockup-highlight);
 }
 
 .editDropDownToggle:hover {
