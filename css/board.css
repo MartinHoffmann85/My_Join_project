@@ -176,6 +176,7 @@ body {
     font-size: 16px;
     font-weight: 400;
     color: var(--mockup-color);
+    word-wrap: break-word;
 }
 
 .renderTasksubtaskHTML {
@@ -281,7 +282,7 @@ body {
     font-weight: 700;
     margin-left: 20px;
     margin-right: 20px;
-    word-wrap: break-word;    
+    word-wrap: break-word;
 }
 
 .renderTaskDescriptionOverlay {
@@ -290,7 +291,8 @@ body {
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 24px;
-    margin-top: 24px; 
+    margin-top: 24px;
+    word-wrap: break-word;
 }
 
 .renderTaskOverlayDate {
