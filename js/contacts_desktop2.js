@@ -1,4 +1,84 @@
 /**
+ * Creates a new contact in the desktop view.
+ */
+function createContactDesktop() {
+  const currentUser = getLoggedInUser();
+  if (!currentUser) {
+      console.error("No user logged in.");
+      return;
+  }
+  const { contactName, contactEmail, contactPhone } = validateCreateContactDesktop();
+  const inputs = getInputElements();
+  clearErrorMessages();
+  const hasError = validateInputs(inputs, { contactName, contactEmail, contactPhone });
+  if (hasError) {
+      return;
+  }
+  createContactDesktopSetup();
+}
+
+
+/**
+ * Retrieves the input elements for contact information.
+ * @returns {Object} - An object containing the input elements for name, email, and phone.
+ */
+function getInputElements() {
+    return {
+        nameInput: document.getElementById("add-contact-input-name-desktop-id"),
+        emailInput: document.getElementById("add-contact-input-mail-addresss-desktop-id"),
+        phoneInput: document.getElementById("add-contact-input-phone-desktop-id"),
+    };
+}
+
+
+/**
+ * Validates the input fields for contact information.
+ * @param {Object} inputs - An object containing the input elements.
+ * @param {Object} contactInfo - An object containing contact information.
+ * @returns {boolean} - Returns true if there is an error, otherwise false.
+ */
+function validateInputs(inputs, contactInfo) {
+    let hasError = false;
+    if (!contactInfo.contactName) {
+        displayErrorMessage(inputs.nameInput, "Line cannot be empty, please fill it out.");
+        hasError = true;
+    }
+    if (!contactInfo.contactEmail) {
+        displayErrorMessage(inputs.emailInput, "Line cannot be empty, please fill it out.");
+        hasError = true;
+    }
+    if (!contactInfo.contactPhone) {
+        displayErrorMessage(inputs.phoneInput, "Line cannot be empty, please fill it out.");
+        hasError = true;
+    }
+    return hasError;
+}
+
+
+/**
+ * Displays an error message below the input field.
+ * @param {HTMLElement} inputField - The input field where the error message should be displayed.
+ * @param {string} message - The error message to be displayed.
+ */
+function displayErrorMessage(inputField, message) {
+  const errorMessage = document.createElement("div");
+  errorMessage.textContent = message;
+  errorMessage.style.color = "red"; // Set the text color to red
+  errorMessage.classList.add("error-message"); // Optional: add a class for further styling
+  inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
+}
+
+
+/**
+* Clears previous error messages from the input fields.
+*/
+function clearErrorMessages() {
+  const errorMessages = document.querySelectorAll(".error-message");
+  errorMessages.forEach((message) => message.remove());
+}
+
+
+/**
  * Sets up the process for creating a new contact in the desktop view.
  * This function retrieves new contact information, assigns a unique ID to the contact, 
  * adds the contact to the current user's contact list, hides the overlay, 

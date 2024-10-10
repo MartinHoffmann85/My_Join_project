@@ -237,17 +237,81 @@ function showContactsContentRightSideDesktop() {
 // Delete contact desktop
 
 /**
- * Deletes a contact from the desktop view.
+ * Deletes a contact from the desktop view and removes the contact from all tasks.
  * @param {string} contactId - The ID of the contact to be deleted.
  */
 function deleteContactDesktop(contactId) {
   const currentUser = getLoggedInUser();    
-  const index = currentUser.contacts.findIndex(contact => contact.id === contactId);    
-  currentUser.contacts.splice(index, 1);  
+  const index = currentUser.contacts.findIndex(contact => contact.id === contactId);  
+  if (index !== -1) {
+    const contactToDelete = currentUser.contacts[index];
+    removeContactFromList(currentUser, index);
+    removeContactFromTasks(currentUser, contactToDelete);
+    saveUserData(currentUser);
+    refreshUI();
+  }
+}
+
+
+/**
+ * Removes the contact from the user's contact list.
+ * @param {Object} currentUser - The currently logged-in user.
+ * @param {number} index - The index of the contact to be removed.
+ */
+function removeContactFromList(currentUser, index) {
+  currentUser.contacts.splice(index, 1);
+}
+
+
+/**
+ * Removes the contact from all assigned tasks.
+ * @param {Object} currentUser - The currently logged-in user.
+ * @param {Object} contactToDelete - The contact to be removed from tasks.
+ */
+function removeContactFromTasks(currentUser, contactToDelete) {
+  if (currentUser.tasks && Array.isArray(currentUser.tasks)) {
+    currentUser.tasks.forEach(task => {
+      if (task.assignedTo && Array.isArray(task.assignedTo.userNames)) {
+        removeContactFromTask(task, contactToDelete);
+      }
+    });
+  }
+}
+
+
+/**
+ * Removes the contact from a single task.
+ * @param {Object} task - The task to update.
+ * @param {Object} contactToDelete - The contact to remove from the task.
+ */
+function removeContactFromTask(task, contactToDelete) {
+  const userIndex = task.assignedTo.userNames.indexOf(contactToDelete.name);
+  
+  if (userIndex !== -1) {
+    task.assignedTo.colorCodes.splice(userIndex, 1);
+    task.assignedTo.initials.splice(userIndex, 1);
+    task.assignedTo.textColor.splice(userIndex, 1);
+    task.assignedTo.userNames.splice(userIndex, 1);
+  }
+}
+
+
+/**
+ * Saves the updated user data in localStorage and updates the backend.
+ * @param {Object} currentUser - The currently logged-in user.
+ */
+function saveUserData(currentUser) {
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
   updateCurrentUserInBackend(currentUser);
+}
+
+
+/**
+ * Refreshes the UI after the contact has been deleted.
+ */
+function refreshUI() {
   document.getElementById("contactsContentRightSideContactDataContainerID").innerHTML = "";
-  contactsInit();  
+  contactsInit();
 }
 
 
@@ -315,84 +379,4 @@ function hideOverlay() {
     if (overlayContainer) {
       overlayContainer.parentNode.removeChild(overlayContainer);
     }
-}
-
-
-/**
- * Creates a new contact in the desktop view.
- */
-function createContactDesktop() {
-  const currentUser = getLoggedInUser();
-  if (!currentUser) {
-      console.error("No user logged in.");
-      return;
-  }
-  const { contactName, contactEmail, contactPhone } = validateCreateContactDesktop();
-  const inputs = getInputElements();
-  clearErrorMessages();
-  const hasError = validateInputs(inputs, { contactName, contactEmail, contactPhone });
-  if (hasError) {
-      return;
-  }
-  createContactDesktopSetup();
-}
-
-
-/**
- * Retrieves the input elements for contact information.
- * @returns {Object} - An object containing the input elements for name, email, and phone.
- */
-function getInputElements() {
-    return {
-        nameInput: document.getElementById("add-contact-input-name-desktop-id"),
-        emailInput: document.getElementById("add-contact-input-mail-addresss-desktop-id"),
-        phoneInput: document.getElementById("add-contact-input-phone-desktop-id"),
-    };
-}
-
-
-/**
- * Validates the input fields for contact information.
- * @param {Object} inputs - An object containing the input elements.
- * @param {Object} contactInfo - An object containing contact information.
- * @returns {boolean} - Returns true if there is an error, otherwise false.
- */
-function validateInputs(inputs, contactInfo) {
-    let hasError = false;
-    if (!contactInfo.contactName) {
-        displayErrorMessage(inputs.nameInput, "Line cannot be empty, please fill it out.");
-        hasError = true;
-    }
-    if (!contactInfo.contactEmail) {
-        displayErrorMessage(inputs.emailInput, "Line cannot be empty, please fill it out.");
-        hasError = true;
-    }
-    if (!contactInfo.contactPhone) {
-        displayErrorMessage(inputs.phoneInput, "Line cannot be empty, please fill it out.");
-        hasError = true;
-    }
-    return hasError;
-}
-
-
-/**
- * Displays an error message below the input field.
- * @param {HTMLElement} inputField - The input field where the error message should be displayed.
- * @param {string} message - The error message to be displayed.
- */
-function displayErrorMessage(inputField, message) {
-  const errorMessage = document.createElement("div");
-  errorMessage.textContent = message;
-  errorMessage.style.color = "red"; // Set the text color to red
-  errorMessage.classList.add("error-message"); // Optional: add a class for further styling
-  inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
-}
-
-
-/**
-* Clears previous error messages from the input fields.
-*/
-function clearErrorMessages() {
-  const errorMessages = document.querySelectorAll(".error-message");
-  errorMessages.forEach((message) => message.remove());
 }
