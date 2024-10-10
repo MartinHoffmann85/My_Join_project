@@ -384,3 +384,20 @@ function updateSubtaskStatus(taskId, subtaskId, isChecked) {
         }
     }
 }
+
+
+/**
+ * Renders user details like initials in a colored box.
+ * @param {Object} user - The user object containing user details.
+ * @returns {string} - The HTML content representing user details.
+ */
+function renderUserDetails(user) {
+  const colorCode = user.colorCodes && user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
+  const initials = user.userNames && user.userNames.length > 0 ? user.userNames[0].slice(0, 2) : '';
+  const textColor = isColorLight(colorCode) ? "black" : "white";
+  return `
+    <div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
+      ${initials}
+    </div>
+  `;
+}
