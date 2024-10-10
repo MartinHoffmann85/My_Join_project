@@ -27,12 +27,25 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
+ * Renders the subtasks list based on the subtaskList array.
+ */
+function renderSubtasks() {
+    let element = document.getElementById('add-task-list-id');
+    element.innerHTML = '';
+    subtaskList.forEach((subtask, index) => {
+      element.innerHTML += templateSubtaskHTML(index, subtask);
+    });
+}
+
+
+/**
  * Handles the editing of a subtask.
  * @param {number} index - The index of the subtask being edited.
  */
 function editSubtask(index) {
     const ListElement = document.getElementById(`substask-content-id${index}`);
     handleFirstSubtaskEdit(index, ListElement);
+    toggleEditMode(index, true);
     document.addEventListener('click', function(event) {
       const clickedElement = event.target;
       const isSubtaskContent = clickedElement.closest(`[id^="substask-content-id${index}"]`);
@@ -40,10 +53,28 @@ function editSubtask(index) {
       const isSubtaskEditedContainer = clickedElement.closest(`[id^="subtask-edited-container-id${index}"]`);
       if (!isSubtaskContent &amp;&amp; !isSubtaskDefaultContainer &amp;&amp; !isSubtaskEditedContainer)
         ListElement.classList.add('red-line-highlight');
-    });
+    });    
 }
-  
-  
+
+
+/**
+ * Toggles the edit mode by showing/hiding icons.
+ * @param {number} index - The index of the subtask.
+ * @param {boolean} isEditing - Whether the subtask is in edit mode.
+ */
+function toggleEditMode(index, isEditing) {
+    const editIconContainer = document.getElementById(`subtask-default-container-id${index}`);
+    const saveIconContainer = document.getElementById(`subtask-edited-container-id${index}`);
+    if (isEditing) {
+        editIconContainer.classList.add('d-none');
+        saveIconContainer.classList.remove('d-none');
+    } else {
+        editIconContainer.classList.remove('d-none');
+        saveIconContainer.classList.add('d-none');
+    }
+}
+
+
 /**
 * Handles the first edit of a subtask.
 * @param {number} index - The index of the subtask being edited.
@@ -112,26 +143,122 @@ function deleteSubtask(index) {
   
   
 /**
-* Creates a new task with user-provided inputs and updates the current user's data.
-* Then redirects the user to the add board page.
-*/
+ * Creates a new task with user-provided inputs and updates the current user's data.
+ * Then redirects the user to the add board page.
+ */
 async function createTask() {
-    const titleInput = document.getElementById('title-input-id').value;
-    const textareaInput = document.getElementById('textarea-input-id').value;
-    const dateInput = document.getElementById('date-input-id').value;
-    const categoryInput = document.getElementById('category-input-id').value;
-    const columnId = 'todo';
+    const titleInput = getInputValue('title-input-id');
+    const textareaInput = getInputValue('textarea-input-id');
+    const dateInput = getInputValue('date-input-id');
+    const categoryInput = getInputValue('category-input-id');
+    if (!validateInputsCreateTask(titleInput, textareaInput, dateInput, categoryInput)) {
+        return;
+    }
+    const columnId = localStorage.getItem('selectedColumnId') || 'todo';
     const priority = prio[prioIndex];
-    const taskID = generateTaskID();
+    const taskID = generateTaskID();    
+    await saveTask(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority);
+    showSuccessfullyTaskCreatedImage();
+    redirectAfterDelay(500);
+}
+
+
+/**
+ * Gets the trimmed value of an input field by ID.
+ * @param {string} inputId - The ID of the input element.
+ * @returns {string} The trimmed value of the input.
+ */
+function getInputValue(inputId) {
+    return document.getElementById(inputId).value.trim();
+}
+
+
+/**
+ * Validates the user inputs.
+ * @param {string} titleInput - The title input value.
+ * @param {string} textareaInput - The description input value.
+ * @param {string} dateInput - The date input value.
+ * @param {string} categoryInput - The category input value.
+ * @returns {boolean} True if all inputs are valid; otherwise, false.
+ */
+function validateInputsCreateTask(titleInput, textareaInput, dateInput, categoryInput) {
+    if (!titleInput) return handleInputError('empty-title-id', 'at-title-border-id');
+    if (!validateTextareaInput(textareaInput)) return false;
+    if (!dateInput) return handleInputError('empty-date-id', 'at-date-border-id');
+    if (!categoryInput) return handleInputError('empty-category-id', 'category-container-id');
+    return true;
+}
+
+
+/**
+ * Handles input error display and returns false.
+ * @param {string} errorId - The ID of the error message element.
+ * @param {string} borderId - The ID of the input border element.
+ * @returns {boolean} Always returns false.
+ */
+function handleInputError(errorId, borderId) {
+    showErrorMessage(errorId, borderId);
+    return false;
+}
+
+
+/**
+ * Validates the description input field.
+ * @param {string} textareaInput - The description input value.
+ * @returns {boolean} True if valid; otherwise, false.
+ */
+function validateTextareaInput(textareaInput) {
+    const descriptionError = document.getElementById('empty-description-id');
+    if (!textareaInput) {
+        descriptionError.classList.remove('d-none');
+        return false;
+    }
+    descriptionError.classList.add('d-none');
+    return true;
+}
+
+
+/**
+ * Displays an error message and highlights the input field.
+ * This function makes the specified error message visible and adds an error
+ * border to the corresponding input field to indicate that there is an issue
+ * with the user's input.
+ * @param {string} errorMessageId - The ID of the error message element to be displayed.
+ * @param {string} inputBorderId - The ID of the input field to be highlighted with an error border.
+ */
+function showErrorMessage(errorMessageId, inputBorderId) {
+    toggleVisibility(errorMessageId, true);
+    toggleVisibility(inputBorderId, true, 'error-border');
+}
+
+
+/**
+ * Saves the new task to the current user's data.
+ * @param {string} taskID - The ID of the task.
+ * @param {string} titleInput - The title of the task.
+ * @param {string} textareaInput - The description of the task.
+ * @param {string} dateInput - The due date of the task.
+ * @param {string} categoryInput - The category of the task.
+ * @param {string} columnId - The ID of the column where the task will be added.
+ * @param {string} priority - The priority of the task.
+ */
+async function saveTask(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority) {
     await updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo);
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    showSuccessfullyTaskCreatedImage();
-    setTimeout(() => {
-      redirectToAddBoard();
-    }, 2000);  
 }
-  
-  
+
+
+/**
+ * Redirects the user after a specified delay.
+ * @param {number} delay - The delay in milliseconds before redirecting.
+ */
+function redirectAfterDelay(delay) {
+    setTimeout(() => {
+        redirectToAddBoard();
+    }, delay);
+}
+
+
 /**
 * Show successfully contact created image.
 */
@@ -290,13 +417,13 @@ function redirectToAddBoard() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#clearAll">clearAll</a></li><li><a href="global.html#clearAllErrMsg">clearAllErrMsg</a></li><li><a href="global.html#clearAllInputs">clearAllInputs</a></li><li><a href="global.html#clearAllLists">clearAllLists</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#createTaskObject">createTaskObject</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#disableAllSubtasksExcept">disableAllSubtasksExcept</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#generateSubtasks">generateSubtasks</a></li><li><a href="global.html#generateTaskID">generateTaskID</a></li><li><a href="global.html#handleFirstSubtaskEdit">handleFirstSubtaskEdit</a></li><li><a href="global.html#makeElementEditableWithMaxLength">makeElementEditableWithMaxLength</a></li><li><a href="global.html#redirectToAddBoard">redirectToAddBoard</a></li><li><a href="global.html#saveEditSubtask">saveEditSubtask</a></li><li><a href="global.html#showSuccessfullyTaskCreatedImage">showSuccessfullyTaskCreatedImage</a></li><li><a href="global.html#updateCurrentUser">updateCurrentUser</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#clearAll">clearAll</a></li><li><a href="global.html#clearAllErrMsg">clearAllErrMsg</a></li><li><a href="global.html#clearAllInputs">clearAllInputs</a></li><li><a href="global.html#clearAllLists">clearAllLists</a></li><li><a href="global.html#createTask">createTask</a></li><li><a href="global.html#createTaskObject">createTaskObject</a></li><li><a href="global.html#deleteSubtask">deleteSubtask</a></li><li><a href="global.html#disableAllSubtasksExcept">disableAllSubtasksExcept</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#generateSubtasks">generateSubtasks</a></li><li><a href="global.html#generateTaskID">generateTaskID</a></li><li><a href="global.html#getInputValue">getInputValue</a></li><li><a href="global.html#handleFirstSubtaskEdit">handleFirstSubtaskEdit</a></li><li><a href="global.html#handleInputError">handleInputError</a></li><li><a href="global.html#makeElementEditableWithMaxLength">makeElementEditableWithMaxLength</a></li><li><a href="global.html#redirectAfterDelay">redirectAfterDelay</a></li><li><a href="global.html#redirectToAddBoard">redirectToAddBoard</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#saveEditSubtask">saveEditSubtask</a></li><li><a href="global.html#saveTask">saveTask</a></li><li><a href="global.html#showErrorMessage">showErrorMessage</a></li><li><a href="global.html#showSuccessfullyTaskCreatedImage">showSuccessfullyTaskCreatedImage</a></li><li><a href="global.html#toggleEditMode">toggleEditMode</a></li><li><a href="global.html#updateCurrentUser">updateCurrentUser</a></li><li><a href="global.html#validateInputsCreateTask">validateInputsCreateTask</a></li><li><a href="global.html#validateTextareaInput">validateTextareaInput</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:49:09 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Oct 10 2024 21:53:39 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

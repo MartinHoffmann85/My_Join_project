@@ -30,23 +30,40 @@
  * Check if the logged-in user is added as a contact. If not, create a new contact.
  */
 async function checkIfUserAddedAsContact() {
-    const currentUser = getLoggedInUser();    
-    if (!Array.isArray(currentUser.contacts)) {
-        currentUser.contacts = [];
-    }    
-    const isUserAdded = currentUser.contacts.some(contact => 
-        contact.name === `${currentUser.userName} (you)` &amp;&amp; 
-        contact.email === currentUser.userEMail
+    const currentUser = getLoggedInUser();
+    ensureContactsArray(currentUser);
+    if (!isUserAddedAsContact(currentUser)) addLoggedInUserAsContact(currentUser);
+}
+
+
+/**
+ * Ensures the contacts array exists for the user.
+ * @param {Object} user - The current user object.
+ */
+function ensureContactsArray(user) {
+    if (!Array.isArray(user.contacts)) user.contacts = [];
+}
+
+
+/**
+ * Checks if the logged-in user is already added as a contact.
+ * @param {Object} user - The current user object.
+ * @returns {boolean} True if the user is added, otherwise false.
+ */
+function isUserAddedAsContact(user) {
+    return user.contacts.some(contact => 
+        contact.name === `${user.userName} (you)` &amp;&amp; contact.email === user.userEMail
     );
-    if (!isUserAdded) {        
-        const newContact = { 
-            name: `${currentUser.userName} (you)`, 
-            email: currentUser.userEMail, 
-            phone: '0' 
-        };
-        newContact.id = generateUniqueID();
-        addContactToCurrentUser(newContact);      
-    }
+}
+
+
+/**
+ * Adds the logged-in user as a contact.
+ * @param {Object} user - The current user object.
+ */
+function addLoggedInUserAsContact(user) {
+    const newContact = { name: `${user.userName} (you)`, email: user.userEMail, phone: '0', id: generateUniqueID() };
+    addContactToCurrentUser(newContact);
 }
 
 
@@ -72,29 +89,76 @@ async function login() {
 
 /**
  * Attempts to authenticate the user.
- * @returns {Promise&lt;Object|string>} - The authenticated user object if successful, otherwise a string indicating "User not found".
+ * @returns {Promise&lt;Object|string>} - The authenticated user object if successful, otherwise a string.
  */
 async function authenticateUser() {
+    const { email, password } = getLoginInputs();
+    if (!isValidUsersObject(users)) return;
+    const user = findUserByEmail(email);
+    return validateUserCredentials(user, password);
+}
+
+
+/**
+ * Retrieves the login input values.
+ * @returns {Object} The email and password from the login inputs.
+ */
+function getLoginInputs() {
     const email = document.getElementById("login-user-e-mail-id").value;
     const password = document.getElementById("login-user-password-id").value;
+    return { email, password };
+}
+
+
+/**
+ * Checks if the users object is valid.
+ * @param {Object} users - The users object.
+ * @returns {boolean} True if valid, otherwise false.
+ */
+function isValidUsersObject(users) {
     if (!users || typeof users !== 'object') {
         console.error('users is not a valid object:', users);
-        return;
-    }    
-    const usersArray = Object.values(users).flat();
-    const user = usersArray.find(user => user.userEMail === email);    
-    if (user &amp;&amp; user.userPassword === password) {        
-        return user;
-    } else {
-        const errorContainer = document.getElementById('login-email-error');
-        errorContainer.innerText = "User not found";
-        errorContainer.style.color = "red";
-        setTimeout(() => {
-            errorContainer.innerText = "";
-            resetLoginInputs();
-        }, 2000);
-        return "User not found";
+        return false;
     }
+    return true;
+}
+
+
+/**
+ * Finds a user by email.
+ * @param {string} email - The email to search for.
+ * @returns {Object|undefined} The user object if found, otherwise undefined.
+ */
+function findUserByEmail(email) {
+    return Object.values(users).flat().find(user => user.userEMail === email);
+}
+
+
+/**
+ * Validates user credentials.
+ * @param {Object} user - The user object.
+ * @param {string} password - The entered password.
+ * @returns {Object|string} The user object if credentials match, otherwise error message.
+ */
+function validateUserCredentials(user, password) {
+    if (user &amp;&amp; user.userPassword === password) return user;
+    showLoginError("User not found or wrong password");
+    return "User not found or wrong password";
+}
+
+
+/**
+ * Shows login error message.
+ * @param {string} message - The error message to display.
+ */
+function showLoginError(message) {
+    const errorContainer = document.getElementById('login-email-error');
+    errorContainer.innerText = message;
+    errorContainer.style.color = "red";
+    setTimeout(() => {
+        errorContainer.innerText = "";
+        resetLoginInputs();
+    }, 2000);
 }
 
 
@@ -289,54 +353,6 @@ function userLogOut() {
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.removeItem('currentUser');
     resetActiveLinkId();
-}
-
-
-/**
- * Function only for developers to clear double user entrys.
- */
-async function removeDuplicateUsers() {
-    try {
-        let existingUsers = await loadUsersFromBackend('users');
-        let uniqueUsers = [];
-        let emailsSet = new Set();
-        for (let user of existingUsers) {            
-            if (!emailsSet.has(user.userEMail)) {                
-                uniqueUsers.push(user);                
-                emailsSet.add(user.userEMail);
-            }
-        }
-        await setItem('users', JSON.stringify(uniqueUsers));
-    } catch (error) {
-        console.error('Fehler beim Entfernen doppelter Benutzer:', error);
-    }
-}
-
-
-/**
- * Function only for developers to clear double user entrys.
- */
-async function deletAllUsersInBackend() {
-    await setItem("users", JSON.stringify({}));
-}
-
-
-/**
- * Function only for developers to clear user entrys. 
- * @param {number} index - Index ist for the index of the user to delete 
- */
-async function deleteUserAtIndex(index) {
-    try {        
-        let existingUsers = await loadUsersFromBackend('users');
-        if (index &lt; 0 || index >= existingUsers.length) {
-            console.error('Ungültiger Index für Benutzerlöschung');
-            return;
-        }
-        existingUsers.splice(index, 1);
-        await setItem('users', JSON.stringify(existingUsers));
-    } catch (error) {
-        console.error('Fehler beim Löschen des Benutzers:', error);
-    }
 }</code></pre>
         </article>
     </section>
@@ -347,13 +363,13 @@ async function deleteUserAtIndex(index) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addPasswordVisibilityListener">addPasswordVisibilityListener</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfUserAddedAsContact">checkIfUserAddedAsContact</a></li><li><a href="global.html#deletAllUsersInBackend">deletAllUsersInBackend</a></li><li><a href="global.html#deleteUserAtIndex">deleteUserAtIndex</a></li><li><a href="global.html#getPasswordInput">getPasswordInput</a></li><li><a href="global.html#guestLogin">guestLogin</a></li><li><a href="global.html#handlerFieldValidationLogin">handlerFieldValidationLogin</a></li><li><a href="global.html#isValueNotEmpty">isValueNotEmpty</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#removeDuplicateUsers">removeDuplicateUsers</a></li><li><a href="global.html#showHeaderUserInitials">showHeaderUserInitials</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#toggleCheckbox">toggleCheckbox</a></li><li><a href="global.html#toggleCheckboxVariables">toggleCheckboxVariables</a></li><li><a href="global.html#togglePasswordVisibility">togglePasswordVisibility</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updatePasswordInput">updatePasswordInput</a></li><li><a href="global.html#userLogOut">userLogOut</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addLoggedInUserAsContact">addLoggedInUserAsContact</a></li><li><a href="global.html#addPasswordVisibilityListener">addPasswordVisibilityListener</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfUserAddedAsContact">checkIfUserAddedAsContact</a></li><li><a href="global.html#ensureContactsArray">ensureContactsArray</a></li><li><a href="global.html#findUserByEmail">findUserByEmail</a></li><li><a href="global.html#getLoginInputs">getLoginInputs</a></li><li><a href="global.html#getPasswordInput">getPasswordInput</a></li><li><a href="global.html#guestLogin">guestLogin</a></li><li><a href="global.html#handlerFieldValidationLogin">handlerFieldValidationLogin</a></li><li><a href="global.html#isUserAddedAsContact">isUserAddedAsContact</a></li><li><a href="global.html#isValidUsersObject">isValidUsersObject</a></li><li><a href="global.html#isValueNotEmpty">isValueNotEmpty</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#showHeaderUserInitials">showHeaderUserInitials</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#showLoginError">showLoginError</a></li><li><a href="global.html#toggleCheckbox">toggleCheckbox</a></li><li><a href="global.html#toggleCheckboxVariables">toggleCheckboxVariables</a></li><li><a href="global.html#togglePasswordVisibility">togglePasswordVisibility</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updatePasswordInput">updatePasswordInput</a></li><li><a href="global.html#userLogOut">userLogOut</a></li><li><a href="global.html#validateUserCredentials">validateUserCredentials</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 21:05:18 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Oct 10 2024 22:47:05 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

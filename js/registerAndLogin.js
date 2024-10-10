@@ -7,7 +7,6 @@ let emptyInput = true;
 let pwVisibility = { pwVisibilityOn: false };
 let confirmPwVisibility = { pwVisibilityOn: false };
 
-
 /**
  * Initializes the application by loading users from the backend and setting up password visibility listener.
  */

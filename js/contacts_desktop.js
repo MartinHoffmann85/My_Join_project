@@ -285,8 +285,7 @@ function removeContactFromTasks(currentUser, contactToDelete) {
  * @param {Object} contactToDelete - The contact to remove from the task.
  */
 function removeContactFromTask(task, contactToDelete) {
-  const userIndex = task.assignedTo.userNames.indexOf(contactToDelete.name);
-  
+  const userIndex = task.assignedTo.userNames.indexOf(contactToDelete.name);  
   if (userIndex !== -1) {
     task.assignedTo.colorCodes.splice(userIndex, 1);
     task.assignedTo.initials.splice(userIndex, 1);

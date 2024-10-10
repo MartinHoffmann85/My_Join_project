@@ -22,18 +22,12 @@
     height: 122px;
 }
 
-.menu-box {
-    /* display: flex; */
+.menu-box {    
     height: 229px;
     margin-top: 114px;
     justify-content: center;
     align-items: center;
 }
-
-/* .menu-box-hidden {
-    display: none;
-}
-*/
 
 .menu-content {
     display: none;  
@@ -107,7 +101,6 @@
     transform: scaleX(1.2);
     font-size: 1rem;
 }
-
 
 @media (max-width: 949px) {
 

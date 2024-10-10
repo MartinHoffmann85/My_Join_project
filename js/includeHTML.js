@@ -16,6 +16,7 @@ async function includeHTML() {
     }
 }
 
+
 /**
  * Redirects the user to the index.html page by changing the current window location.
  * This function is typically used to navigate back to the main or home page of the application.

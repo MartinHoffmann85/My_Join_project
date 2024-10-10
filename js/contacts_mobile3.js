@@ -1,4 +1,68 @@
 /**
+ * Handle click on drop down menu option
+* @param {string} dropdownContainer - Drop down div Container
+* @param {string} addContactButtonContainerMobile - Render the contact button container mobile
+* @param {string} handleDocumentClick - Remove or add the event listener for the drop down menu
+*/
+function handleDocumentClick(dropdownTrigger, dropdownMenu) {
+    return function (event) {
+        if (!dropdownTrigger.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = "none";
+            document.removeEventListener("click", handleDocumentClick(dropdownTrigger, dropdownMenu));
+        }
+    };
+}
+
+
+/**
+* Generates HTML for displaying a single member's information.
+* @param {Object} member - The member object containing information about the user.
+* @returns {string} The HTML code for displaying the member's information.
+*/
+function singleMemberToHTML(member) {
+    const colorCode = member.colorCode || getRandomColorHex();
+    const textColor = isColorLight(colorCode) ? "black" : "white";  
+    return `
+      <div class="openContactUserImgMobile" style="background-color: ${colorCode}; color: ${textColor};">
+        ${getFirstLettersOfName(member.name)}
+      </div>
+    `;
+}
+
+
+/**
+* Deletes a contact on mobile.
+* @param {string} contactId - The ID of the contact to be deleted.
+*/
+function deleteContactMobile(contactId) {
+    const currentUser = getLoggedInUser();
+    const index = currentUser.contacts.findIndex(contact => contact.id === contactId);
+    if (index === -1) {
+        console.error("Contact not found.");
+        return;
+    }
+    currentUser.contacts.splice(index, 1);  
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateCurrentUserInBackend(currentUser);  
+    contactsInit();  
+}
+
+
+/**
+* Opens the edit contact overlay on mobile.
+* @param {string} contactId - The ID of the contact to be edited.
+*/
+function editContactOverlayMobile(contactId) {  
+    let { content, editContactHTML } = editContactOverlayMobileVariables(contactId);  
+    content.innerHTML = editContactHTML;  
+    hideHeaderAndFooter();    
+    content.style.marginTop = '0px';
+    content.style.overflow = 'hidden';
+    removeMaxHeight();
+}
+
+
+/**
 * Prepares variables required for editing a contact overlay on mobile.
 * @param {string} contactId - The ID of the contact to be edited.
 * @returns {Object} An object containing references to the content element and the HTML code for editing the contact.

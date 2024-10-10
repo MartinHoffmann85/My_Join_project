@@ -314,22 +314,38 @@ function redirectToContacts() {
  */
 async function createContactMobile() {
   const currentUser = getLoggedInUser();
-  if (!currentUser) {
-    console.error("No user logged in.");
-    return;
-  }  
-  const { contactName, contactEmail, contactPhone } = validateCreateContactMobile();
+  if (!currentUser) return console.error("No user logged in.");
   const inputs = getInputElementsMobile();
+  const { contactName, contactEmail, contactPhone } = validateCreateContactMobile();
+  if (validateAndHandleErrors(inputs, { contactName, contactEmail, contactPhone })) return;
+  saveNewContact(contactName, contactEmail, contactPhone);
+  contactsInit();
+  showSuccessfullyContactCreatedImageMobile();
+}
+
+
+/**
+ * Validates inputs and handles errors if any.
+ * @param {Object} inputs - The input elements.
+ * @param {Object} contactData - The contact data.
+ * @returns {boolean} True if there's an error, otherwise false.
+ */
+function validateAndHandleErrors(inputs, contactData) {
   clearErrorMessages();
-  const hasError = validateInputsMobile(inputs, { contactName, contactEmail, contactPhone });
-  if (hasError) {
-    return;
-  }
+  return validateInputsMobile(inputs, contactData);
+}
+
+
+/**
+ * Saves the new contact to the current user.
+ * @param {string} contactName - The name of the contact.
+ * @param {string} contactEmail - The email of the contact.
+ * @param {string} contactPhone - The phone number of the contact.
+ */
+function saveNewContact(contactName, contactEmail, contactPhone) {
   const newContact = { name: contactName, email: contactEmail, phone: contactPhone };
   newContact.id = generateUniqueID();
   addContactToCurrentUser(newContact);
-  contactsInit();
-  showSuccessfullyContactCreatedImageMobile();
 }
 
 
@@ -379,18 +395,4 @@ function validateCreateContactMobile() {
   const contactEmail = document.getElementById("add-contact-input-mail-addresss-mobile-id").value;
   const contactPhone = document.getElementById("add-contact-input-phone-mobile-id").value;
   return { contactName, contactEmail, contactPhone };
-}
-
-
-/**
- * Displays an error message below the input field.
- * @param {HTMLElement} inputField - The input field where the error message should be displayed.
- * @param {string} message - The error message to be displayed.
- */
-function displayErrorMessage(inputField, message) {
-  const errorMessage = document.createElement("div");
-  errorMessage.textContent = message;
-  errorMessage.style.color = "red";
-  errorMessage.classList.add("error-message");
-  inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
 }

@@ -6,6 +6,7 @@ function footerInit() {
     showMenuIfLoggedIn();    
 }
 
+
 /**
  * Displays or hides the menu and profile section based on the user's login status.
  * This function checks if the user is logged in by retrieving the login status from local storage

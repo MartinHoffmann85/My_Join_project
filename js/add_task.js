@@ -60,22 +60,41 @@ function renderAssignedToContacts(contacts = currentUser.contacts) {
 
 
 /**
-* Iterates over the given contacts and updates the UI accordingly.
-* @param {Array} contacts - The array of contacts to iterate over.
-*/
+ * Iterates over the given contacts and updates the UI accordingly.
+ * @param {Array} contacts - The array of contacts to iterate over.
+ */
 function iterateOverContacts(contacts) {
     const assignedToContainer = document.getElementById('assigned-to-contacts-id');
     assignedToContainer.innerHTML = '';
-    contacts.forEach((contact, index) => {
-        if (contact.name === currentUser.userName)
-            contact.name = contact.name + ' (you)';
-        const initials = getFirstLettersOfName(contact.name);
-        textColor = isColorLight(contact.colorCode) ? 'white' : 'black';
-        const isSelected = contacts[index].selected;
-        assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, index, contact.colorCode, initials, textColor, isSelected);
-    });
-    const contactElements = assignedToContainer.querySelectorAll('.assigned-to-box');
-    contactElements.forEach(contactElement => {
+    contacts.forEach((contact, index) => updateContactUI(contact, index, contacts, assignedToContainer));
+    clearSelectedContacts(assignedToContainer);
+}
+
+
+/**
+ * Updates the UI for each contact.
+ * @param {Object} contact - The contact object to update.
+ * @param {number} index - The index of the contact in the array.
+ * @param {Array} contacts - The array of all contacts.
+ * @param {HTMLElement} assignedToContainer - The DOM element for the contacts container.
+ */
+function updateContactUI(contact, index, contacts, assignedToContainer) {
+    if (contact.name === currentUser.userName) contact.name += ' (you)';
+    const initials = getFirstLettersOfName(contact.name);
+    const textColor = isColorLight(contact.colorCode) ? 'white' : 'black';
+    const isSelected = contacts[index].selected;
+    assignedToContainer.innerHTML += templateAssignedToContainerHTML(
+        contact.name, index, contact.colorCode, initials, textColor, isSelected
+    );
+}
+
+
+/**
+ * Clears the selected class from all contact elements in the container.
+ * @param {HTMLElement} container - The DOM element for the contacts container.
+ */
+function clearSelectedContacts(container) {
+    container.querySelectorAll('.assigned-to-box').forEach(contactElement => {
         contactElement.classList.remove('selected-contact');
     });
 }
@@ -369,16 +388,4 @@ function addNewTaskMenu() {
     subtaskList.push(inputElement.value);
     inputElement.value = '';
     renderSubtasks();
-}
-
-
-/**
- * Renders the subtasks list based on the subtaskList array.
- */
-function renderSubtasks() {
-    let element = document.getElementById('add-task-list-id');
-    element.innerHTML = '';
-    subtaskList.forEach((subtask, index) => {
-      element.innerHTML += templateSubtaskHTML(index, subtask);
-    });
 }

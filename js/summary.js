@@ -212,25 +212,36 @@ function summaryGetAwaitingFeedbackCount() {
  * Updates the greeting message based on the time of the day.
  */
 async function updateGreeting() {
-    let { h, e, currentUser, addHours, addMinutes } = updateGreetingVariables();
+    const { h, e, currentUser, addHours, addMinutes } = updateGreetingVariables();
     const currentUserPElement = `<p class="greetingUserNamePElement">${currentUser.userName}</p>`;
-    if (h <= 4) {
-      e.innerHTML = `Good night, ${currentUserPElement}`;
-      addHours = 4 - h;
-    } else if (h <= 10) {
-      e.innerHTML = `Good morning, ${currentUserPElement}`;
-      addHours = 10 - h;
-    } else if (h <= 12) {
-      e.innerHTML = `Good noon, ${currentUserPElement}`;
-      addHours = 12 - h;
-    } else if (h <= 17) {
-        e.innerHTML = `Good afternoon, ${currentUserPElement}`;
-        addHours = 17 - h;
-    } else {
-      e.innerHTML = `Good evening,<br> ${currentUserPElement}`;
-      addHours = 23 - h;
-    }
-    const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;    
+    const greeting = getGreetingMessage(h, currentUserPElement);
+    e.innerHTML = greeting.message;
+    scheduleNextGreeting(greeting.addHours, addMinutes);
+}
+
+
+/**
+ * Gets the appropriate greeting message and hours to add based on the time.
+ * @param {number} h - The current hour.
+ * @param {string} currentUserPElement - The HTML for the current user's name.
+ * @returns {Object} Greeting message and hours to add.
+ */
+function getGreetingMessage(h, currentUserPElement) {
+    if (h <= 4) return { message: `Good night, ${currentUserPElement}`, addHours: 4 - h };
+    if (h <= 10) return { message: `Good morning, ${currentUserPElement}`, addHours: 10 - h };
+    if (h <= 12) return { message: `Good noon, ${currentUserPElement}`, addHours: 12 - h };
+    if (h <= 17) return { message: `Good afternoon, ${currentUserPElement}`, addHours: 17 - h };
+    return { message: `Good evening,<br> ${currentUserPElement}`, addHours: 23 - h };
+}
+
+
+/**
+ * Schedules the next greeting update.
+ * @param {number} addHours - Hours to add until the next update.
+ * @param {number} addMinutes - Minutes to add until the next update.
+ */
+function scheduleNextGreeting(addHours, addMinutes) {
+    const waitTime = addHours * 60 * 60 * 1000 + addMinutes * 60 * 1000;
     setTimeout(updateGreeting, waitTime);
 }
 

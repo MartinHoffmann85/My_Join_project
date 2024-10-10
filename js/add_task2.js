@@ -1,4 +1,16 @@
 /**
+ * Renders the subtasks list based on the subtaskList array.
+ */
+function renderSubtasks() {
+    let element = document.getElementById('add-task-list-id');
+    element.innerHTML = '';
+    subtaskList.forEach((subtask, index) => {
+      element.innerHTML += templateSubtaskHTML(index, subtask);
+    });
+}
+
+
+/**
  * Handles the editing of a subtask.
  * @param {number} index - The index of the subtask being edited.
  */
@@ -142,25 +154,38 @@ function getInputValue(inputId) {
  * @returns {boolean} True if all inputs are valid; otherwise, false.
  */
 function validateInputsCreateTask(titleInput, textareaInput, dateInput, categoryInput) {
-    if (!titleInput) {
-        showErrorMessage('empty-title-id', 'at-title-border-id');
-        return false;
-    }    
+    if (!titleInput) return handleInputError('empty-title-id', 'at-title-border-id');
+    if (!validateTextareaInput(textareaInput)) return false;
+    if (!dateInput) return handleInputError('empty-date-id', 'at-date-border-id');
+    if (!categoryInput) return handleInputError('empty-category-id', 'category-container-id');
+    return true;
+}
+
+
+/**
+ * Handles input error display and returns false.
+ * @param {string} errorId - The ID of the error message element.
+ * @param {string} borderId - The ID of the input border element.
+ * @returns {boolean} Always returns false.
+ */
+function handleInputError(errorId, borderId) {
+    showErrorMessage(errorId, borderId);
+    return false;
+}
+
+
+/**
+ * Validates the description input field.
+ * @param {string} textareaInput - The description input value.
+ * @returns {boolean} True if valid; otherwise, false.
+ */
+function validateTextareaInput(textareaInput) {
     const descriptionError = document.getElementById('empty-description-id');
     if (!textareaInput) {
         descriptionError.classList.remove('d-none');
         return false;
-    } else {
-        descriptionError.classList.add('d-none');
-    }    
-    if (!dateInput) {
-        showErrorMessage('empty-date-id', 'at-date-border-id');
-        return false;
-    }    
-    if (!categoryInput) {
-        showErrorMessage('empty-category-id', 'category-container-id');
-        return false;
     }
+    descriptionError.classList.add('d-none');
     return true;
 }
 

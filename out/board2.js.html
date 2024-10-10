@@ -27,6 +27,23 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
+ * Renders user details like initials in a colored box.
+ * @param {Object} user - The user object containing user details.
+ * @returns {string} - The HTML content representing user details.
+ */
+function renderUserDetails(user) {
+    const colorCode = user.colorCodes &amp;&amp; user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
+    const initials = user.userNames &amp;&amp; user.userNames.length > 0 ? user.userNames[0].slice(0, 2) : '';
+    const textColor = isColorLight(colorCode) ? "black" : "white";
+    return `
+      &lt;div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
+        ${initials}
+      &lt;/div>
+    `;
+}
+
+
+/**
  * Saves the updated tasks data to localStorage.
  * @param {Object} currentUser - The current user object.
  */
@@ -97,11 +114,39 @@ function drop(event) {
         const targetContainer = document.getElementById(targetColumnId + '-tasks');
         const draggedTaskElement = document.getElementById(taskId);
         if (draggedTaskElement &amp;&amp; targetContainer) {
-            targetContainer.appendChild(draggedTaskElement);
-            updateTaskColumnId(taskId, targetColumnId);
+            if (targetContainer.contains(draggedTaskElement) === false) {
+                targetContainer.appendChild(draggedTaskElement);
+                updateTaskColumnId(taskId, targetColumnId);
+            }
         }
     }
     renderAllTasks();
+    removeHighlight(event);
+}
+
+
+/**
+ * Highlights the target column when a task is dragged over it.
+ * @param {Event} event - The dragover event object.
+ */
+function highlightColumn(event) {
+    event.preventDefault();
+    const targetColumn = event.target.closest('.boardColumn');
+    if (targetColumn) {
+        targetColumn.classList.add('highlight');
+    }
+}
+
+
+/**
+ * Removes the highlight from the target column when dragging leaves it.
+ * @param {Event} event - The dragleave event object.
+ */
+function removeHighlight(event) {
+    const targetColumn = event.target.closest('.boardColumn');
+    if (targetColumn) {
+        targetColumn.classList.remove('highlight');
+    }
 }
 
 
@@ -136,22 +181,41 @@ async function updateTaskColumnId(taskId, newColumnId) {
  * @param {Array} subtasks - Array of subtasks.
  */
 function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {
+    prepareOverlay();
+    const card = createTaskCard(category, assignedTo, prio, id);
+    const subtasksHTML = boardRenderSubtasks(card, id);
+    renderTaskCardAsOverlayCardHTML(card, card.bgColor, category, title, description, date, card.prioContent, card.assignedToHTML, subtasksHTML, id);
+    document.body.appendChild(card.overlay);
+}
+
+
+/**
+ * Prepares and opens the task overlay.
+ */
+function prepareOverlay() {
     closeOverlayBoard();
     restoreBackgroundOnOverlayClose();
-    const overlay = document.createElement('div');
-    overlay.classList.add('boardoverlay');    
-    const card = document.createElement('div');
-    card.classList.add('card');    
-    let assignedToHTML = renderTaskCardAsOverlayAssignetTo(assignedTo);    
-    let backgroundColor = '';
-    backgroundColor = renderTaskCardAsOverlayCategory(category, backgroundColor);
-    let prioContent = prio;
-    prioContent = renderTaskCarsAsOverlayPrio(prio, prioContent);
-    const subtasksHTML = boardRenderSubtasks(card, id);
-    renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id);
-    overlay.appendChild(card);
-    document.body.appendChild(overlay);
     changeBackgroundOnOverlayOpen();
+}
+
+
+/**
+ * Creates and configures the task card elements.
+ * @param {string} category - Task category.
+ * @param {Object} assignedTo - Assigned to details.
+ * @param {string} prio - Task priority.
+ * @param {string} id - Task ID.
+ * @returns {Object} Object containing the card, assignedToHTML, prioContent, and backgroundColor.
+ */
+function createTaskCard(category, assignedTo, prio, id) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('boardoverlay');
+    const card = document.createElement('div');
+    card.classList.add('card');
+    const assignedToHTML = renderTaskCardAsOverlayAssignetTo(assignedTo);
+    const bgColor = renderTaskCardAsOverlayCategory(category, '');
+    const prioContent = renderTaskCarsAsOverlayPrio(prio, prio);
+    return { overlay, card, assignedToHTML, prioContent, bgColor };
 }
 
 
@@ -348,48 +412,9 @@ function deleteTask(id) {
 function boardEditTask(taskId) {
     closeOverlayBoard();
     const task = getTaskFromLocalStorage(taskId);
-    if (task) {
-        const overlay = document.createElement('div');
-        overlay.classList.add('boardoverlay');
-        const card = document.createElement('div');
-        card.classList.add('card');        
-        let backgroundColor = boardEditTaskCategory(task);
-        boardEditTaskPrio(task);
-        const assignedToHTML = boardEditTaskAssignetTo(task);
-        boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML);
-        overlay.appendChild(card);
-        document.body.appendChild(overlay);
-    }
+    if (task) createTaskEditOverlay(task, taskId);
     changeBackgroundOnOverlayOpen();
     activateSubtaskListener(taskId);
-}
-
-
-/**
- * Activates a listener for adding a subtask when the Enter key is pressed.
- * The function retrieves the input field for the new subtask and sets up
- * an event listener that listens for a 'keydown' event. If the Enter key 
- * is pressed and the input field is not empty, the subtask is added using
- * the `addSubtask` function, and the input field is cleared.
- *
- * @param {string} taskId - The ID of the task to which the subtask will be added.
- */
-function activateSubtaskListener(taskId) {
-    const subtaskInput = document.getElementById('newSubtaskInput');
-    if (!subtaskInput) {
-        console.error('Subtask input field not found.');
-        return;
-    }
-    subtaskInput.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const subtaskTitle = subtaskInput.value.trim();
-            if (subtaskTitle) {
-                addSubtask(taskId, subtaskTitle);
-                subtaskInput.value = '';
-            }
-        }
-    });
 }</code></pre>
         </article>
     </section>
@@ -400,13 +425,13 @@ function activateSubtaskListener(taskId) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateSubtaskListener">activateSubtaskListener</a></li><li><a href="global.html#addTaskClickListener">addTaskClickListener</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#changeBackgroundOnOverlayOpen">changeBackgroundOnOverlayOpen</a></li><li><a href="global.html#closeOverlayBoard">closeOverlayBoard</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#drag">drag</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#drop">drop</a></li><li><a href="global.html#loadTasksFromLocalStorage">loadTasksFromLocalStorage</a></li><li><a href="global.html#renderTaskCardAsOverlay">renderTaskCardAsOverlay</a></li><li><a href="global.html#renderTaskCardAsOverlayAssignetTo">renderTaskCardAsOverlayAssignetTo</a></li><li><a href="global.html#renderTaskCardAsOverlayCardHTML">renderTaskCardAsOverlayCardHTML</a></li><li><a href="global.html#renderTaskCardAsOverlayCategory">renderTaskCardAsOverlayCategory</a></li><li><a href="global.html#renderTaskCardOverlay">renderTaskCardOverlay</a></li><li><a href="global.html#renderTaskCarsAsOverlayPrio">renderTaskCarsAsOverlayPrio</a></li><li><a href="global.html#restoreBackgroundOnOverlayClose">restoreBackgroundOnOverlayClose</a></li><li><a href="global.html#saveTasksToLocalStorage">saveTasksToLocalStorage</a></li><li><a href="global.html#updateTaskColumnId">updateTaskColumnId</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addTaskClickListener">addTaskClickListener</a></li><li><a href="global.html#allowDrop">allowDrop</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#changeBackgroundOnOverlayOpen">changeBackgroundOnOverlayOpen</a></li><li><a href="global.html#closeOverlayBoard">closeOverlayBoard</a></li><li><a href="global.html#createTaskCard">createTaskCard</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#drag">drag</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#drop">drop</a></li><li><a href="global.html#highlightColumn">highlightColumn</a></li><li><a href="global.html#loadTasksFromLocalStorage">loadTasksFromLocalStorage</a></li><li><a href="global.html#prepareOverlay">prepareOverlay</a></li><li><a href="global.html#removeHighlight">removeHighlight</a></li><li><a href="global.html#renderTaskCardAsOverlay">renderTaskCardAsOverlay</a></li><li><a href="global.html#renderTaskCardAsOverlayAssignetTo">renderTaskCardAsOverlayAssignetTo</a></li><li><a href="global.html#renderTaskCardAsOverlayCardHTML">renderTaskCardAsOverlayCardHTML</a></li><li><a href="global.html#renderTaskCardAsOverlayCategory">renderTaskCardAsOverlayCategory</a></li><li><a href="global.html#renderTaskCardOverlay">renderTaskCardOverlay</a></li><li><a href="global.html#renderTaskCarsAsOverlayPrio">renderTaskCarsAsOverlayPrio</a></li><li><a href="global.html#renderUserDetails">renderUserDetails</a></li><li><a href="global.html#restoreBackgroundOnOverlayClose">restoreBackgroundOnOverlayClose</a></li><li><a href="global.html#saveTasksToLocalStorage">saveTasksToLocalStorage</a></li><li><a href="global.html#updateTaskColumnId">updateTaskColumnId</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Oct 07 2024 00:48:34 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Oct 10 2024 22:06:50 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

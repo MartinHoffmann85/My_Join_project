@@ -45,7 +45,8 @@ async function initBoard() {
 /**
  * Redirects the user to the add task page.
  */
-function redirectToAddTask() {
+function redirectToAddTask(columnId) {
+    localStorage.setItem('selectedColumnId', columnId);
     window.location.assign("./add_task.html");
 }
 
@@ -148,7 +149,20 @@ function createTaskCardElement(id, title, description, category, assignedTo, pri
  * @returns {HTMLElement} - The task card element with HTML content.
  */
 function createTaskCardElementHTML(taskCard, backgroundColor, category, title, description, id, assignedToHTML, prioContent) {
-    taskCard.innerHTML = `
+  taskCard.innerHTML = `
+      &lt;div class="boardDropdown">
+          &lt;button class="boardDropdown-toggle" onclick="toggleBoardDropdown(event, '${id}')">
+              &lt;img src="./assets/svg/arrow_drop_down.svg" alt="Toggle Dropdown" />
+          &lt;/button>
+          &lt;div class="boardDropdown-menu" id="dropdown-menu-${id}">
+              &lt;ul>
+                  &lt;li onclick="handleDropdownOptionClick(event, '${id}', 'todo')">To Do&lt;/li>
+                  &lt;li onclick="handleDropdownOptionClick(event, '${id}', 'inprogress')">In Progress&lt;/li>
+                  &lt;li onclick="handleDropdownOptionClick(event, '${id}', 'awaitfeedback')">Await Feedback&lt;/li>
+                  &lt;li onclick="handleDropdownOptionClick(event, '${id}', 'done')">Done&lt;/li>
+              &lt;/ul>
+          &lt;/div>
+      &lt;/div>
       &lt;div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}&lt;/div>
       &lt;div class="renderTaskTitle">&lt;p class="renderTaskTitlePElement">${title}&lt;/p>&lt;/div>
       &lt;div class="renderTaskDescription">${description}&lt;/div>        
@@ -159,9 +173,9 @@ function createTaskCardElementHTML(taskCard, backgroundColor, category, title, d
       &lt;div class="assignetToHTMLAndPrioContentContainer">   
           &lt;div class="renderTaskCardAssignetToContainer">${assignedToHTML}&lt;/div>
           &lt;div class="renderTaskToHTMLPrioContainer">${prioContent}&lt;/div>
-      &lt;/div>        
-    `;
-    return taskCard;
+      &lt;/div>
+  `;
+  return taskCard;
 }
 
 
@@ -397,23 +411,6 @@ function updateSubtaskStatus(taskId, subtaskId, isChecked) {
             }
         }
     }
-}
-
-
-/**
- * Renders user details like initials in a colored box.
- * @param {Object} user - The user object containing user details.
- * @returns {string} - The HTML content representing user details.
- */
-function renderUserDetails(user) {
-  const colorCode = user.colorCodes &amp;&amp; user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
-  const initials = user.userNames &amp;&amp; user.userNames.length > 0 ? user.userNames[0].slice(0, 2) : '';
-  const textColor = isColorLight(colorCode) ? "black" : "white";
-  return `
-    &lt;div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
-      ${initials}
-    &lt;/div>
-  `;
 }</code></pre>
         </article>
     </section>
@@ -424,13 +421,13 @@ function renderUserDetails(user) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#appendCountElement">appendCountElement</a></li><li><a href="global.html#boardRenderSubtaskForEach">boardRenderSubtaskForEach</a></li><li><a href="global.html#boardRenderSubtasks">boardRenderSubtasks</a></li><li><a href="global.html#boardRenderSubtasksCount">boardRenderSubtasksCount</a></li><li><a href="global.html#calculateProgress">calculateProgress</a></li><li><a href="global.html#clearTaskContainers">clearTaskContainers</a></li><li><a href="global.html#countCheckedSubtasks">countCheckedSubtasks</a></li><li><a href="global.html#createTaskCardElement">createTaskCardElement</a></li><li><a href="global.html#createTaskCardElementHTML">createTaskCardElementHTML</a></li><li><a href="global.html#determineBackgroundColor">determineBackgroundColor</a></li><li><a href="global.html#determinePriorityContent">determinePriorityContent</a></li><li><a href="global.html#generateAssignedToHTML">generateAssignedToHTML</a></li><li><a href="global.html#generateCheckboxAttributes">generateCheckboxAttributes</a></li><li><a href="global.html#generateProgressBarContainer">generateProgressBarContainer</a></li><li><a href="global.html#generateSubtaskHTML">generateSubtaskHTML</a></li><li><a href="global.html#getCurrentUserTask">getCurrentUserTask</a></li><li><a href="global.html#initBoard">initBoard</a></li><li><a href="global.html#redirectToAddTask">redirectToAddTask</a></li><li><a href="global.html#renderAllTasks">renderAllTasks</a></li><li><a href="global.html#renderTask">renderTask</a></li><li><a href="global.html#renderTaskCard">renderTaskCard</a></li><li><a href="global.html#renderUserDetails">renderUserDetails</a></li><li><a href="global.html#updateSubtaskStatus">updateSubtaskStatus</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#appendCountElement">appendCountElement</a></li><li><a href="global.html#boardRenderSubtaskForEach">boardRenderSubtaskForEach</a></li><li><a href="global.html#boardRenderSubtasks">boardRenderSubtasks</a></li><li><a href="global.html#boardRenderSubtasksCount">boardRenderSubtasksCount</a></li><li><a href="global.html#calculateProgress">calculateProgress</a></li><li><a href="global.html#clearTaskContainers">clearTaskContainers</a></li><li><a href="global.html#countCheckedSubtasks">countCheckedSubtasks</a></li><li><a href="global.html#createTaskCardElement">createTaskCardElement</a></li><li><a href="global.html#createTaskCardElementHTML">createTaskCardElementHTML</a></li><li><a href="global.html#determineBackgroundColor">determineBackgroundColor</a></li><li><a href="global.html#determinePriorityContent">determinePriorityContent</a></li><li><a href="global.html#generateAssignedToHTML">generateAssignedToHTML</a></li><li><a href="global.html#generateCheckboxAttributes">generateCheckboxAttributes</a></li><li><a href="global.html#generateProgressBarContainer">generateProgressBarContainer</a></li><li><a href="global.html#generateSubtaskHTML">generateSubtaskHTML</a></li><li><a href="global.html#getCurrentUserTask">getCurrentUserTask</a></li><li><a href="global.html#initBoard">initBoard</a></li><li><a href="global.html#redirectToAddTask">redirectToAddTask</a></li><li><a href="global.html#renderAllTasks">renderAllTasks</a></li><li><a href="global.html#renderTask">renderTask</a></li><li><a href="global.html#renderTaskCard">renderTaskCard</a></li><li><a href="global.html#updateSubtaskStatus">updateSubtaskStatus</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Oct 07 2024 00:48:28 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Oct 10 2024 22:06:41 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

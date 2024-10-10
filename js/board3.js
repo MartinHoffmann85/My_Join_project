@@ -1,4 +1,71 @@
 /**
+ * Creates the task edit overlay.
+ * @param {Object} task - The task object to edit.
+ * @param {string} taskId - ID of the task.
+ */
+function createTaskEditOverlay(task, taskId) {
+    const overlay = createOverlayElement();
+    const card = createCardElement();
+    const backgroundColor = boardEditTaskCategory(task);
+    const assignedToHTML = boardEditTaskAssignetTo(task);
+    boardEditTaskPrio(task);
+    boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML);
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+}
+
+
+/**
+ * Creates an overlay div element.
+ * @returns {HTMLElement} The overlay div element.
+ */
+function createOverlayElement() {
+    const overlay = document.createElement('div');
+    overlay.classList.add('boardoverlay');
+    return overlay;
+}
+
+
+/**
+ * Creates a card div element.
+ * @returns {HTMLElement} The card div element.
+ */
+function createCardElement() {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    return card;
+}
+
+
+/**
+ * Activates a listener for adding a subtask when the Enter key is pressed.
+ * The function retrieves the input field for the new subtask and sets up
+ * an event listener that listens for a 'keydown' event. If the Enter key 
+ * is pressed and the input field is not empty, the subtask is added using
+ * the `addSubtask` function, and the input field is cleared.
+ *
+ * @param {string} taskId - The ID of the task to which the subtask will be added.
+ */
+function activateSubtaskListener(taskId) {
+    const subtaskInput = document.getElementById('newSubtaskInput');
+    if (!subtaskInput) {
+        console.error('Subtask input field not found.');
+        return;
+    }
+    subtaskInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const subtaskTitle = subtaskInput.value.trim();
+            if (subtaskTitle) {
+                addSubtask(taskId, subtaskTitle);
+                subtaskInput.value = '';
+            }
+        }
+    });
+}
+
+
+/**
  * Renders the HTML content for editing a task.
  * @param {HTMLElement} card - Card element.
  * @param {string} backgroundColor - Background color.
@@ -304,7 +371,7 @@ function displayTasks(taskCards, searchInput) {
  */
 function checkForTasks(foundTask) {
     if (!foundTask) {
-        alert('No task was found'); // Alert anzeigen, wenn kein Task gefunden wurde
+        alert('No task was found');
     }
 }
 
@@ -326,65 +393,4 @@ function addSubtask(taskId) {
             addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId);
         }
     }
-}
-
-
-/**
- * Saves the new subtask to local storage, updates the backend, and redirects to edit task view.
- * @param {string} subtaskTitle - Title of the new subtask.
- * @param {Object} currentUser - Current user object.
- * @param {number} taskIndex - Index of the task in the user's tasks array.
- * @param {string} taskId - ID of the task to which the subtask is added.
- */
-function addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId) {
-    const newSubtask = addSubtaskNewSubtask(subtaskTitle);
-    currentUser.tasks[taskIndex].subtasks.push(newSubtask);
-    saveTasksToLocalStorage(currentUser);
-    updateCurrentUserInBackend(currentUser);
-    boardEditTask(taskId);
-}
-
-
-/**
- * Creates a new subtask object with a random ID.
- * @param {string} subtaskTitle - Title of the new subtask.
- * @returns {Object} - New subtask object.
- */
-function addSubtaskNewSubtask(subtaskTitle) {
-    return {
-        id: boardGenerateRandomID(),
-        title: subtaskTitle,
-        completed: false
-    };
-}
-
-
-/**
- * Generates a random alphanumeric ID.
- * @returns {string} - Random alphanumeric ID.
- */
-function boardGenerateRandomID() {    
-    return Math.random().toString(36).substring(2, 11);
-}
-
-
-/**
- * Checks if any column is empty and displays "No tasks in this line" if so.
- */
-function checkEmptyColumns() {
-    const columns = document.querySelectorAll('.boardColumn');
-    columns.forEach(column => {
-        const taskContainer = column.querySelector('.task-container');
-        if (!taskContainer || taskContainer.children.length === 0) {
-            const emptyMessage = document.createElement('div');
-            emptyMessage.classList.add('empty-message');
-            emptyMessage.textContent = 'No tasks in this line';
-            taskContainer.appendChild(emptyMessage);
-        } else {
-            const emptyMessage = column.querySelector('.empty-message');
-            if (emptyMessage) {
-                emptyMessage.remove();
-            }
-        }
-    });
 }

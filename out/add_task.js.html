@@ -88,22 +88,41 @@ function renderAssignedToContacts(contacts = currentUser.contacts) {
 
 
 /**
-* Iterates over the given contacts and updates the UI accordingly.
-* @param {Array} contacts - The array of contacts to iterate over.
-*/
+ * Iterates over the given contacts and updates the UI accordingly.
+ * @param {Array} contacts - The array of contacts to iterate over.
+ */
 function iterateOverContacts(contacts) {
     const assignedToContainer = document.getElementById('assigned-to-contacts-id');
     assignedToContainer.innerHTML = '';
-    contacts.forEach((contact, index) => {
-        if (contact.name === currentUser.userName)
-            contact.name = contact.name + ' (you)';
-        const initials = getFirstLettersOfName(contact.name);
-        textColor = isColorLight(contact.colorCode) ? 'white' : 'black';
-        const isSelected = contacts[index].selected;
-        assignedToContainer.innerHTML += templateAssignedToContainerHTML(contact.name, index, contact.colorCode, initials, textColor, isSelected);
-    });
-    const contactElements = assignedToContainer.querySelectorAll('.assigned-to-box');
-    contactElements.forEach(contactElement => {
+    contacts.forEach((contact, index) => updateContactUI(contact, index, contacts, assignedToContainer));
+    clearSelectedContacts(assignedToContainer);
+}
+
+
+/**
+ * Updates the UI for each contact.
+ * @param {Object} contact - The contact object to update.
+ * @param {number} index - The index of the contact in the array.
+ * @param {Array} contacts - The array of all contacts.
+ * @param {HTMLElement} assignedToContainer - The DOM element for the contacts container.
+ */
+function updateContactUI(contact, index, contacts, assignedToContainer) {
+    if (contact.name === currentUser.userName) contact.name += ' (you)';
+    const initials = getFirstLettersOfName(contact.name);
+    const textColor = isColorLight(contact.colorCode) ? 'white' : 'black';
+    const isSelected = contacts[index].selected;
+    assignedToContainer.innerHTML += templateAssignedToContainerHTML(
+        contact.name, index, contact.colorCode, initials, textColor, isSelected
+    );
+}
+
+
+/**
+ * Clears the selected class from all contact elements in the container.
+ * @param {HTMLElement} container - The DOM element for the contacts container.
+ */
+function clearSelectedContacts(container) {
+    container.querySelectorAll('.assigned-to-box').forEach(contactElement => {
         contactElement.classList.remove('selected-contact');
     });
 }
@@ -397,18 +416,6 @@ function addNewTaskMenu() {
     subtaskList.push(inputElement.value);
     inputElement.value = '';
     renderSubtasks();
-}
-
-
-/**
- * Renders the subtasks list based on the subtaskList array.
- */
-function renderSubtasks() {
-    let element = document.getElementById('add-task-list-id');
-    element.innerHTML = '';
-    subtaskList.forEach((subtask, index) => {
-      element.innerHTML += templateSubtaskHTML(index, subtask);
-    });
 }</code></pre>
         </article>
     </section>
@@ -419,13 +426,13 @@ function renderSubtasks() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactToAssignedTo">addContactToAssignedTo</a></li><li><a href="global.html#addNewTaskMenu">addNewTaskMenu</a></li><li><a href="global.html#addSubtaskVisibilityListener">addSubtaskVisibilityListener</a></li><li><a href="global.html#closeAssignedToMenu">closeAssignedToMenu</a></li><li><a href="global.html#closeCategoryMenu">closeCategoryMenu</a></li><li><a href="global.html#deleteOrAddTaskMenu">deleteOrAddTaskMenu</a></li><li><a href="global.html#filterAssignedToContacts">filterAssignedToContacts</a></li><li><a href="global.html#formatWithLeadingZero">formatWithLeadingZero</a></li><li><a href="global.html#initAddTask">initAddTask</a></li><li><a href="global.html#iterateOverContacts">iterateOverContacts</a></li><li><a href="global.html#openAssignedbyArrow">openAssignedbyArrow</a></li><li><a href="global.html#removeContactFromAssignedTo">removeContactFromAssignedTo</a></li><li><a href="global.html#renderAddedContacts">renderAddedContacts</a></li><li><a href="global.html#renderAssignedToContacts">renderAssignedToContacts</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#selectCategory">selectCategory</a></li><li><a href="global.html#selectedAssignedToUser">selectedAssignedToUser</a></li><li><a href="global.html#selectedAssignedToUserVariables">selectedAssignedToUserVariables</a></li><li><a href="global.html#setCurrentDate">setCurrentDate</a></li><li><a href="global.html#sortContactsBySurname">sortContactsBySurname</a></li><li><a href="global.html#toggleAddNewTaskMenu">toggleAddNewTaskMenu</a></li><li><a href="global.html#toggleAssignedToSection">toggleAssignedToSection</a></li><li><a href="global.html#toggleCategoryContainer">toggleCategoryContainer</a></li><li><a href="global.html#togglePrioImg">togglePrioImg</a></li><li><a href="global.html#toggleSection">toggleSection</a></li><li><a href="global.html#updateAssignedToLocalStorage">updateAssignedToLocalStorage</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactToAssignedTo">addContactToAssignedTo</a></li><li><a href="global.html#addNewTaskMenu">addNewTaskMenu</a></li><li><a href="global.html#addSubtaskVisibilityListener">addSubtaskVisibilityListener</a></li><li><a href="global.html#clearSelectedContacts">clearSelectedContacts</a></li><li><a href="global.html#closeAssignedToMenu">closeAssignedToMenu</a></li><li><a href="global.html#closeCategoryMenu">closeCategoryMenu</a></li><li><a href="global.html#deleteOrAddTaskMenu">deleteOrAddTaskMenu</a></li><li><a href="global.html#filterAssignedToContacts">filterAssignedToContacts</a></li><li><a href="global.html#formatWithLeadingZero">formatWithLeadingZero</a></li><li><a href="global.html#initAddTask">initAddTask</a></li><li><a href="global.html#iterateOverContacts">iterateOverContacts</a></li><li><a href="global.html#openAssignedbyArrow">openAssignedbyArrow</a></li><li><a href="global.html#removeContactFromAssignedTo">removeContactFromAssignedTo</a></li><li><a href="global.html#renderAddedContacts">renderAddedContacts</a></li><li><a href="global.html#renderAssignedToContacts">renderAssignedToContacts</a></li><li><a href="global.html#selectCategory">selectCategory</a></li><li><a href="global.html#selectedAssignedToUser">selectedAssignedToUser</a></li><li><a href="global.html#selectedAssignedToUserVariables">selectedAssignedToUserVariables</a></li><li><a href="global.html#setCurrentDate">setCurrentDate</a></li><li><a href="global.html#sortContactsBySurname">sortContactsBySurname</a></li><li><a href="global.html#toggleAddNewTaskMenu">toggleAddNewTaskMenu</a></li><li><a href="global.html#toggleAssignedToSection">toggleAssignedToSection</a></li><li><a href="global.html#toggleCategoryContainer">toggleCategoryContainer</a></li><li><a href="global.html#togglePrioImg">togglePrioImg</a></li><li><a href="global.html#toggleSection">toggleSection</a></li><li><a href="global.html#updateAssignedToLocalStorage">updateAssignedToLocalStorage</a></li><li><a href="global.html#updateContactUI">updateContactUI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 04 2024 20:48:56 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Oct 10 2024 21:53:29 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
