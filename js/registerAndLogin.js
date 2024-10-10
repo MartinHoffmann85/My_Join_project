@@ -12,7 +12,7 @@ let confirmPwVisibility = { pwVisibilityOn: false };
  */
 async function init() {
     users = await loadUsersFromBackend('users');
-    console.log(users);
+    /* console.log(users); */
     userLogOut();
     addPasswordVisibilityListener('login-pw-border-id', 
                                 'lock-id', 
