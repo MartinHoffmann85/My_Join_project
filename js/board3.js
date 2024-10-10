@@ -38,34 +38,6 @@ function createCardElement() {
 
 
 /**
- * Activates a listener for adding a subtask when the Enter key is pressed.
- * The function retrieves the input field for the new subtask and sets up
- * an event listener that listens for a 'keydown' event. If the Enter key 
- * is pressed and the input field is not empty, the subtask is added using
- * the `addSubtask` function, and the input field is cleared.
- *
- * @param {string} taskId - The ID of the task to which the subtask will be added.
- */
-function activateSubtaskListener(taskId) {
-    const subtaskInput = document.getElementById('newSubtaskInput');
-    if (!subtaskInput) {
-        console.error('Subtask input field not found.');
-        return;
-    }
-    subtaskInput.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const subtaskTitle = subtaskInput.value.trim();
-            if (subtaskTitle) {
-                addSubtask(taskId, subtaskTitle);
-                subtaskInput.value = '';
-            }
-        }
-    });
-}
-
-
-/**
  * Renders the HTML content for editing a task.
  * @param {HTMLElement} card - Card element.
  * @param {string} backgroundColor - Background color.
