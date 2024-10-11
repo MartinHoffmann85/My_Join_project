@@ -1,4 +1,21 @@
 /**
+ * Renders user details like initials in a colored box.
+ * @param {Object} user - The user object containing user details.
+ * @returns {string} - The HTML content representing user details.
+ */
+function renderUserDetails(user) {
+    const colorCode = user.colorCodes && user.colorCodes.length > 0 ? user.colorCodes[0] : getRandomColorHex();
+    const initials = user.userNames && user.userNames.length > 0 ? user.userNames[0].slice(0, 2) : '';
+    const textColor = isColorLight(colorCode) ? "black" : "white";
+    return `
+      <div class="boardContactInitialsandColor" style="background-color: ${colorCode}; color: ${textColor};">
+        ${initials}
+      </div>
+    `;
+}
+
+
+/**
  * Saves the updated tasks data to localStorage.
  * @param {Object} currentUser - The current user object.
  */
@@ -64,17 +81,56 @@ function drop(event) {
     event.preventDefault();
     const taskId = event.dataTransfer.getData("text/plain");
     const targetColumn = event.target.closest('.boardColumn');
+    handleDrop(taskId, targetColumn, event);
+}
+
+
+/**
+ * Handles task dropping and updating the task's column.
+ * @param {string} taskId - The ID of the dragged task.
+ * @param {HTMLElement} targetColumn - The target column where the task is dropped.
+ * @param {Event} event - The drop event object.
+ */
+function handleDrop(taskId, targetColumn, event) {
     if (targetColumn) {
-        const targetColumnId = targetColumn.id.split('-')[0];
+        const targetColumnId = getColumnId(targetColumn);
         const targetContainer = document.getElementById(targetColumnId + '-tasks');
-        const draggedTaskElement = document.getElementById(taskId);
-        if (draggedTaskElement && targetContainer) {
-            if (targetContainer.contains(draggedTaskElement) === false) {
-                targetContainer.appendChild(draggedTaskElement);
-                updateTaskColumnId(taskId, targetColumnId);
-            }
-        }
+        moveTaskToColumn(taskId, targetContainer, targetColumnId);
     }
+    finalizeDrop(event);
+}
+
+
+/**
+ * Gets the ID of the target column.
+ * @param {HTMLElement} targetColumn - The target column element.
+ * @returns {string} - The ID of the column.
+ */
+function getColumnId(targetColumn) {
+    return targetColumn.id.split('-')[0];
+}
+
+
+/**
+ * Moves the task to the specified column if not already present.
+ * @param {string} taskId - The ID of the task being moved.
+ * @param {HTMLElement} targetContainer - The container for the tasks in the target column.
+ * @param {string} targetColumnId - The ID of the target column.
+ */
+function moveTaskToColumn(taskId, targetContainer, targetColumnId) {
+    const draggedTaskElement = document.getElementById(taskId);
+    if (draggedTaskElement && targetContainer && !targetContainer.contains(draggedTaskElement)) {
+        targetContainer.appendChild(draggedTaskElement);
+        updateTaskColumnId(taskId, targetColumnId);
+    }
+}
+
+
+/**
+ * Finalizes the drop by rendering tasks and removing highlights.
+ * @param {Event} event - The drop event object.
+ */
+function finalizeDrop(event) {
     renderAllTasks();
     removeHighlight(event);
 }
@@ -136,19 +192,82 @@ async function updateTaskColumnId(taskId, newColumnId) {
  * @param {Array} subtasks - Array of subtasks.
  */
 function renderTaskCardAsOverlay(id, title, description, category, assignedTo, prio, date, columnId, subtasks) {
+    setupOverlayEnvironment();
+    const overlay = createOverlayElement();
+    const card = createCardElement();    
+    let assignedToHTML = renderTaskCardAsOverlayAssignetTo(assignedTo);
+    let backgroundColor = getCategoryBackgroundColor(category);
+    let prioContent = getPrioContent(prio);    
+    const subtasksHTML = boardRenderSubtasks(card, id);
+    renderTaskCardContent(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id);    
+    finalizeOverlay(overlay, card);
+}
+
+/**
+ * Sets up the environment by closing existing overlays and restoring the background.
+ */
+function setupOverlayEnvironment() {
     closeOverlayBoard();
     restoreBackgroundOnOverlayClose();
+}
+
+
+/**
+ * Creates the overlay element.
+ * @returns {HTMLElement} The overlay div element.
+ */
+function createOverlayElement() {
     const overlay = document.createElement('div');
-    overlay.classList.add('boardoverlay');    
+    overlay.classList.add('boardoverlay');
+    return overlay;
+}
+
+
+/**
+ * Creates the card element.
+ * @returns {HTMLElement} The card div element.
+ */
+function createCardElement() {
     const card = document.createElement('div');
-    card.classList.add('card');    
-    let assignedToHTML = renderTaskCardAsOverlayAssignetTo(assignedTo);    
+    card.classList.add('card');
+    return card;
+}
+
+
+/**
+ * Gets the background color based on the task category.
+ * @param {string} category - Task category.
+ * @returns {string} The background color.
+ */
+function getCategoryBackgroundColor(category) {
     let backgroundColor = '';
-    backgroundColor = renderTaskCardAsOverlayCategory(category, backgroundColor);
+    return renderTaskCardAsOverlayCategory(category, backgroundColor);
+}
+
+
+/**
+ * Gets the priority content.
+ * @param {string} prio - Task priority.
+ * @returns {string} The priority content.
+ */
+function getPrioContent(prio) {
     let prioContent = prio;
-    prioContent = renderTaskCarsAsOverlayPrio(prio, prioContent);
-    const subtasksHTML = boardRenderSubtasks(card, id);
+    return renderTaskCarsAsOverlayPrio(prio, prioContent);
+}
+
+
+/**
+ * Renders the task card content inside the card element.
+ */
+function renderTaskCardContent(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id) {
     renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id);
+}
+
+
+/**
+ * Finalizes the overlay by appending the card and changing the background.
+ */
+function finalizeOverlay(overlay, card) {
     overlay.appendChild(card);
     document.body.appendChild(overlay);
     changeBackgroundOnOverlayOpen();
@@ -258,136 +377,4 @@ function renderTaskCardAsOverlayCategory(category, backgroundColor) {
         backgroundColor = 'var(--user-story-blue)';
     }
     return backgroundColor;
-}
-
-
-/**
- * Renders the HTML content for the assigned to section of the task card overlay.
- * @param {Object} assignedTo - Assigned to details.
- * @returns {string} - Rendered HTML content for the assigned to section.
- */
-function renderTaskCardAsOverlayAssignetTo(assignedTo) {
-    let assignedToHTML = '';
-    if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
-        assignedTo.userNames.forEach((userName, index) => {
-            const initials = getFirstLettersOfName(userName);
-            const backgroundColor = assignedTo.colorCodes[index];
-            const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
-            assignedToHTML += `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
-        });
-    } else {
-        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
-    }
-    return assignedToHTML;
-}
-
-
-/**
- * Adds click event listeners to task cards.
- */
-function addTaskClickListener() {
-    const taskCards = document.querySelectorAll('.task');
-    taskCards.forEach(taskCard => {        
-        taskCard.removeEventListener('click', renderTaskCardOverlay);        
-        taskCard.addEventListener('click', renderTaskCardOverlay);
-    });
-}
-
-
-/**
- * Renders the task card overlay when a task is clicked.
- * @param {Event} event - Click event.
- */
-function renderTaskCardOverlay(event) {
-    const taskId = event.currentTarget.id;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    const task = currentUser.tasks.find(task => task.id === taskId);
-    if (task) {        
-        const subtasks = task.subtasks;        
-        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, subtasks);
-    }
-}
-
-
-/**
- * Closes the task card overlay.
- */
-function closeOverlayBoard() {
-    const overlay = document.querySelector('.boardoverlay');
-    if (overlay) {
-        overlay.remove();
-    }
-    restoreBackgroundOnOverlayClose();
-}
-
-
-/**
- * Deletes a task.
- * @param {string} id - Task ID.
- */
-function deleteTask(id) {    
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    const stringId = id.toString();
-    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === stringId);
-        if (taskIndex !== -1) {
-            currentUser.tasks.splice(taskIndex, 1);
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));            
-            updateCurrentUserInBackend(currentUser);
-            closeOverlayBoard();
-            renderAllTasks();
-        }
-    }
-}
-
-
-/**
- * Opens an overlay to edit a task.
- * @param {string} taskId - ID of the task to be edited.
- */
-function boardEditTask(taskId) {
-    closeOverlayBoard();
-    const task = getTaskFromLocalStorage(taskId);
-    if (task) {
-        const overlay = document.createElement('div');
-        overlay.classList.add('boardoverlay');
-        const card = document.createElement('div');
-        card.classList.add('card');        
-        let backgroundColor = boardEditTaskCategory(task);
-        boardEditTaskPrio(task);
-        const assignedToHTML = boardEditTaskAssignetTo(task);
-        boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML);
-        overlay.appendChild(card);
-        document.body.appendChild(overlay);
-    }
-    changeBackgroundOnOverlayOpen();
-    activateSubtaskListener(taskId);
-}
-
-
-/**
- * Activates a listener for adding a subtask when the Enter key is pressed.
- * The function retrieves the input field for the new subtask and sets up
- * an event listener that listens for a 'keydown' event. If the Enter key 
- * is pressed and the input field is not empty, the subtask is added using
- * the `addSubtask` function, and the input field is cleared.
- *
- * @param {string} taskId - The ID of the task to which the subtask will be added.
- */
-function activateSubtaskListener(taskId) {
-    const subtaskInput = document.getElementById('newSubtaskInput');
-    if (!subtaskInput) {
-        console.error('Subtask input field not found.');
-        return;
-    }
-    subtaskInput.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const subtaskTitle = subtaskInput.value.trim();
-            if (subtaskTitle) {
-                addSubtask(taskId, subtaskTitle);
-                subtaskInput.value = '';
-            }
-        }
-    });
 }

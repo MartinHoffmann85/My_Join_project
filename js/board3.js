@@ -1,4 +1,169 @@
 /**
+ * Renders the HTML content for the assigned to section of the task card overlay.
+ * @param {Object} assignedTo - Assigned to details.
+ * @returns {string} - Rendered HTML content for the assigned to section.
+ */
+function renderTaskCardAsOverlayAssignetTo(assignedTo) {
+    let assignedToHTML = '';
+    if (assignedTo && assignedTo.userNames && assignedTo.userNames.length > 0) {
+        assignedTo.userNames.forEach((userName, index) => {
+            const initials = getFirstLettersOfName(userName);
+            const backgroundColor = assignedTo.colorCodes[index];
+            const iconHTML = `<div class="userIcon" style="background-color: ${backgroundColor};">${initials}</div>`;
+            assignedToHTML += `<div class="assignedToUser">${iconHTML} <p class="editAssignetToUserPElement">${userName}</p></div>`;
+        });
+    } else {
+        assignedToHTML = '<div><strong>Assigned to:</strong> No one assigned</div>';
+    }
+    return assignedToHTML;
+}
+
+
+/**
+ * Adds click event listeners to task cards.
+ */
+function addTaskClickListener() {
+    const taskCards = document.querySelectorAll('.task');
+    taskCards.forEach(taskCard => {        
+        taskCard.removeEventListener('click', renderTaskCardOverlay);        
+        taskCard.addEventListener('click', renderTaskCardOverlay);
+    });
+}
+
+
+/**
+ * Renders the task card overlay when a task is clicked.
+ * @param {Event} event - Click event.
+ */
+function renderTaskCardOverlay(event) {
+    const taskId = event.currentTarget.id;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+    const task = currentUser.tasks.find(task => task.id === taskId);
+    if (task) {        
+        const subtasks = task.subtasks;        
+        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, subtasks);
+    }
+}
+
+
+/**
+ * Closes the task card overlay.
+ */
+function closeOverlayBoard() {
+    const overlay = document.querySelector('.boardoverlay');
+    if (overlay) {
+        overlay.remove();
+    }
+    restoreBackgroundOnOverlayClose();
+}
+
+
+/**
+ * Deletes a task.
+ * @param {string} id - Task ID.
+ */
+function deleteTask(id) {    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+    const stringId = id.toString();
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const taskIndex = currentUser.tasks.findIndex(task => task.id === stringId);
+        if (taskIndex !== -1) {
+            currentUser.tasks.splice(taskIndex, 1);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));            
+            updateCurrentUserInBackend(currentUser);
+            closeOverlayBoard();
+            renderAllTasks();
+        }
+    }
+}
+
+
+/**
+ * Opens an overlay to edit a task.
+ * @param {string} taskId - ID of the task to be edited.
+ */
+function boardEditTask(taskId) {
+    closeOverlayBoard();
+    const task = getTaskFromLocalStorage(taskId);
+    if (task) {
+        const overlay = createEditOverlay(task, taskId);
+        finalizeEditOverlay(overlay);
+    }
+    activateSubtaskListener(taskId);
+}
+
+
+/**
+ * Creates the overlay for editing a task.
+ * @param {Object} task - The task object.
+ * @param {string} taskId - The task ID.
+ * @returns {HTMLElement} - The overlay element.
+ */
+function createEditOverlay(task, taskId) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('boardoverlay');
+    const card = createEditCard(task, taskId);
+    overlay.appendChild(card);
+    return overlay;
+}
+
+
+/**
+ * Creates the card for the edit overlay.
+ * @param {Object} task - The task object.
+ * @param {string} taskId - The task ID.
+ * @returns {HTMLElement} - The card element.
+ */
+function createEditCard(task, taskId) {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    const backgroundColor = boardEditTaskCategory(task);
+    boardEditTaskPrio(task);
+    const assignedToHTML = boardEditTaskAssignetTo(task);
+    boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML);
+    return card;
+}
+
+
+/**
+ * Finalizes the edit overlay by appending it to the document and changing the background.
+ * @param {HTMLElement} overlay - The overlay element.
+ */
+function finalizeEditOverlay(overlay) {
+    document.body.appendChild(overlay);
+    changeBackgroundOnOverlayOpen();
+}
+
+
+/**
+ * Activates a listener for adding a subtask when the Enter key is pressed.
+ * The function retrieves the input field for the new subtask and sets up
+ * an event listener that listens for a 'keydown' event. If the Enter key 
+ * is pressed and the input field is not empty, the subtask is added using
+ * the `addSubtask` function, and the input field is cleared.
+ *
+ * @param {string} taskId - The ID of the task to which the subtask will be added.
+ */
+function activateSubtaskListener(taskId) {
+    const subtaskInput = document.getElementById('newSubtaskInput');
+    if (!subtaskInput) {
+        console.error('Subtask input field not found.');
+        return;
+    }
+    subtaskInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const subtaskTitle = subtaskInput.value.trim();
+            if (subtaskTitle) {
+                addSubtask(taskId, subtaskTitle);
+                subtaskInput.value = '';
+            }
+        }
+    });
+}
+
+
+/**
  * Creates the task edit overlay.
  * @param {Object} task - The task object to edit.
  * @param {string} taskId - ID of the task.
@@ -214,217 +379,20 @@ function getTaskFromLocalStorage(taskId) {
  * @param {string} taskId - ID of the task.
  */
 function editUpdateAssignedTo(taskId) {
-    const selectedContacts = Array.from(document.querySelectorAll('.contact-option.selected')).map(contact => contact.textContent.trim());
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
+    const selectedContacts = getSelectedContacts();
+    const currentUser = getCurrentUser();
+    const taskIndex = findTaskIndex(currentUser, taskId);
     if (taskIndex !== -1) {
-      const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo || { userNames: [], colorCodes: [] };
-      userNames.length = 0;
-      colorCodes.length = 0;
-      selectedContacts.forEach(contactName => {
-        userNames.push(contactName);
-        colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
-      });
-      saveTasksToLocalStorage(currentUser);
-      updateCurrentUserInBackend(currentUser);
-      boardEditTask(taskId);
+        updateAssignedContacts(currentUser, taskIndex, selectedContacts);
+        saveAndRefreshTask(currentUser, taskId);
     }
 }
 
 
 /**
- * Retrieves the color code for a given contact name from the contacts list.
- * @param {Array} contacts - List of contacts.
- * @param {string} contactName - Name of the contact to retrieve the color code for.
- * @returns {string} - Color code associated with the contact.
+ * Retrieves the list of selected contacts from the DOM.
+ * @returns {Array} - Array of selected contact names.
  */
-function getColorCodeForContact(contacts, contactName) {
-    const contact = contacts.find(contact => contact.name === contactName);
-    if (contact) {
-        return contact.colorCode;
-    }
-}
-
-
-/**
- * Updates the task in local storage and backend after editing.
- * @param {string} taskId - ID of the task.
- */
-function boardEditTaskUpdate(taskId) {
-    const { task, updatedTitle, updatedDescription, updatedDate, updatedPriority } = boardEditTaskUpdateVariables(taskId);    
-    if (task) {        
-        task.title = updatedTitle;
-        task.description = updatedDescription;
-        task.date = updatedDate;
-        task.prio = updatedPriority;        
-        updateTaskInLocalStorageAndBackend(taskId, task);        
-        closeOverlayBoard();
-        initBoard();
-    }
-}
-
-
-/**
- * Collects the updated task information from the edit task form.
- * @param {string} taskId - ID of the task.
- * @returns {Object} - Object containing the task and updated information.
- */
-function boardEditTaskUpdateVariables(taskId) {
-    const editTitleInput = document.getElementById('editTitle');
-    const editDescriptionTextarea = document.getElementById('editDescription');
-    const editDateInput = document.getElementById('editDate');
-    const editPrioritySelect = document.getElementById('editPriority');
-    const updatedTitle = editTitleInput.value;
-    const updatedDescription = editDescriptionTextarea.value;
-    const updatedDate = editDateInput.value;
-    const updatedPriority = editPrioritySelect.value;
-    const task = getTaskFromLocalStorage(taskId);
-    return { task, updatedTitle, updatedDescription, updatedDate, updatedPriority };
-}
-
-
-/**
- * Updates the task in local storage and backend.
- * @param {string} taskId - ID of the task.
- * @param {Object} updatedTask - Updated task object.
- */
-function updateTaskInLocalStorageAndBackend(taskId, updatedTask) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
-        if (taskIndex !== -1) {
-            currentUser.tasks[taskIndex] = updatedTask;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            updateCurrentUserInBackend(currentUser);
-        }
-    }
-}
-
-
-/**
- * Searches tasks based on the input provided in the search input field.
- */
-function searchTasks() {
-    const searchInput = document.getElementById('boardSearchInputID').value.toLowerCase();
-    const taskCards = document.querySelectorAll('.task');
-    const foundTask = displayTasks(taskCards, searchInput);
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-        checkForTasks(foundTask);
-    }, 2000);
-}
-
-
-/**
- * Displays tasks based on the search input.
- * @param {NodeList} taskCards - The list of task elements.
- * @param {string} searchInput - The search query.
- * @returns {boolean} - Returns true if at least one task is found, otherwise false.
- */
-function displayTasks(taskCards, searchInput) {
-    let foundTask = false;
-    taskCards.forEach(taskCard => {
-        const taskTitle = taskCard.querySelector('.renderTaskTitlePElement').textContent.toLowerCase();
-        const taskDescription = taskCard.querySelector('.renderTaskDescription').textContent.toLowerCase();        
-        if (taskTitle.includes(searchInput) || taskDescription.includes(searchInput)) {
-            taskCard.style.display = 'block';
-            foundTask = true;
-        } else {
-            taskCard.style.display = 'none';
-        }
-    });
-    return foundTask;
-}
-
-
-/**
- * Checks if any tasks were found and displays an alert if none were found.
- * @param {boolean} foundTask - Indicates whether any tasks were found.
- */
-function checkForTasks(foundTask) {
-    if (!foundTask) {
-        alert('No task was found');
-        alert('No task was found');
-    }
-}
-
-
-/**
- * Adds a new subtask to the specified task.
- * @param {string} taskId - ID of the task to which the subtask is added.
- */
-function addSubtask(taskId) {
-    const newSubtaskInput = document.getElementById('newSubtaskInput');
-    const subtaskTitle = newSubtaskInput.value.trim();
-    if (subtaskTitle !== '') {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
-        if (taskIndex !== -1) {            
-            if (!currentUser.tasks[taskIndex].subtasks) {
-                currentUser.tasks[taskIndex].subtasks = [];
-            }            
-            addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId);
-        }
-    }
-}
-
-
-/**
- * Saves the new subtask to local storage, updates the backend, and redirects to edit task view.
- * @param {string} subtaskTitle - Title of the new subtask.
- * @param {Object} currentUser - Current user object.
- * @param {number} taskIndex - Index of the task in the user's tasks array.
- * @param {string} taskId - ID of the task to which the subtask is added.
- */
-function addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId) {
-    const newSubtask = addSubtaskNewSubtask(subtaskTitle);
-    currentUser.tasks[taskIndex].subtasks.push(newSubtask);
-    saveTasksToLocalStorage(currentUser);
-    updateCurrentUserInBackend(currentUser);
-    boardEditTask(taskId);
-}
-
-
-/**
- * Creates a new subtask object with a random ID.
- * @param {string} subtaskTitle - Title of the new subtask.
- * @returns {Object} - New subtask object.
- */
-function addSubtaskNewSubtask(subtaskTitle) {
-    return {
-        id: boardGenerateRandomID(),
-        title: subtaskTitle,
-        completed: false
-    };
-}
-
-
-/**
- * Generates a random alphanumeric ID.
- * @returns {string} - Random alphanumeric ID.
- */
-function boardGenerateRandomID() {    
-    return Math.random().toString(36).substring(2, 11);
-}
-
-
-/**
- * Checks if any column is empty and displays "No tasks in this line" if so.
- */
-function checkEmptyColumns() {
-    const columns = document.querySelectorAll('.boardColumn');
-    columns.forEach(column => {
-        const taskContainer = column.querySelector('.task-container');
-        if (!taskContainer || taskContainer.children.length === 0) {
-            const emptyMessage = document.createElement('div');
-            emptyMessage.classList.add('empty-message');
-            emptyMessage.textContent = 'No tasks in this line';
-            taskContainer.appendChild(emptyMessage);
-        } else {
-            const emptyMessage = column.querySelector('.empty-message');
-            if (emptyMessage) {
-                emptyMessage.remove();
-            }
-        }
-    });
+function getSelectedContacts() {
+    return Array.from(document.querySelectorAll('.contact-option.selected')).map(contact => contact.textContent.trim());
 }
