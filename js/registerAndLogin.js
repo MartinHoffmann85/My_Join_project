@@ -60,7 +60,6 @@ async function register() {
     if (emailExistsInBackend) {
         document.getElementById('existing-user-msg').innerText = "User with this email already exists in backend.";
         document.getElementById('existing-user-msg').classList.remove('d-none');
-        console.log("async function register()", emailExistsInBackend);
         return;
     }
     await registerFinsh(newUser);
@@ -95,7 +94,6 @@ async function checkEmailExistsInBackend(email) {
 async function fetchUsersFromBackend() {
     const response = await fetch(STORAGE_URL + "/users.json");
     const users = await response.json();
-    console.log("Users from backend:", users);
     return users;
 }
 
