@@ -54,16 +54,35 @@ async function loadUsersFromBackend() {
 async function register() {
     if (!(registerValidationCheck() && ppCheckboxConfirmed)) {
         return;
-    }
-    const newUser = await generateNewUserObject();    
-    const userArray = Object.values(users);    
+    }    
+    const newUser = generateNewUserObject();    
+    const userArray = Object.values(users);
     const userExists = userArray.some(user => user.userEMail === newUser.userEMail);    
     if (userExists) {
         document.getElementById('existing-user-msg').innerText = "User with this email already exists.";
         document.getElementById('existing-user-msg').classList.remove('d-none');
         return;
     }
+    const emailExistsInBackend = await checkEmailExistsInBackend(newUser.userEMail);
+    if (emailExistsInBackend) {
+        document.getElementById('existing-user-msg').innerText = "User with this email already exists in backend.";
+        document.getElementById('existing-user-msg').classList.remove('d-none');
+        return;
+    }    
     registerFinsh(newUser);
+}
+
+
+async function checkEmailExistsInBackend(email) {
+    try {
+        const response = await fetch(STORAGE_URL + "/users.json");
+        const users = await response.json();
+        const userArray = Object.values(users);
+        return userArray.some(user => user.userEMail === email);
+    } catch (error) {
+        console.error('Error checking email in backend:', error);
+        return false;
+    }
 }
 
 
@@ -78,20 +97,8 @@ async function register() {
 async function registerFinsh(newUser) {
     await addNewUser(newUser);
     toggleSuccessesMsg();
-    closeSignUp();
-    redirectToIndex();
-}
-
-
-/**
- * Redirects the user to the "index.html" page and reloads the page after the redirect.
- * This ensures that the page is reloaded when navigated to.
- */
-function redirectToIndex() {    
-    window.location.href = "index.html";
-    window.onload = function() {
-    location.reload();
-    };
+    closeSignUp();    
+    init();
 }
 
 
