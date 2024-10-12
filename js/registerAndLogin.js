@@ -12,7 +12,7 @@ let confirmPwVisibility = { pwVisibilityOn: false };
  */
 async function init() {
     users = await loadUsersFromBackend('users');
-    /* console.log(users); */
+    console.log(users);
     userLogOut();
     addPasswordVisibilityListener('login-pw-border-id', 
                                 'lock-id', 
@@ -55,7 +55,7 @@ async function register() {
     if (!(registerValidationCheck() && ppCheckboxConfirmed)) {
         return;
     }
-    const newUser = generateNewUserObject();    
+    const newUser = await generateNewUserObject();    
     const userArray = Object.values(users);    
     const userExists = userArray.some(user => user.userEMail === newUser.userEMail);    
     if (userExists) {
@@ -63,9 +63,35 @@ async function register() {
         document.getElementById('existing-user-msg').classList.remove('d-none');
         return;
     }
-    addNewUser(newUser);
+    registerFinsh(newUser);
+}
+
+
+/**
+ * Completes the registration process by adding a new user, showing a success message,
+ * closing the sign-up form, and redirecting to the index page.
+ * 
+ * @async
+ * @param {Object} newUser - The new user object to be registered.
+ * @returns {Promise<void>} - Resolves when the registration process is finished.
+ */
+async function registerFinsh(newUser) {
+    await addNewUser(newUser);
     toggleSuccessesMsg();
     closeSignUp();
+    redirectToIndex();
+}
+
+
+/**
+ * Redirects the user to the "index.html" page and reloads the page after the redirect.
+ * This ensures that the page is reloaded when navigated to.
+ */
+function redirectToIndex() {    
+    window.location.href = "index.html";
+    window.onload = function() {
+    location.reload();
+    };
 }
 
 
