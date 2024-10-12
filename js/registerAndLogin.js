@@ -54,35 +54,94 @@ async function loadUsersFromBackend() {
 async function register() {
     if (!(registerValidationCheck() && ppCheckboxConfirmed)) {
         return;
-    }    
-    const newUser = generateNewUserObject();    
-    const userArray = Object.values(users);
-    const userExists = userArray.some(user => user.userEMail === newUser.userEMail);    
-    if (userExists) {
-        document.getElementById('existing-user-msg').innerText = "User with this email already exists.";
-        document.getElementById('existing-user-msg').classList.remove('d-none');
-        return;
     }
+    const newUser = generateNewUserObject();
     const emailExistsInBackend = await checkEmailExistsInBackend(newUser.userEMail);
     if (emailExistsInBackend) {
         document.getElementById('existing-user-msg').innerText = "User with this email already exists in backend.";
         document.getElementById('existing-user-msg').classList.remove('d-none');
+        console.log("async function register()", emailExistsInBackend);
         return;
-    }    
-    registerFinsh(newUser);
+    }
+    await registerFinsh(newUser);
 }
 
 
+/**
+ * Checks if a given email exists in the backend user database.
+ *
+ * @async
+ * @param {string} email - The email address to check for existence.
+ * @returns {Promise<boolean>} - Returns true if the email exists, otherwise false.
+ */
 async function checkEmailExistsInBackend(email) {
     try {
-        const response = await fetch(STORAGE_URL + "/users.json");
-        const users = await response.json();
-        const userArray = Object.values(users);
-        return userArray.some(user => user.userEMail === email);
+        const users = await fetchUsersFromBackend();
+        const userArray = extractEmailsFromUsers(users);
+        return userArray.includes(email);
     } catch (error) {
         console.error('Error checking email in backend:', error);
         return false;
     }
+}
+
+
+/**
+ * Fetches the list of users from the backend storage.
+ *
+ * @async
+ * @returns {Promise<Object>} - Returns a promise that resolves to the user data from the backend.
+ */
+async function fetchUsersFromBackend() {
+    const response = await fetch(STORAGE_URL + "/users.json");
+    const users = await response.json();
+    console.log("Users from backend:", users);
+    return users;
+}
+
+/**
+ * Extracts email addresses from the provided users object.
+ *
+ * @param {Object} users - The users object fetched from the backend.
+ * @returns {string[]} - An array of email addresses extracted from the users.
+ */
+function extractEmailsFromUsers(users) {
+    const userArray = [];
+    for (const key in users) {
+        const user = users[key];
+        if (isUserObject(user)) {
+            userArray.push(user.userEMail);
+        } else if (Array.isArray(user)) {
+            extractEmailsFromArray(user, userArray);
+        }
+    }
+    return userArray;
+}
+
+
+/**
+ * Checks if the given input is a user object.
+ *
+ * @param {any} user - The input to check.
+ * @returns {boolean} - Returns true if the input is a user object, otherwise false.
+ */
+function isUserObject(user) {
+    return typeof user === 'object' && !Array.isArray(user);
+}
+
+
+/**
+ * Extracts email addresses from an array of user objects and adds them to a given list.
+ *
+ * @param {Object[]} userArray - An array of user objects.
+ * @param {string[]} emailList - The list to which extracted email addresses will be added.
+ */
+function extractEmailsFromArray(userArray, emailList) {
+    userArray.forEach(u => {
+        if (u.userEMail) {
+            emailList.push(u.userEMail);
+        }
+    });
 }
 
 
