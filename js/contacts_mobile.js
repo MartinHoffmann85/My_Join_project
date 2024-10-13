@@ -289,12 +289,14 @@ return /*html*/ `
       <img class="addContactBlankUserImgMobile" src="./assets/img/contacts/addContactBlankUserImg.svg" alt="addContactBlankUserImg">
     </div>
   </div>
-  <form id="add-contact-form-mobile-id" onsubmit="createContactMobile(); return false;">
+  <form id="add-contact-form-mobile-id" onsubmit="event.preventDefault(); createContactMobile(); return false;">
     <div class="addContactContainerFooterMobile">
-      <input class="addContactInputNameMobile" name="addContactInputNameMobile" id="add-contact-input-name-mobile-id" type="text" placeholder="Name">
+      <input class="addContactInputNameMobile" name="addContactInputNameMobile" id="add-contact-input-name-mobile-id" required pattern="[A-Za-z'\\- ]+" type="text" placeholder="Name">
       <input class="addContactInputMailAddresssMobile" name="addContactInputMailAddresssMobile" id="add-contact-input-mail-addresss-mobile-id" type="text" placeholder="E Mail">
-      <input class="addContactInputPhoneMobile" name="addContactInputPhoneMobile" id="add-contact-input-phone-mobile-id" type="text" placeholder="Phone">          
-      <img class="createContactButtonImg" src="./assets/img/contacts/createContactButton.svg" alt="createContactButton" onclick="createContactMobile()">
+      <input class="addContactInputPhoneMobile" name="addContactInputPhoneMobile" id="add-contact-input-phone-mobile-id" type="tel" required pattern="[0-9]{1,}" placeholder="Phone">          
+      <button class="createContactButtonImg" type="submit">
+      <img src="./assets/img/contacts/createContactButton.svg" alt="createContactButton">
+</button>
     </div>
   </form>
 `;
