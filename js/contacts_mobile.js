@@ -434,6 +434,11 @@ function validateEmail(emailInput, contactEmail) {
     displayErrorMessage(emailInput, "Line cannot be empty, please fill it out.");
     return true;
   }
+  if (contactEmail.indexOf('@') === -1 || contactEmail.indexOf('.') === -1) {
+    displayErrorMessage(emailInput, "Please enter a valid email address.");
+    return true;
+  }
+
   return false;
 }
 
