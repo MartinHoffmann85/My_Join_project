@@ -102,7 +102,7 @@ body {
 
 .task-container {
     display: flex;
-    flex-direction: column;    
+    flex-direction: column;
 }
 
 .renderTaskCardCategoryDiv {
@@ -859,6 +859,11 @@ body {
     .userIcon {
         height: 42px;
         width: 42px;
+    }
+
+    .task-container {
+        flex-direction: row;
+        overflow-y: scroll;        
     }
 }
 
