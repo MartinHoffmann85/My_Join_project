@@ -259,7 +259,10 @@ function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) 
                 </div>
             </div>
             <div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-                <img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTaskUpdate('${taskId}')">
+                <span class="contactsContentRightSideEditButton" onclick="boardEditTaskUpdate('${taskId}')">
+                    <img src="./assets/svg/check.svg" alt="check" />
+                    Save
+                </span>
                 <img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
             </div>
         `;

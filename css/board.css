@@ -355,6 +355,9 @@ body {
 }
 
 .contactsContentRightSideEditButton {
+    display: flex;
+    justify-content: center;
+    color: #2A3647;
     height: 24px;
     width: 81px;
 }
