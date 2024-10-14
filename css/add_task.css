@@ -142,6 +142,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin: 4px;
     padding: 16px 7px;
     border-radius: 10px;
+    max-width: 440px;
 }
 
 .assigned-to-box:hover {
