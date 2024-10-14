@@ -446,10 +446,6 @@
 }
 
 @media only screen and (max-width: 375px) and (min-width: 320px){
-    .header-gap {
-        padding: 0;
-    }
-
     .summary-title {
         margin-top: 50px;
     }
