@@ -289,16 +289,16 @@ return /*html*/ `
       <img class="addContactBlankUserImgMobile" src="./assets/img/contacts/addContactBlankUserImg.svg" alt="addContactBlankUserImg">
     </div>
   </div>
-  <form id="add-contact-form-mobile-id" onsubmit="event.preventDefault(); createContactMobile(); return false;">
+
     <div class="addContactContainerFooterMobile">
       <input class="addContactInputNameMobile" name="addContactInputNameMobile" id="add-contact-input-name-mobile-id" required pattern="[A-Za-z'\\- ]+" type="text" placeholder="Name">
       <input class="addContactInputMailAddresssMobile" name="addContactInputMailAddresssMobile" id="add-contact-input-mail-addresss-mobile-id" type="text" placeholder="E Mail">
       <input class="addContactInputPhoneMobile" name="addContactInputPhoneMobile" id="add-contact-input-phone-mobile-id" type="tel" required pattern="[0-9]{1,}" placeholder="Phone">          
-      <button class="createContactButtonImg" type="submit">
+      <button class="createContactButtonImg" onclick="createContactMobile()">
       <img src="./assets/img/contacts/createContactButton.svg" alt="createContactButton">
-</button>
+      </button>
     </div>
-  </form>
+
 `;
 }
 
@@ -318,9 +318,13 @@ async function createContactMobile() {
   const currentUser = getLoggedInUser();
   if (!currentUser) return console.error("No user logged in.");
   const inputs = getInputElementsMobile();
-  const { contactName, contactEmail, contactPhone } = validateCreateContactMobile();
-  if (validateAndHandleErrors(inputs, { contactName, contactEmail, contactPhone })) return;
-  saveNewContact(contactName, contactEmail, contactPhone);
+  const contactInfo = {
+    contactName: inputs.nameInput.value,
+    contactEmail: inputs.emailInput.value,
+    contactPhone: inputs.phoneInput.value
+  };
+  if (validateAndHandleErrors(inputs, contactInfo)) return;
+  saveNewContact(contactInfo.contactName, contactInfo.contactEmail, contactInfo.contactPhone);
   contactsInit();
   showSuccessfullyContactCreatedImageMobile();
 }
@@ -372,16 +376,13 @@ function getInputElementsMobile() {
  */
 function validateInputsMobile(inputs, contactInfo) {
   let hasError = false;  
-  if (!contactInfo.contactName) {
-    displayErrorMessage(inputs.nameInput, "Line cannot be empty, please fill it out.");
+  if (validateName(inputs.nameInput, contactInfo.contactName)) {
     hasError = true;
   }  
-  if (!contactInfo.contactEmail) {
-    displayErrorMessage(inputs.emailInput, "Line cannot be empty, please fill it out.");
+  if (validateEmail(inputs.emailInput, contactInfo.contactEmail)) {
     hasError = true;
   }  
-  if (!contactInfo.contactPhone) {
-    displayErrorMessage(inputs.phoneInput, "Line cannot be empty, please fill it out.");
+  if (validatePhone(inputs.phoneInput, contactInfo.contactPhone)) {
     hasError = true;
   }
   return hasError;
@@ -389,12 +390,53 @@ function validateInputsMobile(inputs, contactInfo) {
 
 
 /**
- * Retrieves the contact information from mobile input fields.
- * @returns {Object} An object containing the contact name, email, and phone.
+ * Validates the contact name input.
+ * @param {Object} nameInput - The input element for the contact name.
+ * @param {string} contactName - The name of the contact.
+ * @returns {boolean} - Returns true if there is an error.
  */
-function validateCreateContactMobile() {
-  const contactName = document.getElementById("add-contact-input-name-mobile-id").value;
-  const contactEmail = document.getElementById("add-contact-input-mail-addresss-mobile-id").value;
-  const contactPhone = document.getElementById("add-contact-input-phone-mobile-id").value;
-  return { contactName, contactEmail, contactPhone };
+function validateName(nameInput, contactName) {
+  const nameHasNumbers = /\d/;  
+  if (!contactName) {
+    displayErrorMessage(nameInput, "Line cannot be empty, please fill it out.");
+    return true;
+  } else if (nameHasNumbers.test(contactName)) {
+    displayErrorMessage(nameInput, "The name cannot contain numbers.");
+    return true;
+  }  
+  return false;
+}
+
+
+/**
+ * Validates the contact email input.
+ * @param {Object} emailInput - The input element for the contact email.
+ * @param {string} contactEmail - The email of the contact.
+ * @returns {boolean} - Returns true if there is an error.
+ */
+function validateEmail(emailInput, contactEmail) {
+  if (!contactEmail) {
+    displayErrorMessage(emailInput, "Line cannot be empty, please fill it out.");
+    return true;
+  }
+  return false;
+}
+
+
+/**
+ * Validates the contact phone input.
+ * @param {Object} phoneInput - The input element for the contact phone.
+ * @param {string} contactPhone - The phone number of the contact.
+ * @returns {boolean} - Returns true if there is an error.
+ */
+function validatePhone(phoneInput, contactPhone) {
+  const phoneIsValid = /^\d+$/;  
+  if (!contactPhone) {
+    displayErrorMessage(phoneInput, "Line cannot be empty, please fill it out.");
+    return true;
+  } else if (!phoneIsValid.test(contactPhone)) {
+    displayErrorMessage(phoneInput, "The phone number can only contain digits.");
+    return true;
+  }  
+  return false;
 }
