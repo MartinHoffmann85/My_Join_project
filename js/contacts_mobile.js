@@ -369,23 +369,38 @@ function getInputElementsMobile() {
 
 
 /**
- * Validates the input fields for the mobile view.
+ * Validates the input fields for the mobile view and adjusts body overflow based on screen height.
  * @param {Object} inputs - An object containing the input elements.
  * @param {Object} contactInfo - An object containing contact information.
  * @returns {boolean} - Returns true if there is an error, otherwise false.
  */
 function validateInputsMobile(inputs, contactInfo) {
-  let hasError = false;  
-  if (validateName(inputs.nameInput, contactInfo.contactName)) {
-    hasError = true;
-  }  
-  if (validateEmail(inputs.emailInput, contactInfo.contactEmail)) {
-    hasError = true;
-  }  
-  if (validatePhone(inputs.phoneInput, contactInfo.contactPhone)) {
-    hasError = true;
+    checkScreenHeightAndAdjustOverflow();  
+    let hasError = false;
+    if (validateName(inputs.nameInput, contactInfo.contactName)) {
+      hasError = true;
+    }
+    if (validateEmail(inputs.emailInput, contactInfo.contactEmail)) {
+      hasError = true;
+    }
+    if (validatePhone(inputs.phoneInput, contactInfo.contactPhone)) {
+      hasError = true;
+    }
+    return hasError;
+}
+
+
+/**
+ * Checks the screen height and adjusts body overflow accordingly.
+ */
+function checkScreenHeightAndAdjustOverflow() {
+  const screenHeight = window.innerHeight;
+  const body = document.body;  
+  if (screenHeight <= 667) {
+    body.style.overflow = 'scroll';
+  } else {
+    body.style.overflow = 'auto';
   }
-  return hasError;
 }
 
 
