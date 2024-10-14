@@ -7,8 +7,8 @@ function createContactDesktop() {
       console.error("No user logged in.");
       return;
   }
-  const { contactName, contactEmail, contactPhone } = validateCreateContactDesktop();
   const inputs = getInputElements();
+  const { contactName, contactEmail, contactPhone } = validateCreateContactDesktop();
   clearErrorMessages();
   const hasError = validateInputs(inputs, { contactName, contactEmail, contactPhone });
   if (hasError) {
@@ -23,11 +23,11 @@ function createContactDesktop() {
  * @returns {Object} - An object containing the input elements for name, email, and phone.
  */
 function getInputElements() {
-    return {
-        nameInput: document.getElementById("add-contact-input-name-desktop-id"),
-        emailInput: document.getElementById("add-contact-input-mail-addresss-desktop-id"),
-        phoneInput: document.getElementById("add-contact-input-phone-desktop-id"),
-    };
+  return {
+      nameInput: document.getElementById("add-contact-input-name-desktop-id"),
+      emailInput: document.getElementById("add-contact-input-mail-addresss-desktop-id"),
+      phoneInput: document.getElementById("add-contact-input-phone-desktop-id"),
+  };
 }
 
 
@@ -38,20 +38,17 @@ function getInputElements() {
  * @returns {boolean} - Returns true if there is an error, otherwise false.
  */
 function validateInputs(inputs, contactInfo) {
-    let hasError = false;
-    if (!contactInfo.contactName) {
-        displayErrorMessage(inputs.nameInput, "Line cannot be empty, please fill it out.");
-        hasError = true;
-    }
-    if (!contactInfo.contactEmail) {
-        displayErrorMessage(inputs.emailInput, "Line cannot be empty, please fill it out.");
-        hasError = true;
-    }
-    if (!contactInfo.contactPhone) {
-        displayErrorMessage(inputs.phoneInput, "Line cannot be empty, please fill it out.");
-        hasError = true;
-    }
-    return hasError;
+  let hasError = false;
+  if (validateName(inputs.nameInput, contactInfo.contactName)) {
+      hasError = true;
+  }
+  if (validateEmail(inputs.emailInput, contactInfo.contactEmail)) {
+      hasError = true;
+  }
+  if (validatePhone(inputs.phoneInput, contactInfo.contactPhone)) {
+      hasError = true;
+  }  
+  return hasError;
 }
 
 
@@ -63,8 +60,8 @@ function validateInputs(inputs, contactInfo) {
 function displayErrorMessage(inputField, message) {
   const errorMessage = document.createElement("div");
   errorMessage.textContent = message;
-  errorMessage.style.color = "red"; // Set the text color to red
-  errorMessage.classList.add("error-message"); // Optional: add a class for further styling
+  errorMessage.style.color = "red";
+  errorMessage.classList.add("error-message");
   inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
 }
 
@@ -165,16 +162,14 @@ function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
               <button class="addContactCloseXButton" onclick="hideOverlay()">X</button>
             </div>
             <div id="editContactDestopID">
-              <div class="addContactContainerFooter">
-                <form id="addContactForm" onsubmit="event.preventDefault(); updateContactsDataDesktop(lastClickedContactId)">
+              <div class="addContactContainerFooter">                
                   <input class="addContactInputNameDesktop" type="text" name="editContactInputNameDesktop" id="editContactInputNameDesktopID" required placeholder="Name" value="${selectedContact.name}">
                   <input class="addContactInputMailAddresssDesktop" type="email" name="editContactInputMailAddresssDesktop" id="editContactInputMailAddresssDesktopID" required placeholder="E-Mail" value="${selectedContact.email}">
                   <input class="addContactInputPhoneDesktop" type="tel" name="editContactInputPhoneDesktop" id="editContactInputPhoneDesktopID" required pattern="[0-9]{1,}" placeholder="Phone" value="${selectedContact.phone}">
                   <div class="addContactButtonContainerDesktop">
                     <button class="cancelContactDesktopDeleteButton" onclick="deleteContactDesktop(${lastClickedContactId})">Delete</button>
-                    <button class="createContactButton" type="submit">Save</button>
-                  </div>
-                </form>
+                    <button class="createContactButton" onclick="updateContactsDataDesktop(lastClickedContactId)">Save</button>
+                  </div>                
               </div>
             </div>
           </div>
@@ -203,19 +198,48 @@ function singleMemberToHTMLOpenContactDesktop2(member, index) {
 
 
 /**
- * Overwrite the old contact data with the new contact data
- * @param {string} contactId - This is the contact ID example "5" 
+ * Updates the contact data on the desktop after validation.
+ * @param {string} contactId - The ID of the contact to be updated.
  */
-function updateContactsDataDesktop(contactId) {    
-    const { currentUser, contactIndex, updatedName, updatedEmail, updatedPhone } = updateContactsDataDesktopVariables(contactId);
-    currentUser.contacts[contactIndex].name = updatedName;
-    currentUser.contacts[contactIndex].email = updatedEmail;
-    currentUser.contacts[contactIndex].phone = updatedPhone;  
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    updateCurrentUserInBackend(currentUser);  
-    clearAddContactDesktopRightSideContainer();
-    hideOverlay();
-    contactsInit();    
+function updateContactsDataDesktop(contactId) {
+  const { currentUser, contactIndex } = updateContactsDataDesktopVariables(contactId);  
+  try {
+      const { updatedName, updatedEmail, updatedPhone } = editContactInputValidation();
+      currentUser.contacts[contactIndex].name = updatedName;
+      currentUser.contacts[contactIndex].email = updatedEmail;
+      currentUser.contacts[contactIndex].phone = updatedPhone;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      updateCurrentUserInBackend(currentUser);  
+      clearAddContactDesktopRightSideContainer();
+      hideOverlay();
+      contactsInit();    
+  } catch (error) {
+      displayErrorMessage(document.getElementById('editContactInputNameDesktopID'), error.message);
+  }
+}
+
+
+/**
+ * Validates the input fields for editing contact information.
+ * @returns {Object} - An object containing the updated contact data or throws an error.
+ */
+function editContactInputValidation() {
+  const updatedName = document.getElementById('editContactInputNameDesktopID').value.trim();
+  const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value.trim();
+  const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value.trim();
+  if (!updatedName) {
+      throw new Error("Name is required.");
+  }
+  if (/[\d]/.test(updatedName)) {
+      throw new Error("Name cannot contain numbers.");
+  }
+  if (!updatedEmail || !validateEmailFormat(updatedEmail)) {
+      throw new Error("A valid email address is required.");
+  }
+  if (!updatedPhone || !validatePhoneFormat(updatedPhone)) {
+      throw new Error("A valid phone number is required.");
+  }
+  return { updatedName, updatedEmail, updatedPhone };
 }
 
 
@@ -243,12 +267,31 @@ function showSuccessfullyContactCreatedImageDesktop() {
  * @returns {Object} - Object containing updated contact data and related variables.
  */
 function updateContactsDataDesktopVariables(contactId) {
-    const updatedName = document.getElementById('editContactInputNameDesktopID').value;
-    const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value;
-    const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value;
-    const currentUser = getLoggedInUser();
-    const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
-    return { currentUser, contactIndex, updatedName, updatedEmail, updatedPhone };
+  const currentUser = getLoggedInUser();
+  const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
+  return { currentUser, contactIndex };
+}
+
+
+/**
+ * Validate email format.
+ * @param {string} email - The email to validate.
+ * @returns {boolean} - Returns true if valid, otherwise false.
+ */
+function validateEmailFormat(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+
+/**
+ * Validate phone format (simple validation).
+ * @param {string} phone - The phone number to validate.
+ * @returns {boolean} - Returns true if valid, otherwise false.
+ */
+function validatePhoneFormat(phone) {
+  const phoneRegex = /^[0-9]+$/;
+  return phoneRegex.test(phone);
 }
 
 
