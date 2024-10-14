@@ -301,6 +301,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     overflow-y: auto;
     margin-block: 8px;
     max-height: 160px;
+    max-width: 440px;
 }
 
 .subtask-list ul li {

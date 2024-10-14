@@ -164,7 +164,7 @@ function templateaddedContactsHTML(index, iconColor, initials, textColor) {
 function templateSubtaskHTML(index, subtask) {
   return /*html*/ `
     <li id="substask-content-id${index}">
-      <span id="editable-span-id${index}"  class="editable-span" contenteditable="false">
+      <span id="editable-span-id${index}"  class="editable-span" contenteditable="false">      
         ${subtask}
       </span>
       <div id="subtask-default-container-id${index}" class="subtask-svg ">
