@@ -81,6 +81,7 @@ function drop(event) {
     event.preventDefault();
     const taskId = event.dataTransfer.getData("text/plain");
     const targetColumn = event.target.closest('.boardColumn');
+    removeHighlight(event);    
     handleDrop(taskId, targetColumn, event);
 }
 
@@ -155,9 +156,18 @@ function highlightColumn(event) {
  */
 function removeHighlight(event) {
     const targetColumn = event.target.closest('.boardColumn');
-    if (targetColumn) {
+    if (targetColumn && targetColumn.classList.contains('highlight')) {
         targetColumn.classList.remove('highlight');
     }
+}
+
+
+/**
+ * Handles the dragleave event when a task leaves the target column.
+ * @param {Event} event - The dragleave event object.
+ */
+function handleDragLeave(event) {
+    removeHighlight(event);
 }
 
 
