@@ -116,22 +116,20 @@ function createEditContactHTML(selectedContact, colorCode, textColor) {
     </div>
     <div class="addContactBlankUserImg">        
         ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
-    </div>
-            <form id="editcontactFormMobileID" onsubmit="updateContactMobile(event, '${selectedContact.id}')">
-            <div class="addContactContainerFooter">
-                <input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z'\\- ]+" placeholder="Name" value="${name}">
-                <input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
-                <input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
-                <div>
-                    <button type="button" class="createContactButtonImg" onclick="deleteContactMobile('${selectedContact.id}')">
-                    <img src="./assets/img/contacts/editContactDeleteButtonImg.svg" alt="">
-                </button>
-                <button type="submit" class="createContactButtonImg">
-                    <img src="./assets/img/contacts/editContactSaveButtonImg.svg" alt="">
-                </button>
-            </div>
+    </div>            
+        <div class="addContactContainerFooter">
+            <input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z'\\- ]+" placeholder="Name" value="${name}">
+            <input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
+            <input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
+            <div>
+                <button type="button" class="createContactButtonImg" onclick="deleteContactMobile('${selectedContact.id}')">
+                <img src="./assets/img/contacts/editContactDeleteButtonImg.svg" alt="">
+            </button>
+            <button onclick="updateContactMobile(event, '${selectedContact.id}')" class="createContactButtonImg">
+                <img src="./assets/img/contacts/editContactSaveButtonImg.svg" alt="">
+            </button>
         </div>
-    </form>
+    </div>    
     `;
 }
 
@@ -173,21 +171,71 @@ function removeMaxHeight() {
 
 
 /**
-* Updates contact information on mobile.
-* @param {string} contactId - The ID of the contact to be updated.
-*/
+ * Updates contact information on mobile.
+ * @param {Event} event - The event object.
+ * @param {string} contactId - The ID of the contact to be updated.
+ */
 function updateContactMobile(event, contactId) {
-    event.preventDefault();  
-    const updatedName = document.getElementById('editContactInputNameMobileID').value;
-    const updatedEmail = document.getElementById('editContactInputMailAddresssMobileID').value;
-    const updatedPhone = document.getElementById('editContactInputPhoneMobileID').value;  
+    event.preventDefault();
+    const inputs = getEditInputElementsMobile();
+    const updatedContactInfo = getUpdatedContactInfo(inputs);
+    if (validateAndHandleErrors(inputs, updatedContactInfo)) return;
     const currentUser = getLoggedInUser();
+    updateContactData(currentUser, contactId, updatedContactInfo);
+    saveAndRefresh(currentUser);
+}
+
+
+/**
+ * Retrieves updated contact information from inputs.
+ * @param {Object} inputs - Input elements containing contact details.
+ * @returns {Object} - Updated contact information.
+ */
+function getUpdatedContactInfo(inputs) {
+    return {
+        contactName: inputs.nameInput.value,
+        contactEmail: inputs.emailInput.value,
+        contactPhone: inputs.phoneInput.value
+    };
+}
+
+
+/**
+ * Retrieves the input elements for editing mobile contact information.
+ * @returns {Object} - An object containing the input elements for name, email, and phone.
+ */
+function getEditInputElementsMobile() {
+    return {
+        nameInput: document.getElementById('editContactInputNameMobileID'),
+        emailInput: document.getElementById('editContactInputMailAddresssMobileID'),
+        phoneInput: document.getElementById('editContactInputPhoneMobileID'),
+    };
+}
+
+
+/**
+ * Updates the contact information in the current user's contact list.
+ * @param {Object} currentUser - The current logged-in user.
+ * @param {string} contactId - The ID of the contact to be updated.
+ * @param {Object} updatedContactInfo - The new contact information.
+ */
+function updateContactData(currentUser, contactId, updatedContactInfo) {
     const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
-    currentUser.contacts[contactIndex].name = updatedName;
-    currentUser.contacts[contactIndex].email = updatedEmail;
-    currentUser.contacts[contactIndex].phone = updatedPhone;  
+    currentUser.contacts[contactIndex].name = updatedContactInfo.contactName;
+    currentUser.contacts[contactIndex].email = updatedContactInfo.contactEmail;
+    currentUser.contacts[contactIndex].phone = updatedContactInfo.contactPhone;
+}
+
+
+/**
+ * Saves the updated user data and refreshes the UI.
+ * @param {Object} currentUser - The current user with updated contact information.
+ */
+function saveAndRefresh(currentUser) {
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    updateCurrentUserInBackend(currentUser);  
-    closeContactOverlay();  
+    updateCurrentUserInBackend(currentUser);
+    closeContactOverlay();
     contactsInit();
 }
+
+
