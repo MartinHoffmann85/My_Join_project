@@ -8,8 +8,6 @@
  */
 if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
   window.addEventListener('resize', contactsInit);
-} else {
-  window.removeEventListener('resize', contactsInit);
 }
 window.onload = contactsInit;
 
