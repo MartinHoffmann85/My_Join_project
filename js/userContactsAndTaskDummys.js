@@ -93,6 +93,7 @@ function generateDefaultTasks(contacts) {
   }));
   const tasks = [
       {
+          id: generateRandomID(),
           title: "Task 1: Welcome",
           description: "Welcome to the system. Here's your first task.",
           assignedTo: {
@@ -101,13 +102,14 @@ function generateDefaultTasks(contacts) {
               textColor: [contactDetails[0].textColorCode],
               initials: [contactDetails[0].initials]
           },
-          prio: "medium",
-          category: "Introduction",
+          prio: "urgent",
+          category: "User Story",
           columnId: "todo",
           date: new Date().toISOString().split('T')[0],
           subtasks: []
       },
       {
+          id: generateRandomID(),
           title: "Task 2: Setup Profile",
           description: "Please complete your profile information.",
           assignedTo: {
@@ -116,13 +118,14 @@ function generateDefaultTasks(contacts) {
               textColor: [contactDetails[1].textColorCode],
               initials: [contactDetails[1].initials]
           },
-          prio: "high",
-          category: "Setup",
+          prio: "urgent",
+          category: "Technical Task",
           columnId: "todo",
           date: new Date().toISOString().split('T')[0],
           subtasks: []
       },
       {
+          id: generateRandomID(),
           title: "Task 3: Learn System",
           description: "Go through the introduction materials.",
           assignedTo: {
@@ -132,12 +135,13 @@ function generateDefaultTasks(contacts) {
               initials: [contactDetails[2].initials]
           },
           prio: "low",
-          category: "Learning",
-          columnId: "todo",
+          category: "User Story",
+          columnId: "inprogress",
           date: new Date().toISOString().split('T')[0],
           subtasks: []
       },
       {
+          id: generateRandomID(),
           title: "Task 4: Explore Features",
           description: "Familiarize yourself with key features of the system.",
           assignedTo: {
@@ -147,12 +151,13 @@ function generateDefaultTasks(contacts) {
               initials: [contactDetails[3].initials]
           },
           prio: "medium",
-          category: "Learning",
-          columnId: "todo",
+          category: "Technical Task",
+          columnId: "inprogress",
           date: new Date().toISOString().split('T')[0],
           subtasks: []
       },
       {
+          id: generateRandomID(),
           title: "Task 5: First Interaction",
           description: "Interact with another user or team member.",
           assignedTo: {
@@ -162,12 +167,13 @@ function generateDefaultTasks(contacts) {
               initials: [contactDetails[4].initials]
           },
           prio: "medium",
-          category: "Interaction",
-          columnId: "todo",
+          category: "User Story",
+          columnId: "awaitfeedback",
           date: new Date().toISOString().split('T')[0],
           subtasks: []
       },
       {
+          id: generateRandomID(),
           title: "Task 6: Submit Feedback",
           description: "Submit feedback on your first experience.",
           assignedTo: {
@@ -177,8 +183,8 @@ function generateDefaultTasks(contacts) {
               initials: [contactDetails[5].initials]
           },
           prio: "low",
-          category: "Feedback",
-          columnId: "todo",
+          category: "Technical Task",
+          columnId: "done",
           date: new Date().toISOString().split('T')[0],
           subtasks: []
       }
