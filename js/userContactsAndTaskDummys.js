@@ -77,18 +77,126 @@ const defaultContacts = [
 
 
 /**
- * Adds a set of default contacts to a newly registered user.
- * Each default contact is cloned from the `defaultContacts` array,
- * with a unique ID generated for each contact.
- * @param {Object} user - The newly registered user to whom the default contacts will be added.
- * @param {string} user.name - The user's name.
- * @param {string} user.email - The user's email address.
- * @param {Array<Object>} [user.contacts] - An optional array of the user's existing contacts.
+ * Generates default tasks for a newly registered user.
+ * The tasks are automatically assigned to the user's created contacts,
+ * and each task's `assignedTo` includes colorCodes, initials, textColor, and userNames.
+ * 
+ * @param {Array<Object>} contacts - Array of contact objects to assign tasks to.
+ * @returns {Array<Object>} - Array of task objects.
  */
-function addDefaultContactsToUser(user) {
-    const userDefaultContacts = defaultContacts.map(contact => ({
-        ...contact,
-        id: generateRandomID()
-    }));
-    user.contacts = userDefaultContacts;
+function generateDefaultTasks(contacts) {
+  const contactDetails = contacts.map(contact => ({
+      userName: contact.name,
+      colorCode: contact.colorCode,
+      textColorCode: contact.textColorCode,
+      initials: contact.name.split(' ').map(part => part[0]).join('')
+  }));
+  const tasks = [
+      {
+          title: "Task 1: Welcome",
+          description: "Welcome to the system. Here's your first task.",
+          assignedTo: {
+              userNames: [contactDetails[0].userName],
+              colorCodes: [contactDetails[0].colorCode],
+              textColor: [contactDetails[0].textColorCode],
+              initials: [contactDetails[0].initials]
+          },
+          prio: "medium",
+          category: "Introduction",
+          columnId: "todo",
+          date: new Date().toISOString().split('T')[0],
+          subtasks: []
+      },
+      {
+          title: "Task 2: Setup Profile",
+          description: "Please complete your profile information.",
+          assignedTo: {
+              userNames: [contactDetails[1].userName],
+              colorCodes: [contactDetails[1].colorCode],
+              textColor: [contactDetails[1].textColorCode],
+              initials: [contactDetails[1].initials]
+          },
+          prio: "high",
+          category: "Setup",
+          columnId: "todo",
+          date: new Date().toISOString().split('T')[0],
+          subtasks: []
+      },
+      {
+          title: "Task 3: Learn System",
+          description: "Go through the introduction materials.",
+          assignedTo: {
+              userNames: [contactDetails[2].userName],
+              colorCodes: [contactDetails[2].colorCode],
+              textColor: [contactDetails[2].textColorCode],
+              initials: [contactDetails[2].initials]
+          },
+          prio: "low",
+          category: "Learning",
+          columnId: "todo",
+          date: new Date().toISOString().split('T')[0],
+          subtasks: []
+      },
+      {
+          title: "Task 4: Explore Features",
+          description: "Familiarize yourself with key features of the system.",
+          assignedTo: {
+              userNames: [contactDetails[3].userName],
+              colorCodes: [contactDetails[3].colorCode],
+              textColor: [contactDetails[3].textColorCode],
+              initials: [contactDetails[3].initials]
+          },
+          prio: "medium",
+          category: "Learning",
+          columnId: "todo",
+          date: new Date().toISOString().split('T')[0],
+          subtasks: []
+      },
+      {
+          title: "Task 5: First Interaction",
+          description: "Interact with another user or team member.",
+          assignedTo: {
+              userNames: [contactDetails[4].userName],
+              colorCodes: [contactDetails[4].colorCode],
+              textColor: [contactDetails[4].textColorCode],
+              initials: [contactDetails[4].initials]
+          },
+          prio: "medium",
+          category: "Interaction",
+          columnId: "todo",
+          date: new Date().toISOString().split('T')[0],
+          subtasks: []
+      },
+      {
+          title: "Task 6: Submit Feedback",
+          description: "Submit feedback on your first experience.",
+          assignedTo: {
+              userNames: [contactDetails[5].userName],
+              colorCodes: [contactDetails[5].colorCode],
+              textColor: [contactDetails[5].textColorCode],
+              initials: [contactDetails[5].initials]
+          },
+          prio: "low",
+          category: "Feedback",
+          columnId: "todo",
+          date: new Date().toISOString().split('T')[0],
+          subtasks: []
+      }
+  ];
+  return tasks;
+}
+
+
+/**
+ * Adds default contacts and tasks to a newly registered user.
+ * @param {Object} user - The newly registered user.
+ */
+function addDefaultContactsAndTasksToUser(user) {
+  const userDefaultContacts = defaultContacts.map(contact => ({
+      ...contact,
+      id: generateRandomID()
+  }));
+  user.contacts = userDefaultContacts;
+  const userTasks = generateDefaultTasks(userDefaultContacts);
+  user.tasks = userTasks;
 }

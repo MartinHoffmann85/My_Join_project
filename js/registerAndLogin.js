@@ -152,7 +152,7 @@ function extractEmailsFromArray(userArray, emailList) {
  * @returns {Promise<void>} - Resolves when the registration process is finished.
  */
 async function registerFinsh(newUser) {
-    addDefaultContactsToUser(newUser);
+    addDefaultContactsAndTasksToUser(newUser)
     await addNewUser(newUser);
     toggleSuccessesMsg();
     closeSignUp();    
