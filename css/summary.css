@@ -446,8 +446,8 @@
 }
 
 @media only screen and (max-width: 375px) and (min-width: 320px){
-    .summary-title {
-        margin-top: 50px;
+    .summary-title-h1 {
+        font-size: 24px;
     }
 }
 
