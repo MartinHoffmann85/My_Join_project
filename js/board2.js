@@ -213,6 +213,7 @@ function renderTaskCardAsOverlay(id, title, description, category, assignedTo, p
     finalizeOverlay(overlay, card);
 }
 
+
 /**
  * Sets up the environment by closing existing overlays and restoring the background.
  */

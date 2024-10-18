@@ -183,13 +183,21 @@ function addSubtask(taskId) {
     const newSubtaskInput = document.getElementById('newSubtaskInput');
     const subtaskTitle = newSubtaskInput.value.trim();
     if (subtaskTitle !== '') {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
-        if (taskIndex !== -1) {            
+        const currentUser = getCurrentUser();
+        const taskIndex = findTaskIndex(currentUser, taskId);
+        if (taskIndex !== -1) {
+            const updatedTaskInfo = boardEditTaskUpdateVariables(taskId);
+            const { updatedTitle, updatedDescription } = updatedTaskInfo;
+            currentUser.tasks[taskIndex].title = updatedTitle;
+            currentUser.tasks[taskIndex].description = updatedDescription;
             if (!currentUser.tasks[taskIndex].subtasks) {
                 currentUser.tasks[taskIndex].subtasks = [];
-            }            
-            addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId);
+            }
+            const newSubtask = addSubtaskNewSubtask(subtaskTitle);
+            currentUser.tasks[taskIndex].subtasks.push(newSubtask);
+            saveTasksToLocalStorage(currentUser);
+            updateCurrentUserInBackend(currentUser);
+            newSubtaskInput.value = '';
         }
     }
 }
