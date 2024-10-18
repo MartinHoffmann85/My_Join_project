@@ -1,3 +1,10 @@
+let draggedTaskId;
+let originalColumnId;
+let searchTimeout;
+let tempTitle = '';
+let tempDescription = '';
+
+
 document.addEventListener('click', function() {
     const dropdowns = document.querySelectorAll('.boardDropdown-menu');
     dropdowns.forEach(dropdown => {
@@ -7,6 +14,94 @@ document.addEventListener('click', function() {
 
 
 window.addEventListener('resize', updateDropdownVisibility);
+
+
+/**
+ * Initializes the board by loading tasks from local storage, rendering them, and showing user initials in the header.
+ */
+async function initBoard() {
+    const currentUser = await JSON.parse(localStorage.getItem('currentUser'));
+    loadTasksFromLocalStorage(currentUser);
+    renderAllTasks();
+    setTimeout(showHeaderUserInitials, 500);    
+}
+
+
+/**
+ * Redirects the user to the add task page.
+ */
+function redirectToAddTask(columnId) {
+    localStorage.setItem('selectedColumnId', columnId);
+    window.location.assign("./add_task.html");
+}
+
+
+/**
+ * Saves the updated tasks data to localStorage.
+ * @param {Object} currentUser - The current user object.
+ */
+function saveTasksToLocalStorage(currentUser) {
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
+}
+
+
+/**
+ * Updates the column ID of a task and saves the changes to localStorage.
+ * @param {string} taskId - The ID of the task.
+ * @param {string} newColumnId - The new column ID.
+ */
+async function updateTaskColumnId(taskId, newColumnId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
+        if (taskIndex !== -1) {
+            currentUser.tasks[taskIndex].columnId = newColumnId;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            await updateCurrentUserInBackend(currentUser);        
+        }
+    }
+}
+
+
+/**
+ * Loads tasks data from localStorage and renders tasks on the board.
+ * @param {Object} currentUser - The current user object.
+ */
+function loadTasksFromLocalStorage(currentUser) {
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const tasksJSON = localStorage.getItem('currentUser.tasks');
+        if (tasksJSON) {
+            const tasks = JSON.parse(tasksJSON);
+            currentUser.tasks = tasks;
+            clearTaskContainers();
+            tasks.forEach(task => {
+                renderTask(task);
+            });
+        }
+    }
+}
+
+
+/**
+ * Deletes a task.
+ * @param {string} id - Task ID.
+ */
+function deleteTask(id) {    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+    const stringId = id.toString();
+    if (currentUser && currentUser.tasks && Array.isArray(currentUser.tasks)) {
+        const taskIndex = currentUser.tasks.findIndex(task => task.id === stringId);
+        if (taskIndex !== -1) {
+            currentUser.tasks.splice(taskIndex, 1);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));            
+            updateCurrentUserInBackend(currentUser);
+            closeOverlayBoard();
+            renderAllTasks();
+        }
+    }
+}
 
 
 /**
@@ -26,23 +121,6 @@ function getCurrentUser() {
  */
 function findTaskIndex(currentUser, taskId) {
     return currentUser.tasks.findIndex(task => task.id === taskId);
-}
-
-
-/**
- * Updates the assigned contacts and their color codes for a task.
- * @param {Object} currentUser - The current user object.
- * @param {number} taskIndex - The index of the task.
- * @param {Array} selectedContacts - List of selected contact names.
- */
-function updateAssignedContacts(currentUser, taskIndex, selectedContacts) {
-    const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo || { userNames: [], colorCodes: [] };
-    userNames.length = 0;
-    colorCodes.length = 0;
-    selectedContacts.forEach(contactName => {
-        userNames.push(contactName);
-        colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
-    });
 }
 
 
@@ -69,6 +147,23 @@ function getColorCodeForContact(contacts, contactName) {
     if (contact) {
         return contact.colorCode;
     }
+}
+
+
+/**
+ * Updates the assigned contacts and their color codes for a task.
+ * @param {Object} currentUser - The current user object.
+ * @param {number} taskIndex - The index of the task.
+ * @param {Array} selectedContacts - List of selected contact names.
+ */
+function updateAssignedContacts(currentUser, taskIndex, selectedContacts) {
+    const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo || { userNames: [], colorCodes: [] };
+    userNames.length = 0;
+    colorCodes.length = 0;
+    selectedContacts.forEach(contactName => {
+        userNames.push(contactName);
+        colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
+    });
 }
 
 
@@ -260,70 +355,6 @@ function checkEmptyColumns() {
             if (emptyMessage) {
                 emptyMessage.remove();
             }
-        }
-    });
-}
-
-
-/**
- * Toggles the dropdown menu visibility for a task.
- * @param {Event} event - The event object.
- * @param {string} taskId - The ID of the task.
- */
-function toggleBoardDropdown(event, taskId) {
-    event.stopPropagation();
-    const dropdownMenu = document.getElementById(`dropdown-menu-${taskId}`);
-    const allDropdowns = document.querySelectorAll('.boardDropdown-menu');
-    allDropdowns.forEach(menu => {
-        if (menu !== dropdownMenu) {
-            menu.style.display = 'none';
-        }
-    });
-    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-}
-
-
-/**
- * Moves a task to a different column based on the selected option from the dropdown.
- * @param {string} taskId - The ID of the task to move.
- * @param {string} newColumnId - The ID of the new column.
- */
-function moveTask(taskId, newColumnId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const task = currentUser.tasks.find(task => task.id === taskId);
-    if (task) {
-        task.columnId = newColumnId;
-        saveTasksToLocalStorage(currentUser);
-        initBoard();
-    }
-}
-
-
-/**
- * Handles the click on a dropdown option.
- * @param {Event} event - The event object.
- * @param {string} taskId - The ID of the task.
- * @param {string} newColumnId - The ID of the new column.
- */
-function handleDropdownOptionClick(event, taskId, newColumnId) {
-    event.stopPropagation();
-    moveTask(taskId, newColumnId);
-    const dropdownMenu = document.getElementById(`dropdown-menu-${taskId}`);
-    dropdownMenu.style.display = 'none';
-}
-
-
-/**
- * Updates the visibility of the dropdown based on the screen width.
- */
-function updateDropdownVisibility() {
-    const dropdowns = document.querySelectorAll('.boardDropdown');
-    const isDesktop = window.innerWidth > 950;
-    dropdowns.forEach(dropdown => {
-        if (isDesktop) {
-            dropdown.style.display = 'none';
-        } else {
-            dropdown.style.display = 'flex';
         }
     });
 }
