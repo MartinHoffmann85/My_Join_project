@@ -77,16 +77,17 @@ function getColorCodeForContact(contacts, contactName) {
  * @param {string} taskId - ID of the task.
  */
 function boardEditTaskUpdate(taskId) {
-    const { task, updatedTitle, updatedDescription, updatedDate, updatedPriority } = boardEditTaskUpdateVariables(taskId);    
-    if (task) {        
-        task.title = updatedTitle;
-        task.description = updatedDescription;
-        task.date = updatedDate;
-        task.prio = updatedPriority;        
-        updateTaskInLocalStorageAndBackend(taskId, task);        
-        closeOverlayBoard();
-        initBoard();
+    const title = document.getElementById('editTitle').value;
+    const description = document.getElementById('editDescription').value;    
+    const currentUser = getCurrentUser();
+    const taskIndex = findTaskIndex(currentUser, taskId);    
+    if (taskIndex !== -1) {
+        currentUser.tasks[taskIndex].title = title;
+        currentUser.tasks[taskIndex].description = description;
     }
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    closeOverlayBoard();
+    renderAllTasks();
 }
 
 

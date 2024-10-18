@@ -121,6 +121,18 @@ function createEditCard(task, taskId) {
     boardEditTaskPrio(task);
     const assignedToHTML = boardEditTaskAssignetTo(task);
     boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML);
+    const editTitleElement = card.querySelector('#editTitle');
+    if (editTitleElement) {
+        editTitleElement.addEventListener('input', (e) => {
+            tempTitle = e.target.value;
+        });
+    }
+    const editDescriptionElement = card.querySelector('#editDescription');
+    if (editDescriptionElement) {
+        editDescriptionElement.addEventListener('input', (e) => {
+            tempDescription = e.target.value;
+        });
+    }
     return card;
 }
 
@@ -218,11 +230,11 @@ function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) 
             </div>
             <div class="renderTaskTitleOverlay">
                 <p>Title:</p>
-                <textarea class="boardEditTaskOverlayTitleInput" id="editTitle">${task.title}</textarea>
+                <textarea class="boardEditTaskOverlayTitleInput" id="editTitle">${tempTitle || task.title}</textarea>
             </div>
             <div class="renderTaskDescriptionOverlay">
                 <p>Description:</p>
-                <textarea class="boardTextAreaStyle" id="editDescription">${task.description}</textarea>
+                <textarea class="boardTextAreaStyle" id="editDescription">${tempDescription || task.description}</textarea>
             </div>
             <div class="renderTaskDate" type="date">
                 <p>Due date:</p>

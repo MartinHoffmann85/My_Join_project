@@ -1,6 +1,8 @@
 let draggedTaskId;
 let originalColumnId;
 let searchTimeout;
+let tempTitle = '';
+let tempDescription = '';
 
 
 /**
