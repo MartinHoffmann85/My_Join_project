@@ -1,105 +1,3 @@
-let currentUser;
-let assignedTo = {
-  'initials': [],
-  'colorCodes': [],
-  'textColor': [],
-  'userNames': []
-};
-let subtaskList = [];
-let userIndex;
-let prio = ['urgent', 'medium', 'low'];
-let prioIndex = 1;
-let isFilterActive = false;
-
-
-/**
- * Initializes the add task functionality.
- * Parses the current user from local storage,
- * renders assigned contacts, sets the current date,
- * adds a listener for subtask visibility,
- * closes the assigned-to menu, closes the category menu,
- * and filters assigned contacts based on user input.
- */
-function initAddTask() {
-    currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    renderAssignedToContacts();
-    setCurrentDate();
-    addSubtaskVisibilityListener();
-    closeAssignedToMenu();
-    closeCategoryMenu();
-    filterAssignedToContacts();
-    setTimeout(showHeaderUserInitials, 500);    
-}
-
-
-/**
-* Listens for input events on the assigned-to input field
-* and filters contacts accordingly.
-* @param {Event} event - The input event object.
-*/
-function filterAssignedToContacts() {
-    document.getElementById('assignedto-input-id').addEventListener('input', function (event) {
-        const searchTerm = event.target.value;
-        isFilterActive = searchTerm.trim() !== '';
-        const filteredContacts = currentUser.contacts.filter(contact =>
-            contact.name.toLowerCase().includes(searchTerm.toLowerCase())
-      ) ;
-        iterateOverContacts(filteredContacts);
-    });
-}
-
-
-/**
-* Renders the assigned contacts.
-* @param {Array} [contacts=currentUser.contacts] - The array of contacts to render.
-*/
-function renderAssignedToContacts(contacts = currentUser.contacts) {
-    contacts.sort(sortContactsBySurname);
-    iterateOverContacts(contacts);
-}
-
-
-/**
- * Iterates over the given contacts and updates the UI accordingly.
- * @param {Array} contacts - The array of contacts to iterate over.
- */
-function iterateOverContacts(contacts) {
-    const assignedToContainer = document.getElementById('assigned-to-contacts-id');
-    assignedToContainer.innerHTML = '';
-    contacts.forEach((contact, index) => updateContactUI(contact, index, contacts, assignedToContainer));
-    clearSelectedContacts(assignedToContainer);
-}
-
-
-/**
- * Updates the UI for each contact.
- * @param {Object} contact - The contact object to update.
- * @param {number} index - The index of the contact in the array.
- * @param {Array} contacts - The array of all contacts.
- * @param {HTMLElement} assignedToContainer - The DOM element for the contacts container.
- */
-function updateContactUI(contact, index, contacts, assignedToContainer) {
-    if (contact.name === currentUser.userName) contact.name += ' (you)';
-    const initials = getFirstLettersOfName(contact.name);
-    const textColor = isColorLight(contact.colorCode) ? 'white' : 'black';
-    const isSelected = contacts[index].selected;
-    assignedToContainer.innerHTML += templateAssignedToContainerHTML(
-        contact.name, index, contact.colorCode, initials, textColor, isSelected
-    );
-}
-
-
-/**
- * Clears the selected class from all contact elements in the container.
- * @param {HTMLElement} container - The DOM element for the contacts container.
- */
-function clearSelectedContacts(container) {
-    container.querySelectorAll('.assigned-to-box').forEach(contactElement => {
-        contactElement.classList.remove('selected-contact');
-    });
-}
-
-
 /**
 * Formats the given value with a leading zero if necessary.
 * @param {number} value - The value to format.
@@ -304,88 +202,152 @@ function togglePrioImg(clickedId) {
 
 
 /**
- * Closes the category menu when the user clicks outside the menu.
+ * Redirects the user after a specified delay.
+ * @param {number} delay - The delay in milliseconds before redirecting.
  */
-function closeCategoryMenu() {
-    document.addEventListener('click', function (event) {
-      const clickInsideInput = event.target.closest('#category-container-id');
-      if (!clickInsideInput) {
-        toggleVisibility('rotate-arrow-category-id', true, 'upsidedown');
-        toggleVisibility('category-id', true, 'active');
-      }
-    });
+function redirectAfterDelay(delay) {
+  setTimeout(() => {
+      redirectToAddBoard();
+  }, delay);
 }
 
 
 /**
- * Toggles the visibility of the category container.
- */
-function toggleCategoryContainer() {
-    toggleSection('rotate-arrow-category-id', 'upsidedown');
-    toggleSection('category-id', 'active');
+* Show successfully contact created image.
+*/
+function showSuccessfullyTaskCreatedImage() {  
+  const imageElement = document.createElement("img");
+  imageElement.src = './assets/img/addedTaskToBoardSuccessfully.svg';
+  imageElement.style.position = "fixed";
+  imageElement.style.top = "50%";
+  imageElement.style.left = "50%";
+  imageElement.style.transform = "translate(-50%, -50%)";
+  imageElement.style.zIndex = "9999";  
+  document.body.appendChild(imageElement);
+  setTimeout(() => {
+      document.body.removeChild(imageElement);
+  }, 2000);
 }
 
 
 /**
- * Handles selection of a category from the dropdown menu.
- * @param {HTMLElement} clickedElement - The clicked category element.
- */
-function selectCategory(clickedElement) {
-    const element = document.getElementById('category-input-id');
-    const allItems = document.querySelectorAll('.category-dropdown ul li');
-    allItems.forEach(item => item.classList.remove('selected-contact'));
-    element.value = clickedElement.innerHTML;
-    clickedElement.classList.add('selected-contact');
-    toggleCategoryContainer(true);
+* Updates the current user's tasks data with the new task and saves it to local storage.
+* Also updates the current user's data in the backend.
+* @param {string} taskID - The ID of the new task.
+* @param {string} titleInput - The title of the new task.
+* @param {string} textareaInput - The description of the new task.
+* @param {string} dateInput - The due date of the new task.
+* @param {string} categoryInput - The category of the new task.
+* @param {string} columnId - The ID of the column the new task belongs to.
+* @param {string} priority - The priority level of the new task.
+* @param {Object} assignedTo - The user(s) assigned to the new task.
+*/
+async function updateCurrentUser(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo) {
+  if (!Array.isArray(currentUser.tasks)) {
+    currentUser.tasks = [];
+  }
+  const subtasks = generateSubtasks(subtaskList);
+  const task = createTaskObject(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo, subtasks);
+  currentUser.tasks.push(task);
+  saveTasksToLocalStorage(currentUser);
+  await updateCurrentUserInBackend(currentUser);
 }
 
 
 /**
- * Adds input event listener to the subtask input field and manages visibility of related buttons.
- */
-function addSubtaskVisibilityListener() {
-    const inputElement = document.getElementById('subtask-input-id');
-    inputElement.addEventListener("input", function(event) {
-      const inputNotEmpty = isValueNotEmpty(event.target.value);
-      toggleVisibility('subtast-add-button-id', !inputNotEmpty);
-      toggleVisibility('subtask-del-and-confim-id', true);
-      if (!inputNotEmpty) 
-          toggleVisibility('subtask-del-and-confim-id', false);
-  });
+* Generates an array of subtasks from the provided subtaskList.
+* @param {Array} subtaskList - The list of subtasks.
+* @returns {Array} - An array of subtask objects.
+*/
+function generateSubtasks(subtaskList) {
+  return subtaskList.map(subtask => ({
+    id: generateTaskID(),
+    title: subtask,
+    completed: false
+  }));
 }
 
 
 /**
- * Toggles visibility of the add new task menu and sets focus on the subtask input field.
- */
-function toggleAddNewTaskMenu() {
-    addSubtaskVisibilityListener();
-    const inputElement = document.getElementById('subtask-input-id');
-    inputElement.focus(); 
+* Creates a task object with the provided details.
+* @param {string} taskID - The ID of the task.
+* @param {string} titleInput - The title of the task.
+* @param {string} textareaInput - The description of the task.
+* @param {string} dateInput - The due date of the task.
+* @param {string} categoryInput - The category of the task.
+* @param {string} columnId - The ID of the column the task belongs to.
+* @param {string} priority - The priority level of the task.
+* @param {Object} assignedTo - The user(s) assigned to the task.
+* @param {Array} subtasks - The list of subtasks of the task.
+* @returns {Object} - The task object.
+*/
+function createTaskObject(taskID, titleInput, textareaInput, dateInput, categoryInput, columnId, priority, assignedTo, subtasks) {
+  return {
+    id: taskID,
+    title: titleInput,
+    description: textareaInput,
+    date: dateInput,
+    category: categoryInput,
+    columnId: columnId,
+    prio: priority,
+    assignedTo: assignedTo,
+    subtasks: subtasks
+  };
 }
 
 
 /**
- * Deletes or adds task menu based on the flag provided.
- * @param {boolean} isDelete - Flag indicating whether to delete or add the task menu.
- */
-function deleteOrAddTaskMenu(isDelete) {
-    const inputElement = document.getElementById('subtask-input-id');
-    if (isDelete)
-      inputElement.value = '';
-    else
-      addNewTaskMenu();
-    toggleVisibility('subtask-del-and-confim-id', false);
-    toggleVisibility('subtast-add-button-id', true);
+* Clears all input fields, lists, and error messages on the task creation form.
+*/
+function clearAll() {
+  clearAllInputs();
+  clearAllLists();
+  clearAllErrMsg();
+  renderAddedContacts();
+  renderSubtasks();
+  togglePrioImg('medium-default-id');  
 }
 
 
 /**
- * Adds a new task menu to the list of subtasks.
- */
-function addNewTaskMenu() {
-    const inputElement = document.getElementById('subtask-input-id');
-    subtaskList.push(inputElement.value);
-    inputElement.value = '';
-    renderSubtasks();
+* Clears all input fields on the task creation form.
+*/
+function clearAllInputs() {
+  document.getElementById('title-input-id').value = '';
+  document.getElementById('textarea-input-id').value = '';
+  document.getElementById('date-input-id').value = '';
+  document.getElementById('category-input-id').value = '';
+}
+
+
+/**
+* Clears all lists (e.g., subtask list, assigned-to list) on the task creation form.
+*/
+function clearAllLists() {
+  subtaskList.splice(0, subtaskList.length);
+  assignedTo.userNames.splice(0, assignedTo.userNames.length);
+  assignedTo.colorCodes.splice(0, assignedTo.colorCodes.length);
+  assignedTo.initials.splice(0, assignedTo.initials.length);
+  assignedTo.textColor.splice(0, assignedTo.textColor.length);
+}
+
+
+/**
+* Clears all error messages on the task creation form.
+*/
+function clearAllErrMsg() {
+  toggleVisibility('empty-title-id', false);
+  toggleVisibility('empty-date-id', false);
+  toggleVisibility('empty-category-id', false);
+  toggleVisibility('at-title-border-id', false, 'error-border');
+  toggleVisibility('at-date-border-id', false, 'error-border');
+  toggleVisibility('category-container-id', false, 'error-border');
+}
+
+
+/**
+* Redirects the user to the add board page.
+*/
+function redirectToAddBoard() {
+  window.location.assign("./board.html");
 }
