@@ -1,207 +1,4 @@
 /**
- * Initializes or removes the 'resize' event listener for the 'contactsInit' function 
- * based on the current page's URL path. 
- * - If the current page is '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' or '/contacts.html',
- *   the 'contactsInit' function will be called on window resize.
- * - If the current page is not one of the specified paths, the 'resize' event listener will be removed. 
- * Additionally, the 'contactsInit' function is called when the page is fully loaded.
- */
-if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
-  window.addEventListener('resize', contactsInit);
-}
-window.onload = contactsInit;
-
-
-/**
- * Initialize the contacts page based on the window width.
- * Renders contacts differently for mobile and desktop views.
- */
-function contactsInit() {
-  const maxWidth = 949;    
-  if (window.innerWidth <= maxWidth) {
-      setTimeout(showHeaderAndFooter, 300);
-      renderContacts();
-      renderAddContactButtonMobile();
-      setTimeout(showHeaderUserInitials, 500);
-      contactsInitVariables();
-      setMaxHeightReduced();
-  } else {
-      setTimeout(showHeaderAndFooter, 300);
-      renderContactsDesktop();        
-      document.body.style.overflow = 'hidden';
-      setTimeout(showHeaderUserInitials, 500);      
-  }
-}
-
-
-/**
-* Initializes variables and styling for the contacts page on mobile view.
-*/
-function contactsInitVariables() {
-document.body.style.overflow = 'hidden';
-const content = document.getElementById("all-contacts-id");
-content.style.marginTop = '80px';
-content.style.paddingBottom = '60px';
-content.style.overflow = 'auto';
-}
-
-
-/**
-* Renders contacts for the mobile view.
-* Contacts are sorted alphabetically and grouped by first letter.
-*/
-async function renderContacts() {
-  const { loggedInUser, contactsByFirstLetter, content } = renderContactsVariables();
-  if (loggedInUser && loggedInUser.contacts) {      
-      loggedInUser.contacts.sort((a, b) => a.name.localeCompare(b.name));
-      loggedInUser.contacts.forEach((oneContact) => {
-          const firstLetter = oneContact.name.charAt(0).toUpperCase();
-          updateContactsByFirstLetter(contactsByFirstLetter, firstLetter, oneContact);
-      });      
-      renderContactsByFirstLetter(content, contactsByFirstLetter);
-      registerContactClickHandlers();
-  }
-}
-
-
-/**
-* Retrieves necessary variables for rendering contacts.
-* @returns {Object} An object containing loggedInUser, contactsByFirstLetter, and content.
-*/
-function renderContactsVariables() {
-const content = document.getElementById("all-contacts-id");
-content.innerHTML = "";
-const contactsByFirstLetter = {};
-const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
-return { loggedInUser, contactsByFirstLetter, content };
-}
-
-
-/**
-* Updates the contacts grouped by their first letter.
-* @param {Object} contactsByFirstLetter - The object storing contacts grouped by first letter.
-* @param {string} firstLetter - The first letter of the contact's name.
-* @param {Object} oneContact - The contact object.
-*/
-function updateContactsByFirstLetter(contactsByFirstLetter, firstLetter, oneContact) {
-  if (!contactsByFirstLetter[firstLetter]) {
-    contactsByFirstLetter[firstLetter] = createLetterAndContactsContainer(firstLetter);
-  }
-  const oneContactContainer = createOneContactContainer(oneContact);
-  contactsByFirstLetter[firstLetter].querySelector('.contacts-list').appendChild(oneContactContainer);
-}
-
-
-/**
- * Creates a container for a group of contacts starting with the same letter.
- * @param {string} firstLetter - The first letter of the contacts in the group.
- * @returns {HTMLElement} The created container element.
- */
-function createLetterAndContactsContainer(firstLetter) {
-  const container = document.createElement('div');
-  container.classList.add('letterAndContactsContainer');
-  container.innerHTML = `
-    <div class="letter-column">
-      <h2 class="contact-first-letter">${firstLetter}</h2>
-      <div class="contacts-list"></div>
-    </div>
-  `;
-  return container;
-}
-
-
-/**
-* Creates a container for a single contact.
-* @param {Object} oneContact - The contact object.
-* @returns {HTMLElement} The created container element.
-*/
-function createOneContactContainer(oneContact) {
-const container = document.createElement('div');
-container.classList.add('oneContactContainer');
-container.setAttribute('data-contact-id', oneContact.id);
-container.addEventListener('click', () => showContactOverlayMobile(oneContact.id));
-const iconHtml = renderSingleMemberToHTMLMobile(oneContact, oneContact.colorCode, oneContact.textColorCode);
-createOneContactContainerHTML(container, iconHtml, oneContact);
-return container;
-}
-
-
-/**
-* Fills the content of a single contact container with HTML content.
-* @param {HTMLElement} container - The container element for the contact.
-* @param {string} iconHtml - The HTML content for the contact's icon.
-* @param {Object} oneContact - The contact object.
-*/
-function createOneContactContainerHTML(container, iconHtml, oneContact) {
-container.innerHTML = `
-  <div class="contact-info-container">
-    <div>
-      ${iconHtml}
-    </div>
-    <div>
-      <h2 class="oneContactContainerH2Mobile">${oneContact.name}</h2>
-      <a class="oneContactContainerAElement">${oneContact.email}</a>
-    </div>
-  </div>
-`;
-}
-
-
-/**
-* Renders contacts grouped by their first letter.
-* @param {HTMLElement} content - The container element to render contacts in.
-* @param {Object} contactsByFirstLetter - The object storing contacts grouped by first letter.
-*/
-function renderContactsByFirstLetter(content, contactsByFirstLetter) {
-  for (const letter in contactsByFirstLetter) {
-    content.appendChild(contactsByFirstLetter[letter]);
-  }
-}
-
-
-/**
-* Registers click event handlers for contact containers.
-*/
-function registerContactClickHandlers() {
-  const contactContainers = document.querySelectorAll('.oneContactContainer');
-  contactContainers.forEach(container => {      
-      const contactId = container.getAttribute('data-contact-id');
-      container.addEventListener('click', () => showContactOverlayMobile(contactId));        
-  });
-}
-
-
-/**
- * Renders the add contact button for mobile view.
- */
-function renderAddContactButtonMobile() {
-  const content = document.getElementById("all-contacts-id");
-  const addContactButtonMobile = document.createElement('div');
-  addContactButtonMobile.classList.add("addContactButtonContainerMobile");
-  addContactButtonMobile.innerHTML = `
-    <img class="addContactButtonImgMobile" src="./assets/img/contacts/addContactButtonMobile.svg" alt="createContactButton" onclick="addContactScreenMobile()"></img>
-  `;
-  content.appendChild(addContactButtonMobile);
-}
-
-
-/**
-* Renders the icon for a single member in mobile view.
-* @param {Object} oneContact - The contact object.
-* @param {string} colorCode - The color code for the icon background.
-* @param {string} textColor - The color code for the text.
-* @returns {string} The HTML for the icon.
-*/
-function renderSingleMemberToHTMLMobile(oneContact, colorCode, textColor) {
-  return `
-    <div class="openContactUserImgMobile" style="background-color: ${colorCode}; color: ${textColor};">
-      ${getFirstLettersOfName(oneContact.name)}
-    </div>
-  `;
-}
-
-
-/**
 * Retrieves the first letters of the first name and last name to generate initials.
 * @param {string} name - The name of the contact.
 * @returns {string} The initials of the name.
@@ -255,136 +52,10 @@ function getRandomColorHex() {
 
 
 /**
- * Displays the add contact screen for mobile view.
- */
-function addContactScreenMobile() {
-  const content = document.getElementById("all-contacts-id");
-  content.innerHTML = addContactFormMobileHTML();
-  content.style.marginTop = '0px';
-  content.style.overflow = 'hidden';
-  content.style.height = '100dvh';
-  hideHeaderAndFooter();
-  setMaxHeightFull();
-}
-
-
-/**
-* Generates the HTML for the add contact form in mobile view.
-* @returns {string} The HTML content for the add contact form.
-*/
-function addContactFormMobileHTML() {
-return /*html*/ `
-  <div class="addContactContainerHeaderMobile">
-    <div class="addContactCloseXContainerMobile">
-      <button class="addContactCloseXButtonMobile" onclick="redirectToContacts()">X</button>
-    </div>
-    <div class="addContactBlockHeaderMobile">
-      <p class="addContactH1Mobile">Add contact</p>
-      <p class="addContactTextMobile">Tasks are better with a team!</p>
-      <img class="addContactBlueStrokedMobile" src="./assets/img/contacts/addContactBlueStroked.svg" alt="addContactBlueStroked">
-    </div>
-    <div>
-      <img class="addContactBlankUserImgMobile" src="./assets/img/contacts/addContactBlankUserImg.svg" alt="addContactBlankUserImg">
-    </div>
-  </div>
-
-    <div class="addContactContainerFooterMobile">
-      <input class="addContactInputNameMobile" name="addContactInputNameMobile" id="add-contact-input-name-mobile-id" required pattern="[A-Za-z'\\- ]+" type="text" placeholder="Name">
-      <input class="addContactInputMailAddresssMobile" name="addContactInputMailAddresssMobile" id="add-contact-input-mail-addresss-mobile-id" type="text" placeholder="E Mail">
-      <input class="addContactInputPhoneMobile" name="addContactInputPhoneMobile" id="add-contact-input-phone-mobile-id" type="tel" required pattern="[0-9]{1,}" placeholder="Phone">          
-      <button class="createContactButtonImg" onclick="createContactMobile()">
-      <img src="./assets/img/contacts/createContactButton.svg" alt="createContactButton">
-      </button>
-    </div>
-
-`;
-}
-
-
-/**
 * Redirects the user to the contacts page.
 */
 function redirectToContacts() {
   window.location.assign("./contacts.html");
-}
-
-
-/**
- * Creates a new contact in mobile view.
- */
-async function createContactMobile() {
-  const currentUser = getLoggedInUser();
-  if (!currentUser) return console.error("No user logged in.");
-  const inputs = getInputElementsMobile();
-  const contactInfo = {
-    contactName: inputs.nameInput.value,
-    contactEmail: inputs.emailInput.value,
-    contactPhone: inputs.phoneInput.value
-  };
-  if (validateAndHandleErrors(inputs, contactInfo)) return;
-  saveNewContact(contactInfo.contactName, contactInfo.contactEmail, contactInfo.contactPhone);
-  contactsInit();
-  showSuccessfullyContactCreatedImageMobile();
-}
-
-
-/**
- * Validates inputs and handles errors if any.
- * @param {Object} inputs - The input elements.
- * @param {Object} contactData - The contact data.
- * @returns {boolean} True if there's an error, otherwise false.
- */
-function validateAndHandleErrors(inputs, contactData) {
-  clearErrorMessages();
-  return validateInputsMobile(inputs, contactData);
-}
-
-
-/**
- * Saves the new contact to the current user.
- * @param {string} contactName - The name of the contact.
- * @param {string} contactEmail - The email of the contact.
- * @param {string} contactPhone - The phone number of the contact.
- */
-function saveNewContact(contactName, contactEmail, contactPhone) {
-  const newContact = { name: contactName, email: contactEmail, phone: contactPhone };
-  newContact.id = generateUniqueID();
-  addContactToCurrentUser(newContact);
-}
-
-
-/**
- * Retrieves the input elements for mobile contact information.
- * @returns {Object} - An object containing the input elements for name, email, and phone.
- */
-function getInputElementsMobile() {
-  return {
-    nameInput: document.getElementById("add-contact-input-name-mobile-id"),
-    emailInput: document.getElementById("add-contact-input-mail-addresss-mobile-id"),
-    phoneInput: document.getElementById("add-contact-input-phone-mobile-id"),
-  };
-}
-
-
-/**
- * Validates the input fields for the mobile view and adjusts body overflow based on screen height.
- * @param {Object} inputs - An object containing the input elements.
- * @param {Object} contactInfo - An object containing contact information.
- * @returns {boolean} - Returns true if there is an error, otherwise false.
- */
-function validateInputsMobile(inputs, contactInfo) {
-    checkScreenHeightAndAdjustOverflow();  
-    let hasError = false;
-    if (validateName(inputs.nameInput, contactInfo.contactName)) {
-      hasError = true;
-    }
-    if (validateEmail(inputs.emailInput, contactInfo.contactEmail)) {
-      hasError = true;
-    }
-    if (validatePhone(inputs.phoneInput, contactInfo.contactPhone)) {
-      hasError = true;
-    }
-    return hasError;
 }
 
 
@@ -403,53 +74,301 @@ function checkScreenHeightAndAdjustOverflow() {
 
 
 /**
- * Validates the contact name input.
- * @param {Object} nameInput - The input element for the contact name.
- * @param {string} contactName - The name of the contact.
- * @returns {boolean} - Returns true if there is an error.
+ * Saves the updated contact list of the current user.
+ * @param {Object} currentUser - The current user object.
+ * @param {Object} newContact - The new contact object to add.
  */
-function validateName(nameInput, contactName) {
-  const nameHasNumbers = /\d/;  
-  if (!contactName) {
-    displayErrorMessage(nameInput, "Line cannot be empty, please fill it out.");
-    return true;
-  } else if (nameHasNumbers.test(contactName)) {
-    displayErrorMessage(nameInput, "The name cannot contain numbers.");
-    return true;
-  }  
-  return false;
+function saveCurrentUserContacts(currentUser, newContact) {
+  currentUser.contacts.push(newContact);
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
 }
 
 
 /**
- * Validates the contact email input.
- * @param {Object} emailInput - The input element for the contact email.
- * @param {string} contactEmail - The email of the contact.
- * @returns {boolean} - Returns true if there is an error.
- */
-function validateEmail(emailInput, contactEmail) {
-  if (!contactEmail) {
-    displayErrorMessage(emailInput, "Line cannot be empty, please fill it out.");
-    return true;
+* Retrieves the variables needed for adding a contact to the current user.
+* @param {Object} newContact - The new contact object.
+* @returns {Object} An object containing the color code, text color code, and current user.
+*/
+function addContactToCurrentUserVariables(newContact) {
+  const currentUser = getLoggedInUser();
+  newContact.id = generateUniqueID();
+  let colorCode = localStorage.getItem(`color_${newContact.id}`);
+  let textColorCode = localStorage.getItem(`textColor_${newContact.id}`);
+  return { colorCode, textColorCode, currentUser };
+}
+
+
+/**
+* Retrieves the currently logged-in user from local storage.
+* @returns {Object} The currently logged-in user object.
+*/
+function getLoggedInUser() {
+  return JSON.parse(localStorage.getItem('currentUser'));
+}
+
+
+/**
+* Generates a unique ID for a contact.
+* @returns {string} The unique ID.
+*/
+function generateUniqueID() {
+  let id;
+  const currentUser = getLoggedInUser();
+  const usersArray = currentUser ? [currentUser] : [];
+  do {
+      id = generateRandomID();
+  } while (usersArray.some(user => user.contacts && user.contacts.some(contact => contact.id === id)));
+  return id;
+}
+
+
+/**
+* Generates a random ID.
+* @returns {string} The random ID.
+*/
+function generateRandomID() {    
+  return Math.random().toString(36).substring(2, 11);
+}
+
+
+/**
+* Updates the current user's data in the backend.
+* @param {Object} currentUser - The current user object to be updated.
+*/
+async function updateCurrentUserInBackend(currentUser) {
+  try {
+      const existingUsers = await loadUsersFromBackend('users');
+      if (!isValidUserObject(existingUsers)) return;
+      const userKey = findUserKey(existingUsers, currentUser.userEMail);
+      if (userKey) await putUser(userKey, { ...existingUsers[userKey], ...currentUser });
+  } catch (error) {
+      console.error("Error updating current user in backend:", error);
   }
-  return false;
 }
 
 
 /**
- * Validates the contact phone input.
- * @param {Object} phoneInput - The input element for the contact phone.
- * @param {string} contactPhone - The phone number of the contact.
- * @returns {boolean} - Returns true if there is an error.
- */
-function validatePhone(phoneInput, contactPhone) {
-  const phoneIsValid = /^\d+$/;  
-  if (!contactPhone) {
-    displayErrorMessage(phoneInput, "Line cannot be empty, please fill it out.");
-    return true;
-  } else if (!phoneIsValid.test(contactPhone)) {
-    displayErrorMessage(phoneInput, "The phone number can only contain digits.");
-    return true;
-  }  
-  return false;
+* Checks if the provided users object is valid.
+* @param {Object} users - The users object.
+* @returns {boolean} True if valid, otherwise false.
+*/
+function isValidUserObject(users) {
+  if (typeof users !== 'object' || users === null) {
+      console.error("Error: existingUsers is not an object.");
+      return false;
+  }
+  return true;
+}
+
+
+/**
+* Finds the key of the user matching the email.
+* @param {Object} users - The users object.
+* @param {string} email - The email of the current user.
+* @returns {string|undefined} The user key if found, otherwise undefined.
+*/
+function findUserKey(users, email) {
+  return Object.keys(users).find(key => users[key]?.userEMail === email);
+}
+
+
+/**
+ * Handle click on drop down menu option
+* @param {string} dropdownContainer - Drop down div Container
+* @param {string} addContactButtonContainerMobile - Render the contact button container mobile
+* @param {string} handleDocumentClick - Remove or add the event listener for the drop down menu
+*/
+function handleDocumentClick(dropdownTrigger, dropdownMenu) {
+  return function (event) {
+      if (!dropdownTrigger.contains(event.target) && !dropdownMenu.contains(event.target)) {
+          dropdownMenu.style.display = "none";
+          document.removeEventListener("click", handleDocumentClick(dropdownTrigger, dropdownMenu));
+      }
+  };
+}
+
+
+/**
+* Generates HTML for displaying a single member's information.
+* @param {Object} member - The member object containing information about the user.
+* @returns {string} The HTML code for displaying the member's information.
+*/
+function singleMemberToHTML(member) {
+  const colorCode = member.colorCode || getRandomColorHex();
+  const textColor = isColorLight(colorCode) ? "black" : "white";  
+  return `
+    <div class="openContactUserImgMobile" style="background-color: ${colorCode}; color: ${textColor};">
+      ${getFirstLettersOfName(member.name)}
+    </div>
+  `;
+}
+
+
+/**
+* Deletes a contact on mobile.
+* @param {string} contactId - The ID of the contact to be deleted.
+*/
+function deleteContactMobile(contactId) {
+  const currentUser = getLoggedInUser();
+  const index = currentUser.contacts.findIndex(contact => contact.id === contactId);
+  if (index === -1) {
+      console.error("Contact not found.");
+      return;
+  }
+  currentUser.contacts.splice(index, 1);  
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  updateCurrentUserInBackend(currentUser);  
+  contactsInit();  
+}
+
+
+/**
+* Opens the edit contact overlay on mobile.
+* @param {string} contactId - The ID of the contact to be edited.
+*/
+function editContactOverlayMobile(contactId) {  
+  let { content, editContactHTML } = editContactOverlayMobileVariables(contactId);  
+  content.innerHTML = editContactHTML;  
+  hideHeaderAndFooter();    
+  content.style.marginTop = '0px';
+  content.style.overflow = 'hidden';
+  removeMaxHeight();
+}
+
+
+/**
+* Prepares variables required for editing a contact overlay on mobile.
+* @param {string} contactId - The ID of the contact to be edited.
+* @returns {Object} An object containing references to the content element and the HTML code for editing the contact.
+*/
+function editContactOverlayMobileVariables(contactId) {
+  let content = document.getElementById('all-contacts-id');
+  content.innerHTML = "";
+  const overlay = document.createElement("div");
+  overlay.classList.add("overlay");
+  const currentUser = getLoggedInUser();
+  const selectedContact = currentUser.contacts.find(contact => contact.id === contactId);
+  const randomColor = getRandomColorHex();
+  const textColor = isColorLight(randomColor) ? 'white' : 'black';
+  const editContactHTML = createEditContactHTML(selectedContact, randomColor, textColor);
+  return { content, editContactHTML };
+}
+
+
+/**
+* Closes the contact overlay.
+*/
+function closeContactOverlay() {
+  let content = document.getElementById('all-contacts-id');    
+  const overlay = document.querySelector(".overlay");
+  if (overlay) {
+    overlay.remove();
+  }
+  content.style.height = '85dvh';
+  content.style.marginTop = '80px';
+}
+
+
+/**
+* Sets the max-height of the element with the class 'allContacts' to 100vh (full viewport height).
+* This function ensures that the element occupies the entire vertical space of the viewport.
+*/
+function setMaxHeightFull() {
+  const allContacts = document.querySelector('.allContacts');
+  if (allContacts) {
+      allContacts.style.maxHeight = '100vh';
+  }
+}
+
+
+/**
+* Sets the max-height of the element with the class 'allContacts' to a calculated value of 100vh minus 170px.
+* This function allows for a reduced height to account for other UI elements (e.g., header or footer).
+*/
+function setMaxHeightReduced() {
+  const allContacts = document.querySelector('.allContacts');
+  if (allContacts) {
+      allContacts.style.maxHeight = 'calc(100vh - 170px)';
+  }
+}
+
+
+/**
+* Removes the max-height restriction of the element with the class 'allContacts' by setting its max-height to 'none'.
+* This effectively removes any height limitation, allowing the element to expand freely.
+*/
+function removeMaxHeight() {
+  const allContacts = document.querySelector('.allContacts');
+  if (allContacts) {
+      allContacts.style.maxHeight = 'none';
+  }
+}
+
+
+/**
+* Updates contact information on mobile.
+* @param {Event} event - The event object.
+* @param {string} contactId - The ID of the contact to be updated.
+*/
+function updateContactMobile(event, contactId) {
+  event.preventDefault();
+  const inputs = getEditInputElementsMobile();
+  const updatedContactInfo = getUpdatedContactInfo(inputs);
+  if (validateAndHandleErrors(inputs, updatedContactInfo)) return;
+  const currentUser = getLoggedInUser();
+  updateContactData(currentUser, contactId, updatedContactInfo);
+  saveAndRefresh(currentUser);
+}
+
+
+/**
+* Retrieves updated contact information from inputs.
+* @param {Object} inputs - Input elements containing contact details.
+* @returns {Object} - Updated contact information.
+*/
+function getUpdatedContactInfo(inputs) {
+  return {
+      contactName: inputs.nameInput.value,
+      contactEmail: inputs.emailInput.value,
+      contactPhone: inputs.phoneInput.value
+  };
+}
+
+
+/**
+* Retrieves the input elements for editing mobile contact information.
+* @returns {Object} - An object containing the input elements for name, email, and phone.
+*/
+function getEditInputElementsMobile() {
+  return {
+      nameInput: document.getElementById('editContactInputNameMobileID'),
+      emailInput: document.getElementById('editContactInputMailAddresssMobileID'),
+      phoneInput: document.getElementById('editContactInputPhoneMobileID'),
+  };
+}
+
+
+/**
+* Updates the contact information in the current user's contact list.
+* @param {Object} currentUser - The current logged-in user.
+* @param {string} contactId - The ID of the contact to be updated.
+* @param {Object} updatedContactInfo - The new contact information.
+*/
+function updateContactData(currentUser, contactId, updatedContactInfo) {
+  const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
+  currentUser.contacts[contactIndex].name = updatedContactInfo.contactName;
+  currentUser.contacts[contactIndex].email = updatedContactInfo.contactEmail;
+  currentUser.contacts[contactIndex].phone = updatedContactInfo.contactPhone;
+}
+
+
+/**
+* Saves the updated user data and refreshes the UI.
+* @param {Object} currentUser - The current user with updated contact information.
+*/
+function saveAndRefresh(currentUser) {
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  updateCurrentUserInBackend(currentUser);
+  closeContactOverlay();
+  contactsInit();
 }
