@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: htmlBoard.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: htmlBoard.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Creates the HTML content for the task card element.
+ * @param {HTMLElement} taskCard - The task card element.
+ * @param {string} backgroundColor - The background color for the task card.
+ * @param {string} category - The category of the task.
+ * @param {string} title - The title of the task.
+ * @param {string} description - The description of the task.
+ * @param {string} id - The ID of the task.
+ * @param {string} assignedToHTML - The HTML content for the assigned to section.
+ * @param {string} prioContent - The priority content for the task.
+ * @returns {HTMLElement} - The task card element with HTML content.
+ */
+function createTaskCardElementHTML(taskCard, backgroundColor, category, title, description, id, assignedToHTML, prioContent) {
+    taskCard.innerHTML = `
+        &lt;div class="boardDropdown">
+            &lt;button class="boardDropdown-toggle" onclick="toggleBoardDropdown(event, '${id}')">
+                &lt;img src="./assets/svg/arrow_drop_down.svg" alt="Toggle Dropdown" />
+            &lt;/button>
+            &lt;div class="boardDropdown-menu" id="dropdown-menu-${id}">
+                &lt;ul>
+                    &lt;li onclick="handleDropdownOptionClick(event, '${id}', 'todo')">To Do&lt;/li>
+                    &lt;li onclick="handleDropdownOptionClick(event, '${id}', 'inprogress')">In Progress&lt;/li>
+                    &lt;li onclick="handleDropdownOptionClick(event, '${id}', 'awaitfeedback')">Await Feedback&lt;/li>
+                    &lt;li onclick="handleDropdownOptionClick(event, '${id}', 'done')">Done&lt;/li>
+                &lt;/ul>
+            &lt;/div>
+        &lt;/div>
+        &lt;div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${category}&lt;/div>
+        &lt;div class="renderTaskTitle">&lt;p class="renderTaskTitlePElement">${title}&lt;/p>&lt;/div>
+        &lt;div class="renderTaskDescription">${description}&lt;/div>        
+        &lt;div class="subtaskCountContainer">
+            &lt;div class="boardRenderSubtaskContainer">&lt;/div>
+            &lt;p class="boardRenderSubtasksCountPElement">${boardRenderSubtasksCount(id)}&lt;/p>
+        &lt;/div>
+        &lt;div class="assignetToHTMLAndPrioContentContainer">   
+            &lt;div class="renderTaskCardAssignetToContainer">${assignedToHTML}&lt;/div>
+            &lt;div class="renderTaskToHTMLPrioContainer">${prioContent}&lt;/div>
+        &lt;/div>
+    `;
+    return taskCard;
+}
+
+
+/**
+ * Renders the HTML content of a task card overlay.
+ * @param {HTMLElement} card - Task card element.
+ * @param {string} backgroundColor - Background color.
+ * @param {string} category - Task category.
+ * @param {string} title - Task title.
+ * @param {string} description - Task description.
+ * @param {string} date - Task due date.
+ * @param {string} prioContent - Priority content.
+ * @param {string} assignedToHTML - Assigned to HTML content.
+ * @param {string} subtasksHTML - Subtasks HTML content.
+ * @param {string} id - Task ID.
+ */
+function renderTaskCardAsOverlayCardHTML(card, backgroundColor, category, title, description, date, prioContent, assignedToHTML, subtasksHTML, id) {
+    card.innerHTML = `
+        &lt;div class="boardOverlayCategoryAndCloseXContainer">            
+            &lt;div class="renderTaskCardOverlayCategoryDiv" style="background-color: ${backgroundColor};">${category}&lt;/div>
+            &lt;div>&lt;img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt="">&lt;/div>
+        &lt;/div>        
+        &lt;div class="renderTaskTitleOverlay">${title}&lt;/div>
+        &lt;div class="renderTaskDescriptionOverlay">${description}&lt;/div>
+        &lt;div class="renderTaskDate">&lt;p class="renderTaskDatePElement">Due date:&lt;/p>&lt;p class="renderTaskOverlayDate">${date}&lt;/p>&lt;/div>               
+        &lt;div class="overlayAssignetToHTMLAndPrioContentContainer">
+            &lt;div class="boardPriorityContainer">
+                &lt;div class="renderTaskOverlayPrio">Priority:&lt;/div>
+                &lt;div class="boardPrioIcon displayFlex">${prioContent}&lt;/div>
+            &lt;/div>  
+            &lt;div class="renderTaskCardOverlayAssignetToContainer">
+                &lt;p class="renderTaskCardOverlayAssignetToPElement">Assigned To:&lt;/p>
+                &lt;p>${assignedToHTML}&lt;/p>
+            &lt;/div>            
+        &lt;/div>
+        &lt;div class="renderTasksubtaskHTML">&lt;p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks&lt;/p>${subtasksHTML}&lt;/div>
+        &lt;div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
+            &lt;img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTask('${id}')">
+            &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${id}')">
+        &lt;/div>
+    `;
+}
+
+
+/**
+ * Renders the HTML content for editing a task.
+ * @param {HTMLElement} card - Card element.
+ * @param {string} backgroundColor - Background color.
+ * @param {Object} task - Task object.
+ * @param {string} taskId - ID of the task.
+ * @param {string} assignedToHTML - HTML content for assigned to section.
+ */
+function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) {
+    card.innerHTML = `
+            &lt;div class="boardOverlayCategoryAndCloseXContainer">
+                &lt;div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}&lt;/div>
+                &lt;div>&lt;img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard(); initBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt="">&lt;/div>
+            &lt;/div>
+            &lt;div class="renderTaskTitleOverlay">
+                &lt;p>Title:&lt;/p>
+                &lt;textarea class="boardEditTaskOverlayTitleInput" id="editTitle">${tempTitle || task.title}&lt;/textarea>
+            &lt;/div>
+            &lt;div class="renderTaskDescriptionOverlay">
+                &lt;p>Description:&lt;/p>
+                &lt;textarea class="boardTextAreaStyle" id="editDescription">${tempDescription || task.description}&lt;/textarea>
+            &lt;/div>
+            &lt;div class="renderTaskDate" type="date">
+                &lt;p>Due date:&lt;/p>
+                &lt;input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
+            &lt;/div>
+            &lt;div class="overlayAssignetToHTMLAndPrioContentContainer">
+                &lt;div class="boardPriorityContainer">
+                &lt;p>Priority:&lt;/p>
+                    &lt;select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
+                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="low" ${task.prio === 'low' ? 'selected' : ''}>Low&lt;/option>
+                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium&lt;/option>
+                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent&lt;/option>
+                    &lt;/select>
+                &lt;/div>
+                &lt;div class="renderTaskCardOverlayAssignetToContainer">
+                    &lt;div class="editAssigntToPElementAndSelectContactsButton">
+                        &lt;p class="renderTaskCardOverlayAssignetToPElement">Assigned To:&lt;/p>
+                        &lt;div class="dropdown">
+                            &lt;button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts&lt;/button>
+                                &lt;ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
+                                ${generateAssignedToOptions(task.assignedTo, taskId)}
+                                &lt;/ul>                        
+                        &lt;/div>
+                    &lt;/div>
+                    ${assignedToHTML.length > 0 ? assignedToHTML : '&lt;p>No one assigned&lt;/p>'}
+                &lt;/div>
+            &lt;/div>
+            &lt;div class="renderTasksubtaskHTML">
+                &lt;p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks&lt;/p>
+                ${boardRenderSubtasks(card, taskId)}
+                &lt;div class="subtaskInput">
+                    &lt;input class="boardEditSubtaskInput" type="text" id="newSubtaskInput" placeholder="Enter subtask">
+                    &lt;button class="boardEditSubtaskButton" onclick="addSubtask('${taskId}')">Add subtask&lt;/button>
+                &lt;/div>
+            &lt;/div>
+            &lt;div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
+                &lt;span class="contactsContentRightSideEditButton" onclick="boardEditTaskUpdate('${taskId}')">
+                    &lt;img src="./assets/svg/check.svg" alt="check" />
+                    Save
+                &lt;/span>
+                &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
+            &lt;/div>
+        `;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#boardTaskEditHTML">boardTaskEditHTML</a></li><li><a href="global.html#createTaskCardElementHTML">createTaskCardElementHTML</a></li><li><a href="global.html#renderTaskCardAsOverlayCardHTML">renderTaskCardAsOverlayCardHTML</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:12:14 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

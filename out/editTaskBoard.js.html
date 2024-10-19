@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: board3.js</title>
+    <title>JSDoc: Source: editTaskBoard.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: board3.js</h1>
+    <h1 class="page-title">Source: editTaskBoard.js</h1>
 
     
 
@@ -27,86 +27,6 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Renders the HTML content for the assigned to section of the task card overlay.
- * @param {Object} assignedTo - Assigned to details.
- * @returns {string} - Rendered HTML content for the assigned to section.
- */
-function renderTaskCardAsOverlayAssignetTo(assignedTo) {
-    let assignedToHTML = '';
-    if (assignedTo &amp;&amp; assignedTo.userNames &amp;&amp; assignedTo.userNames.length > 0) {
-        assignedTo.userNames.forEach((userName, index) => {
-            const initials = getFirstLettersOfName(userName);
-            const backgroundColor = assignedTo.colorCodes[index];
-            const iconHTML = `&lt;div class="userIcon" style="background-color: ${backgroundColor};">${initials}&lt;/div>`;
-            assignedToHTML += `&lt;div class="assignedToUser">${iconHTML} &lt;p class="editAssignetToUserPElement">${userName}&lt;/p>&lt;/div>`;
-        });
-    } else {
-        assignedToHTML = '&lt;div>&lt;strong>Assigned to:&lt;/strong> No one assigned&lt;/div>';
-    }
-    return assignedToHTML;
-}
-
-
-/**
- * Adds click event listeners to task cards.
- */
-function addTaskClickListener() {
-    const taskCards = document.querySelectorAll('.task');
-    taskCards.forEach(taskCard => {        
-        taskCard.removeEventListener('click', renderTaskCardOverlay);        
-        taskCard.addEventListener('click', renderTaskCardOverlay);
-    });
-}
-
-
-/**
- * Renders the task card overlay when a task is clicked.
- * @param {Event} event - Click event.
- */
-function renderTaskCardOverlay(event) {
-    const taskId = event.currentTarget.id;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    const task = currentUser.tasks.find(task => task.id === taskId);
-    if (task) {        
-        const subtasks = task.subtasks;        
-        renderTaskCardAsOverlay(task.id, task.title, task.description, task.category, task.assignedTo, task.prio, task.date, task.columnId, subtasks);
-    }
-}
-
-
-/**
- * Closes the task card overlay.
- */
-function closeOverlayBoard() {
-    const overlay = document.querySelector('.boardoverlay');
-    if (overlay) {
-        overlay.remove();
-    }
-    restoreBackgroundOnOverlayClose();
-}
-
-
-/**
- * Deletes a task.
- * @param {string} id - Task ID.
- */
-function deleteTask(id) {    
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
-    const stringId = id.toString();
-    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === stringId);
-        if (taskIndex !== -1) {
-            currentUser.tasks.splice(taskIndex, 1);
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));            
-            updateCurrentUserInBackend(currentUser);
-            closeOverlayBoard();
-            renderAllTasks();
-        }
-    }
-}
-
-
-/**
  * Opens an overlay to edit a task.
  * @param {string} taskId - ID of the task to be edited.
  */
@@ -149,6 +69,18 @@ function createEditCard(task, taskId) {
     boardEditTaskPrio(task);
     const assignedToHTML = boardEditTaskAssignetTo(task);
     boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML);
+    const editTitleElement = card.querySelector('#editTitle');
+    if (editTitleElement) {
+        editTitleElement.addEventListener('input', (e) => {
+            tempTitle = e.target.value;
+        });
+    }
+    const editDescriptionElement = card.querySelector('#editDescription');
+    if (editDescriptionElement) {
+        editDescriptionElement.addEventListener('input', (e) => {
+            tempDescription = e.target.value;
+        });
+    }
     return card;
 }
 
@@ -227,70 +159,6 @@ function createCardElement() {
     const card = document.createElement('div');
     card.classList.add('card');
     return card;
-}
-
-
-/**
- * Renders the HTML content for editing a task.
- * @param {HTMLElement} card - Card element.
- * @param {string} backgroundColor - Background color.
- * @param {Object} task - Task object.
- * @param {string} taskId - ID of the task.
- * @param {string} assignedToHTML - HTML content for assigned to section.
- */
-function boardTaskEditHTML(card, backgroundColor, task, taskId, assignedToHTML) {
-    card.innerHTML = `
-            &lt;div class="boardOverlayCategoryAndCloseXContainer">
-                &lt;div class="renderTaskCardCategoryDiv" style="background-color: ${backgroundColor};">${task.category}&lt;/div>
-                &lt;div>&lt;img class="boardTaskOverlayCloseX" onclick="closeOverlayBoard(); initBoard()" src="./assets/img/boardTaskOverlayCloseX.svg" alt="">&lt;/div>
-            &lt;/div>
-            &lt;div class="renderTaskTitleOverlay">
-                &lt;p>Title:&lt;/p>
-                &lt;textarea class="boardEditTaskOverlayTitleInput" id="editTitle">${task.title}&lt;/textarea>
-            &lt;/div>
-            &lt;div class="renderTaskDescriptionOverlay">
-                &lt;p>Description:&lt;/p>
-                &lt;textarea class="boardTextAreaStyle" id="editDescription">${task.description}&lt;/textarea>
-            &lt;/div>
-            &lt;div class="renderTaskDate" type="date">
-                &lt;p>Due date:&lt;/p>
-                &lt;input class="editRenderTaskCardoverlyDate" type="date" id="editDate" value="${task.date}">
-            &lt;/div>
-            &lt;div class="overlayAssignetToHTMLAndPrioContentContainer">
-                &lt;div class="boardPriorityContainer">
-                &lt;p>Priority:&lt;/p>
-                    &lt;select class="editTaskCardoverlayPriorityDropDownMenu" id="editPriority">
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="low" ${task.prio === 'low' ? 'selected' : ''}>Low&lt;/option>
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="medium" ${task.prio === 'medium' ? 'selected' : ''}>Medium&lt;/option>
-                        &lt;option class="editTaskCardoverlayPriorityDropDownMenuOption" value="urgent" ${task.prio === 'urgent' ? 'selected' : ''}>Urgent&lt;/option>
-                    &lt;/select>
-                &lt;/div>
-                &lt;div class="renderTaskCardOverlayAssignetToContainer">
-                    &lt;div class="editAssigntToPElementAndSelectContactsButton">
-                        &lt;p class="renderTaskCardOverlayAssignetToPElement">Assigned To:&lt;/p>
-                        &lt;div class="dropdown">
-                            &lt;button class="editDropDownToggle" onclick="boardToggleDropdownMenu()">Select contacts&lt;/button>
-                                &lt;ul id="boardContactDropDownmenuID" class="boardDropDownMenu">
-                                ${generateAssignedToOptions(task.assignedTo, taskId)}
-                                &lt;/ul>                        
-                        &lt;/div>
-                    &lt;/div>
-                    ${assignedToHTML.length > 0 ? assignedToHTML : '&lt;p>No one assigned&lt;/p>'}
-                &lt;/div>
-            &lt;/div>
-            &lt;div class="renderTasksubtaskHTML">
-                &lt;p class="renderTasksubtaskHTMLSubtaskPElement">Subtasks&lt;/p>
-                ${boardRenderSubtasks(card, taskId)}
-                &lt;div class="subtaskInput">
-                    &lt;input class="boardEditSubtaskInput" type="text" id="newSubtaskInput" placeholder="Enter subtask">
-                    &lt;button class="boardEditSubtaskButton" onclick="addSubtask('${taskId}')">Add subtask&lt;/button>
-                &lt;/div>
-            &lt;/div>
-            &lt;div class="contactsContentRightSideEditAndDeleteButtonContainerBoardOverlay">
-                &lt;img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="boardEditTaskUpdate('${taskId}')">
-                &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteTask('${taskId}')">
-            &lt;/div>
-        `;
 }
 
 
@@ -433,13 +301,13 @@ function getSelectedContacts() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateSubtaskListener">activateSubtaskListener</a></li><li><a href="global.html#addTaskClickListener">addTaskClickListener</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#boardEditTaskAssignetTo">boardEditTaskAssignetTo</a></li><li><a href="global.html#boardEditTaskCategory">boardEditTaskCategory</a></li><li><a href="global.html#boardEditTaskPrio">boardEditTaskPrio</a></li><li><a href="global.html#boardTaskEditHTML">boardTaskEditHTML</a></li><li><a href="global.html#boardToggleDropdownMenu">boardToggleDropdownMenu</a></li><li><a href="global.html#closeOverlayBoard">closeOverlayBoard</a></li><li><a href="global.html#createCardElement">createCardElement</a></li><li><a href="global.html#createEditCard">createEditCard</a></li><li><a href="global.html#createEditOverlay">createEditOverlay</a></li><li><a href="global.html#createOverlayElement">createOverlayElement</a></li><li><a href="global.html#createTaskEditOverlay">createTaskEditOverlay</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#editUpdateAssignedTo">editUpdateAssignedTo</a></li><li><a href="global.html#finalizeEditOverlay">finalizeEditOverlay</a></li><li><a href="global.html#generateAssignedToOptions">generateAssignedToOptions</a></li><li><a href="global.html#getSelectedContacts">getSelectedContacts</a></li><li><a href="global.html#getTaskFromLocalStorage">getTaskFromLocalStorage</a></li><li><a href="global.html#renderTaskCardAsOverlayAssignetTo">renderTaskCardAsOverlayAssignetTo</a></li><li><a href="global.html#renderTaskCardOverlay">renderTaskCardOverlay</a></li><li><a href="global.html#selectContact">selectContact</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateSubtaskListener">activateSubtaskListener</a></li><li><a href="global.html#boardEditTask">boardEditTask</a></li><li><a href="global.html#boardEditTaskAssignetTo">boardEditTaskAssignetTo</a></li><li><a href="global.html#boardEditTaskCategory">boardEditTaskCategory</a></li><li><a href="global.html#boardEditTaskPrio">boardEditTaskPrio</a></li><li><a href="global.html#boardToggleDropdownMenu">boardToggleDropdownMenu</a></li><li><a href="global.html#createCardElement">createCardElement</a></li><li><a href="global.html#createEditCard">createEditCard</a></li><li><a href="global.html#createEditOverlay">createEditOverlay</a></li><li><a href="global.html#createOverlayElement">createOverlayElement</a></li><li><a href="global.html#createTaskEditOverlay">createTaskEditOverlay</a></li><li><a href="global.html#editUpdateAssignedTo">editUpdateAssignedTo</a></li><li><a href="global.html#finalizeEditOverlay">finalizeEditOverlay</a></li><li><a href="global.html#generateAssignedToOptions">generateAssignedToOptions</a></li><li><a href="global.html#getSelectedContacts">getSelectedContacts</a></li><li><a href="global.html#getTaskFromLocalStorage">getTaskFromLocalStorage</a></li><li><a href="global.html#selectContact">selectContact</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 11 2024 21:08:36 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:11:19 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

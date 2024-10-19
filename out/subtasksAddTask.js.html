@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: subtasksAddTask.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: subtasksAddTask.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Renders the subtasks list based on the subtaskList array.
+ */
+function renderSubtasks() {
+    let element = document.getElementById('add-task-list-id');
+    element.innerHTML = '';
+    subtaskList.forEach((subtask, index) => {
+      element.innerHTML += templateSubtaskHTML(index, subtask);
+    });
+}
+
+
+/**
+ * Handles the editing of a subtask.
+ * @param {number} index - The index of the subtask being edited.
+ */
+function editSubtask(index) {
+    const ListElement = document.getElementById(`substask-content-id${index}`);
+    handleFirstSubtaskEdit(index, ListElement);
+    toggleEditMode(index, true);
+    document.addEventListener('click', function(event) {
+      const clickedElement = event.target;
+      const isSubtaskContent = clickedElement.closest(`[id^="substask-content-id${index}"]`);
+      const isSubtaskDefaultContainer = clickedElement.closest(`[id^="subtask-default-container-id${index}"]`);
+      const isSubtaskEditedContainer = clickedElement.closest(`[id^="subtask-edited-container-id${index}"]`);
+      if (!isSubtaskContent &amp;&amp; !isSubtaskDefaultContainer &amp;&amp; !isSubtaskEditedContainer)
+        ListElement.classList.add('red-line-highlight');
+    });    
+}
+
+
+/**
+ * Toggles the edit mode by showing/hiding icons.
+ * @param {number} index - The index of the subtask.
+ * @param {boolean} isEditing - Whether the subtask is in edit mode.
+ */
+function toggleEditMode(index, isEditing) {
+    const editIconContainer = document.getElementById(`subtask-default-container-id${index}`);
+    const saveIconContainer = document.getElementById(`subtask-edited-container-id${index}`);
+    if (isEditing) {
+        editIconContainer.classList.add('d-none');
+        saveIconContainer.classList.remove('d-none');
+    } else {
+        editIconContainer.classList.remove('d-none');
+        saveIconContainer.classList.add('d-none');
+    }
+}
+
+
+/**
+* Handles the first edit of a subtask.
+* @param {number} index - The index of the subtask being edited.
+* @param {HTMLElement} ListElement - The element containing the subtask.
+*/
+function handleFirstSubtaskEdit(index, ListElement) {
+    disableAllSubtasksExcept(index);
+    const element = document.getElementById(`editable-span-id${index}`);
+    toggleVisibility(`subtask-edited-container-id${index}`, true);
+    toggleVisibility(`subtask-default-container-id${index}`, false);
+    makeElementEditableWithMaxLength(element, 30);
+    ListElement.classList.toggle('blue-line-highlight');
+}
+  
+  
+/**
+* Disables all subtasks except the one at the specified index.
+* @param {number} index - The index of the subtask to exclude from disabling.
+*/
+function disableAllSubtasksExcept(index) {
+    const totalNumberOfSubtasks = document.querySelectorAll('[id^="substask-content-id"]').length;
+    for (let i = 0; i &lt; totalNumberOfSubtasks; i++) {
+      if (i !== index) {
+        const otherSubtask = document.getElementById(`substask-content-id${i}`);
+        otherSubtask.classList.add('disabled-svg');
+      }
+    }
+}
+  
+  
+/**
+* Makes an element editable with a specified maximum length.
+* @param {HTMLElement} element - The element to make editable.
+* @param {number} maxLength - The maximum length of the content.
+*/
+function makeElementEditableWithMaxLength(element, maxLength) {
+    element.setAttribute('contentEditable', 'true');
+    element.focus();
+    element.addEventListener('input', function() {
+      const maxLength = 30;
+      if (this.innerText.length > maxLength)
+        this.innerText = this.innerText.slice(0, maxLength);
+    });
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#disableAllSubtasksExcept">disableAllSubtasksExcept</a></li><li><a href="global.html#editSubtask">editSubtask</a></li><li><a href="global.html#handleFirstSubtaskEdit">handleFirstSubtaskEdit</a></li><li><a href="global.html#makeElementEditableWithMaxLength">makeElementEditableWithMaxLength</a></li><li><a href="global.html#renderSubtasks">renderSubtasks</a></li><li><a href="global.html#toggleEditMode">toggleEditMode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:17:13 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

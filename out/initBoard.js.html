@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: board4.js</title>
+    <title>JSDoc: Source: initBoard.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: board4.js</h1>
+    <h1 class="page-title">Source: initBoard.js</h1>
 
     
 
@@ -26,7 +26,14 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>document.addEventListener('click', function() {
+            <pre class="prettyprint source linenums"><code>let draggedTaskId;
+let originalColumnId;
+let searchTimeout;
+let tempTitle = '';
+let tempDescription = '';
+
+
+document.addEventListener('click', function() {
     const dropdowns = document.querySelectorAll('.boardDropdown-menu');
     dropdowns.forEach(dropdown => {
         dropdown.style.display = 'none';
@@ -35,6 +42,94 @@
 
 
 window.addEventListener('resize', updateDropdownVisibility);
+
+
+/**
+ * Initializes the board by loading tasks from local storage, rendering them, and showing user initials in the header.
+ */
+async function initBoard() {
+    const currentUser = await JSON.parse(localStorage.getItem('currentUser'));
+    loadTasksFromLocalStorage(currentUser);
+    renderAllTasks();
+    setTimeout(showHeaderUserInitials, 500);    
+}
+
+
+/**
+ * Redirects the user to the add task page.
+ */
+function redirectToAddTask(columnId) {
+    localStorage.setItem('selectedColumnId', columnId);
+    window.location.assign("./add_task.html");
+}
+
+
+/**
+ * Saves the updated tasks data to localStorage.
+ * @param {Object} currentUser - The current user object.
+ */
+function saveTasksToLocalStorage(currentUser) {
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
+}
+
+
+/**
+ * Updates the column ID of a task and saves the changes to localStorage.
+ * @param {string} taskId - The ID of the task.
+ * @param {string} newColumnId - The new column ID.
+ */
+async function updateTaskColumnId(taskId, newColumnId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
+        if (taskIndex !== -1) {
+            currentUser.tasks[taskIndex].columnId = newColumnId;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            await updateCurrentUserInBackend(currentUser);        
+        }
+    }
+}
+
+
+/**
+ * Loads tasks data from localStorage and renders tasks on the board.
+ * @param {Object} currentUser - The current user object.
+ */
+function loadTasksFromLocalStorage(currentUser) {
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const tasksJSON = localStorage.getItem('currentUser.tasks');
+        if (tasksJSON) {
+            const tasks = JSON.parse(tasksJSON);
+            currentUser.tasks = tasks;
+            clearTaskContainers();
+            tasks.forEach(task => {
+                renderTask(task);
+            });
+        }
+    }
+}
+
+
+/**
+ * Deletes a task.
+ * @param {string} id - Task ID.
+ */
+function deleteTask(id) {    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
+    const stringId = id.toString();
+    if (currentUser &amp;&amp; currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
+        const taskIndex = currentUser.tasks.findIndex(task => task.id === stringId);
+        if (taskIndex !== -1) {
+            currentUser.tasks.splice(taskIndex, 1);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));            
+            updateCurrentUserInBackend(currentUser);
+            closeOverlayBoard();
+            renderAllTasks();
+        }
+    }
+}
 
 
 /**
@@ -54,23 +149,6 @@ function getCurrentUser() {
  */
 function findTaskIndex(currentUser, taskId) {
     return currentUser.tasks.findIndex(task => task.id === taskId);
-}
-
-
-/**
- * Updates the assigned contacts and their color codes for a task.
- * @param {Object} currentUser - The current user object.
- * @param {number} taskIndex - The index of the task.
- * @param {Array} selectedContacts - List of selected contact names.
- */
-function updateAssignedContacts(currentUser, taskIndex, selectedContacts) {
-    const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo || { userNames: [], colorCodes: [] };
-    userNames.length = 0;
-    colorCodes.length = 0;
-    selectedContacts.forEach(contactName => {
-        userNames.push(contactName);
-        colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
-    });
 }
 
 
@@ -101,20 +179,38 @@ function getColorCodeForContact(contacts, contactName) {
 
 
 /**
+ * Updates the assigned contacts and their color codes for a task.
+ * @param {Object} currentUser - The current user object.
+ * @param {number} taskIndex - The index of the task.
+ * @param {Array} selectedContacts - List of selected contact names.
+ */
+function updateAssignedContacts(currentUser, taskIndex, selectedContacts) {
+    const { userNames, colorCodes } = currentUser.tasks[taskIndex].assignedTo || { userNames: [], colorCodes: [] };
+    userNames.length = 0;
+    colorCodes.length = 0;
+    selectedContacts.forEach(contactName => {
+        userNames.push(contactName);
+        colorCodes.push(getColorCodeForContact(currentUser.contacts, contactName));
+    });
+}
+
+
+/**
  * Updates the task in local storage and backend after editing.
  * @param {string} taskId - ID of the task.
  */
 function boardEditTaskUpdate(taskId) {
-    const { task, updatedTitle, updatedDescription, updatedDate, updatedPriority } = boardEditTaskUpdateVariables(taskId);    
-    if (task) {        
-        task.title = updatedTitle;
-        task.description = updatedDescription;
-        task.date = updatedDate;
-        task.prio = updatedPriority;        
-        updateTaskInLocalStorageAndBackend(taskId, task);        
-        closeOverlayBoard();
-        initBoard();
+    const title = document.getElementById('editTitle').value;
+    const description = document.getElementById('editDescription').value;    
+    const currentUser = getCurrentUser();
+    const taskIndex = findTaskIndex(currentUser, taskId);    
+    if (taskIndex !== -1) {
+        currentUser.tasks[taskIndex].title = title;
+        currentUser.tasks[taskIndex].description = description;
     }
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    closeOverlayBoard();
+    renderAllTasks();
 }
 
 
@@ -211,13 +307,21 @@ function addSubtask(taskId) {
     const newSubtaskInput = document.getElementById('newSubtaskInput');
     const subtaskTitle = newSubtaskInput.value.trim();
     if (subtaskTitle !== '') {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const taskIndex = currentUser.tasks.findIndex(task => task.id === taskId);
-        if (taskIndex !== -1) {            
+        const currentUser = getCurrentUser();
+        const taskIndex = findTaskIndex(currentUser, taskId);
+        if (taskIndex !== -1) {
+            const updatedTaskInfo = boardEditTaskUpdateVariables(taskId);
+            const { updatedTitle, updatedDescription } = updatedTaskInfo;
+            currentUser.tasks[taskIndex].title = updatedTitle;
+            currentUser.tasks[taskIndex].description = updatedDescription;
             if (!currentUser.tasks[taskIndex].subtasks) {
                 currentUser.tasks[taskIndex].subtasks = [];
-            }            
-            addSubtaskSaveAndRedirectToBoardEditTask(subtaskTitle, currentUser, taskIndex, taskId);
+            }
+            const newSubtask = addSubtaskNewSubtask(subtaskTitle);
+            currentUser.tasks[taskIndex].subtasks.push(newSubtask);
+            saveTasksToLocalStorage(currentUser);
+            updateCurrentUserInBackend(currentUser);
+            newSubtaskInput.value = '';
         }
     }
 }
@@ -281,70 +385,6 @@ function checkEmptyColumns() {
             }
         }
     });
-}
-
-
-/**
- * Toggles the dropdown menu visibility for a task.
- * @param {Event} event - The event object.
- * @param {string} taskId - The ID of the task.
- */
-function toggleBoardDropdown(event, taskId) {
-    event.stopPropagation();
-    const dropdownMenu = document.getElementById(`dropdown-menu-${taskId}`);
-    const allDropdowns = document.querySelectorAll('.boardDropdown-menu');
-    allDropdowns.forEach(menu => {
-        if (menu !== dropdownMenu) {
-            menu.style.display = 'none';
-        }
-    });
-    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-}
-
-
-/**
- * Moves a task to a different column based on the selected option from the dropdown.
- * @param {string} taskId - The ID of the task to move.
- * @param {string} newColumnId - The ID of the new column.
- */
-function moveTask(taskId, newColumnId) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const task = currentUser.tasks.find(task => task.id === taskId);
-    if (task) {
-        task.columnId = newColumnId;
-        saveTasksToLocalStorage(currentUser);
-        initBoard();
-    }
-}
-
-
-/**
- * Handles the click on a dropdown option.
- * @param {Event} event - The event object.
- * @param {string} taskId - The ID of the task.
- * @param {string} newColumnId - The ID of the new column.
- */
-function handleDropdownOptionClick(event, taskId, newColumnId) {
-    event.stopPropagation();
-    moveTask(taskId, newColumnId);
-    const dropdownMenu = document.getElementById(`dropdown-menu-${taskId}`);
-    dropdownMenu.style.display = 'none';
-}
-
-
-/**
- * Updates the visibility of the dropdown based on the screen width.
- */
-function updateDropdownVisibility() {
-    const dropdowns = document.querySelectorAll('.boardDropdown');
-    const isDesktop = window.innerWidth > 950;
-    dropdowns.forEach(dropdown => {
-        if (isDesktop) {
-            dropdown.style.display = 'none';
-        } else {
-            dropdown.style.display = 'flex';
-        }
-    });
 }</code></pre>
         </article>
     </section>
@@ -355,13 +395,13 @@ function updateDropdownVisibility() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addSubtaskNewSubtask">addSubtaskNewSubtask</a></li><li><a href="global.html#addSubtaskSaveAndRedirectToBoardEditTask">addSubtaskSaveAndRedirectToBoardEditTask</a></li><li><a href="global.html#boardEditTaskUpdate">boardEditTaskUpdate</a></li><li><a href="global.html#boardEditTaskUpdateVariables">boardEditTaskUpdateVariables</a></li><li><a href="global.html#boardGenerateRandomID">boardGenerateRandomID</a></li><li><a href="global.html#checkEmptyColumns">checkEmptyColumns</a></li><li><a href="global.html#checkForTasks">checkForTasks</a></li><li><a href="global.html#displayTasks">displayTasks</a></li><li><a href="global.html#findTaskIndex">findTaskIndex</a></li><li><a href="global.html#getColorCodeForContact">getColorCodeForContact</a></li><li><a href="global.html#getCurrentUser">getCurrentUser</a></li><li><a href="global.html#handleDropdownOptionClick">handleDropdownOptionClick</a></li><li><a href="global.html#moveTask">moveTask</a></li><li><a href="global.html#saveAndRefreshTask">saveAndRefreshTask</a></li><li><a href="global.html#searchTasks">searchTasks</a></li><li><a href="global.html#toggleBoardDropdown">toggleBoardDropdown</a></li><li><a href="global.html#updateAssignedContacts">updateAssignedContacts</a></li><li><a href="global.html#updateDropdownVisibility">updateDropdownVisibility</a></li><li><a href="global.html#updateTaskInLocalStorageAndBackend">updateTaskInLocalStorageAndBackend</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addSubtask">addSubtask</a></li><li><a href="global.html#addSubtaskNewSubtask">addSubtaskNewSubtask</a></li><li><a href="global.html#addSubtaskSaveAndRedirectToBoardEditTask">addSubtaskSaveAndRedirectToBoardEditTask</a></li><li><a href="global.html#boardEditTaskUpdate">boardEditTaskUpdate</a></li><li><a href="global.html#boardEditTaskUpdateVariables">boardEditTaskUpdateVariables</a></li><li><a href="global.html#boardGenerateRandomID">boardGenerateRandomID</a></li><li><a href="global.html#checkEmptyColumns">checkEmptyColumns</a></li><li><a href="global.html#checkForTasks">checkForTasks</a></li><li><a href="global.html#deleteTask">deleteTask</a></li><li><a href="global.html#displayTasks">displayTasks</a></li><li><a href="global.html#findTaskIndex">findTaskIndex</a></li><li><a href="global.html#getColorCodeForContact">getColorCodeForContact</a></li><li><a href="global.html#getCurrentUser">getCurrentUser</a></li><li><a href="global.html#initBoard">initBoard</a></li><li><a href="global.html#loadTasksFromLocalStorage">loadTasksFromLocalStorage</a></li><li><a href="global.html#redirectToAddTask">redirectToAddTask</a></li><li><a href="global.html#saveAndRefreshTask">saveAndRefreshTask</a></li><li><a href="global.html#saveTasksToLocalStorage">saveTasksToLocalStorage</a></li><li><a href="global.html#searchTasks">searchTasks</a></li><li><a href="global.html#updateAssignedContacts">updateAssignedContacts</a></li><li><a href="global.html#updateTaskColumnId">updateTaskColumnId</a></li><li><a href="global.html#updateTaskInLocalStorageAndBackend">updateTaskInLocalStorageAndBackend</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Oct 11 2024 21:08:43 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:13:18 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

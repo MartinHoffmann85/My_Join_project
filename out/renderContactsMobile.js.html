@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: renderContactsMobile.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: renderContactsMobile.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* Renders contacts for the mobile view.
+* Contacts are sorted alphabetically and grouped by first letter.
+*/
+async function renderContacts() {
+    const { loggedInUser, contactsByFirstLetter, content } = renderContactsVariables();
+    if (loggedInUser &amp;&amp; loggedInUser.contacts) {      
+        loggedInUser.contacts.sort((a, b) => a.name.localeCompare(b.name));
+        loggedInUser.contacts.forEach((oneContact) => {
+            const firstLetter = oneContact.name.charAt(0).toUpperCase();
+            updateContactsByFirstLetter(contactsByFirstLetter, firstLetter, oneContact);
+        });      
+        renderContactsByFirstLetter(content, contactsByFirstLetter);
+        registerContactClickHandlers();
+    }
+}
+
+
+/**
+* Retrieves necessary variables for rendering contacts.
+* @returns {Object} An object containing loggedInUser, contactsByFirstLetter, and content.
+*/
+function renderContactsVariables() {
+  const content = document.getElementById("all-contacts-id");
+  content.innerHTML = "";
+  const contactsByFirstLetter = {};
+  const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+  return { loggedInUser, contactsByFirstLetter, content };
+}
+
+
+/**
+* Updates the contacts grouped by their first letter.
+* @param {Object} contactsByFirstLetter - The object storing contacts grouped by first letter.
+* @param {string} firstLetter - The first letter of the contact's name.
+* @param {Object} oneContact - The contact object.
+*/
+function updateContactsByFirstLetter(contactsByFirstLetter, firstLetter, oneContact) {
+    if (!contactsByFirstLetter[firstLetter]) {
+      contactsByFirstLetter[firstLetter] = createLetterAndContactsContainer(firstLetter);
+    }
+    const oneContactContainer = createOneContactContainer(oneContact);
+    contactsByFirstLetter[firstLetter].querySelector('.contacts-list').appendChild(oneContactContainer);
+}
+
+
+/**
+* Creates a container for a single contact.
+* @param {Object} oneContact - The contact object.
+* @returns {HTMLElement} The created container element.
+*/
+function createOneContactContainer(oneContact) {
+  const container = document.createElement('div');
+  container.classList.add('oneContactContainer');
+  container.setAttribute('data-contact-id', oneContact.id);
+  container.addEventListener('click', () => showContactOverlayMobile(oneContact.id));
+  const iconHtml = renderSingleMemberToHTMLMobile(oneContact, oneContact.colorCode, oneContact.textColorCode);
+  createOneContactContainerHTML(container, iconHtml, oneContact);
+  return container;
+}
+
+
+/**
+* Renders contacts grouped by their first letter.
+* @param {HTMLElement} content - The container element to render contacts in.
+* @param {Object} contactsByFirstLetter - The object storing contacts grouped by first letter.
+*/
+function renderContactsByFirstLetter(content, contactsByFirstLetter) {
+    for (const letter in contactsByFirstLetter) {
+      content.appendChild(contactsByFirstLetter[letter]);
+    }
+}
+
+
+/**
+* Registers click event handlers for contact containers.
+*/
+function registerContactClickHandlers() {
+    const contactContainers = document.querySelectorAll('.oneContactContainer');
+    contactContainers.forEach(container => {      
+        const contactId = container.getAttribute('data-contact-id');
+        container.addEventListener('click', () => showContactOverlayMobile(contactId));        
+    });
+}
+
+
+/**
+* Renders the add contact button for mobile view.
+*/
+function renderAddContactButtonMobile() {
+    const content = document.getElementById("all-contacts-id");
+    const addContactButtonMobile = document.createElement('div');
+    addContactButtonMobile.classList.add("addContactButtonContainerMobile");
+    addContactButtonMobile.innerHTML = `
+      &lt;img class="addContactButtonImgMobile" src="./assets/img/contacts/addContactButtonMobile.svg" alt="createContactButton" onclick="addContactScreenMobile()">&lt;/img>
+    `;
+    content.appendChild(addContactButtonMobile);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#createOneContactContainer">createOneContactContainer</a></li><li><a href="global.html#registerContactClickHandlers">registerContactClickHandlers</a></li><li><a href="global.html#renderAddContactButtonMobile">renderAddContactButtonMobile</a></li><li><a href="global.html#renderContacts">renderContacts</a></li><li><a href="global.html#renderContactsByFirstLetter">renderContactsByFirstLetter</a></li><li><a href="global.html#renderContactsVariables">renderContactsVariables</a></li><li><a href="global.html#updateContactsByFirstLetter">updateContactsByFirstLetter</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:15:48 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

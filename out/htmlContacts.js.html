@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: htmlContacts.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: htmlContacts.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Generate HTML for each contact
+ * @param {string} oneContact - One contact data oneContact.id / oneContact color / oneContact.name / oneContact.email
+ */
+function createContactContainer(oneContact) {    
+    return `
+        &lt;div class="oneContactContainer" id="contact-${oneContact.id}" onclick="openContactScreenDesktop('${oneContact.id}')" data-contact-id="${oneContact.id}">
+            &lt;div>                
+                ${singleMemberToHTML(oneContact, 0)}
+            &lt;/div>
+            &lt;div class="contact-info-container-Desktop">
+                &lt;h2 class="oneContactContainerH2Desktop">${oneContact.name}&lt;/h2>
+                &lt;a class="oneContactContainerAElementDesktop">${oneContact.email}&lt;/a>
+            &lt;/div>
+        &lt;/div>
+    `;
+}
+
+
+/**
+ * Generate HTML for clicked contact details
+ * @param {string} content - contactsContent div container
+ * @param {string} selectedContact - This is the selected contact to open
+ */
+function openContactScreenDesktopHTML(content, selectedContact) {
+    content.innerHTML = /*html*/ `
+      &lt;div class="contactsContentRightSideHeadLine">
+          &lt;h1 class="contactsContentRightSideH1">
+            Contacts
+          &lt;/h1>
+          &lt;img class="contactsContentRightSideBlueStribeSvg" src="./assets/img/contacts/contactsContentRightSideBlueStripe.svg" alt="">        
+          &lt;p class="contactsContentRightSideHeadLinePElement">Better with a team&lt;/p>
+      &lt;/div>  
+      &lt;div id="contactsContentRightSideContactDataContainerID">
+        &lt;div class="contactsContentRightSideUserImgAndNameContainer">
+          ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
+        &lt;div>
+            &lt;h2 class="contactsContentRightSideUserNameH2">${selectedContact.name}&lt;/h2>
+              &lt;div class="contactsContentRightSideEditAndDeleteButtonContainer">
+                &lt;img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="editContactDestop(lastClickedContactId)">
+                &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteContactDesktop(lastClickedContactId)">
+              &lt;/div>
+          &lt;/div> 
+        &lt;/div>
+        &lt;div class="contactsContentRightSideContactInformationDesktop">
+          &lt;p class="contactsContentRightSideContactInformationDesktopPText">Contact Information&lt;/p>
+        &lt;/div>
+        &lt;div class="contactsContentRightSideContactEmailH2Desktop">
+          &lt;h2 class="contactsContentRightSideContactEmailH2">Email&lt;/h2>
+        &lt;/div>
+        &lt;div class="openContactEmailLinkDesktopContainer">
+          &lt;a class="openContactEmailLinkDesktop" href="mailto:${selectedContact.email}">${selectedContact.email}&lt;/a>
+        &lt;/div>
+        &lt;div class="contactsContentRightSideContactPhoneH2DesktopContainer">
+          &lt;h2 class="contactsContentRightSideContactPhoneH2Desktop">Phone&lt;/h2>
+        &lt;/div>
+        &lt;div class="openphoneNumberDesktopContainer">
+          &lt;p class="openphoneNumberDesktopPElement">${selectedContact.phone}&lt;/p>
+        &lt;/div>
+      &lt;/div>
+     `;
+}
+
+
+/**
+  * Generate HTML for add contact show overlay desktop
+  * @param {string} overlayContent - Overlay div container
+  */
+function generateHTMLAddContactShowOverlayDesktop(overlayContent) {
+    overlayContent.innerHTML = /*html*/ `
+      &lt;div class="overlay-card">
+        &lt;div class="addContactDesktopLeftSideContainer">
+          &lt;div class="flexDirectionColumn">
+            &lt;img class="joinLogoGreyBackgroundImg" src="./assets/img/contacts/joinLogoGreyBackground.png" alt="">
+            &lt;h1 class="addContactDesktopLeftSideContainerH1">Add contact&lt;/h1>
+            &lt;p class="addContactDesktopLeftSideContainerPElement">Tasks are better with a team!&lt;/p>
+            &lt;img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">
+          &lt;/div>
+        &lt;/div>
+        &lt;div class="addContactDesktopRightSideContent">
+            &lt;div class="addContactCloseXContainerDesktop">
+              &lt;button class="addContactCloseXButton" onclick="hideOverlay()">X&lt;/button>
+            &lt;/div>
+            &lt;div id="edit-contact-destop-id">
+              &lt;div class="addContactContainerFooter">              
+              &lt;div class="addContactContainerFooter">
+              &lt;input class="addContactInputNameDesktop" type="text" name="addContactInputNameDesktop" id="add-contact-input-name-desktop-id" required pattern="[A-Za-z'\\- ]+" placeholder="Name" data-contacts>
+                &lt;input class="addContactInputMailAddresssDesktop" type="email" name="addContactInputMailAddresssDesktop" id="add-contact-input-mail-addresss-desktop-id" required placeholder="E Mail" data-contacts>
+                &lt;input class="addContactInputPhoneDesktop" type="tel" name="addContactInputPhoneDesktop" id="add-contact-input-phone-desktop-id" required pattern="[0-9]{1,}" placeholder="Phone" data-contacts>
+                &lt;div class="addContactButtonContainerDesktop">
+                  &lt;button class="cancelContactDesktopDeleteButton" onclick="hideOverlay()">Cancel&lt;/button>
+                  &lt;button class="createContactButton" onclick="createContactDesktop()">Create contact&lt;/button>
+                  &lt;/div>
+                &lt;/div>                
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+      `;
+}
+
+
+/**
+ * Generate HTML for editContactDestop
+ * @param {string} overlayContent - Overlay div container
+ * @param {string} selectedContact - This is the selected contact to open
+ */
+function generateHTMLEditContactDesktop(overlayContent, selectedContact) {
+    overlayContent.innerHTML = /*html*/ `
+      &lt;div class="overlay-card">
+        &lt;div class="addContactDesktopLeftSideContainer">
+          &lt;div class="flexDirectionColumn">
+            &lt;img class="joinLogoGreyBackgroundImg" src="./assets/img/contacts/joinLogoGreyBackground.png" alt="">
+            &lt;h1 class="addContactDesktopLeftSideContainerH1">Edit contact&lt;/h1>          
+            &lt;img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">
+          &lt;/div>
+        &lt;/div>
+        &lt;div class="addContactDesktopRightSideContainer">
+          &lt;div class="addContactBlankUserImgContainer">          
+            ${singleMemberToHTMLOpenContactDesktop2(selectedContact, 0)}
+          &lt;/div>
+          &lt;div class="addContactDesktopRightSideContent">
+            &lt;div class="addContactCloseXContainerDesktop">
+              &lt;button class="addContactCloseXButton" onclick="hideOverlay()">X&lt;/button>
+            &lt;/div>
+            &lt;div id="editContactDestopID">
+              &lt;div class="addContactContainerFooter">                
+                  &lt;input class="addContactInputNameDesktop" type="text" name="editContactInputNameDesktop" id="editContactInputNameDesktopID" required placeholder="Name" value="${selectedContact.name}">
+                  &lt;input class="addContactInputMailAddresssDesktop" type="email" name="editContactInputMailAddresssDesktop" id="editContactInputMailAddresssDesktopID" required placeholder="E-Mail" value="${selectedContact.email}">
+                  &lt;input class="addContactInputPhoneDesktop" type="tel" name="editContactInputPhoneDesktop" id="editContactInputPhoneDesktopID" required pattern="[0-9]{1,}" placeholder="Phone" value="${selectedContact.phone}">
+                  &lt;div class="addContactButtonContainerDesktop">
+                    &lt;button class="cancelContactDesktopDeleteButton" onclick="deleteContactDesktop(${lastClickedContactId})">Delete&lt;/button>
+                    &lt;button class="createContactButton" onclick="updateContactsDataDesktop(lastClickedContactId)">Save&lt;/button>
+                  &lt;/div>                
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+    `;
+}
+
+
+/**
+* Generates the HTML for the add contact form in mobile view.
+* @returns {string} The HTML content for the add contact form.
+*/
+function addContactFormMobileHTML() {
+    return /*html*/ `
+      &lt;div class="addContactContainerHeaderMobile">
+        &lt;div class="addContactCloseXContainerMobile">
+          &lt;button class="addContactCloseXButtonMobile" onclick="redirectToContacts()">X&lt;/button>
+        &lt;/div>
+        &lt;div class="addContactBlockHeaderMobile">
+          &lt;p class="addContactH1Mobile">Add contact&lt;/p>
+          &lt;p class="addContactTextMobile">Tasks are better with a team!&lt;/p>
+          &lt;img class="addContactBlueStrokedMobile" src="./assets/img/contacts/addContactBlueStroked.svg" alt="addContactBlueStroked">
+        &lt;/div>
+        &lt;div>
+          &lt;img class="addContactBlankUserImgMobile" src="./assets/img/contacts/addContactBlankUserImg.svg" alt="addContactBlankUserImg">
+        &lt;/div>
+      &lt;/div>
+        &lt;div class="addContactContainerFooterMobile">
+          &lt;input class="addContactInputNameMobile" name="addContactInputNameMobile" id="add-contact-input-name-mobile-id" required pattern="[A-Za-z'\\- ]+" type="text" placeholder="Name">
+          &lt;input class="addContactInputMailAddresssMobile" name="addContactInputMailAddresssMobile" id="add-contact-input-mail-addresss-mobile-id" type="text" placeholder="E Mail">
+          &lt;input class="addContactInputPhoneMobile" name="addContactInputPhoneMobile" id="add-contact-input-phone-mobile-id" type="tel" required pattern="[0-9]{1,}" placeholder="Phone">          
+          &lt;button class="createContactButtonImg" onclick="createContactMobile()">
+          &lt;img src="./assets/img/contacts/createContactButton.svg" alt="createContactButton">
+          &lt;/button>
+        &lt;/div>
+    `;
+}
+
+
+/**
+ * Creates a container for a group of contacts starting with the same letter.
+ * @param {string} firstLetter - The first letter of the contacts in the group.
+ * @returns {HTMLElement} The created container element.
+ */
+function createLetterAndContactsContainer(firstLetter) {
+    const container = document.createElement('div');
+    container.classList.add('letterAndContactsContainer');
+    container.innerHTML = `
+      &lt;div class="letter-column">
+        &lt;h2 class="contact-first-letter">${firstLetter}&lt;/h2>
+        &lt;div class="contacts-list">&lt;/div>
+      &lt;/div>
+    `;
+    return container;
+}
+
+
+/**
+* Fills the content of a single contact container with HTML content.
+* @param {HTMLElement} container - The container element for the contact.
+* @param {string} iconHtml - The HTML content for the contact's icon.
+* @param {Object} oneContact - The contact object.
+*/
+function createOneContactContainerHTML(container, iconHtml, oneContact) {
+    container.innerHTML = `
+      &lt;div class="contact-info-container">
+        &lt;div>
+          ${iconHtml}
+        &lt;/div>
+        &lt;div>
+          &lt;h2 class="oneContactContainerH2Mobile">${oneContact.name}&lt;/h2>
+          &lt;a class="oneContactContainerAElement">${oneContact.email}&lt;/a>
+        &lt;/div>
+      &lt;/div>
+    `;
+}
+
+
+/**
+* Renders the icon for a single member in mobile view.
+* @param {Object} oneContact - The contact object.
+* @param {string} colorCode - The color code for the icon background.
+* @param {string} textColor - The color code for the text.
+* @returns {string} The HTML for the icon.
+*/
+function renderSingleMemberToHTMLMobile(oneContact, colorCode, textColor) {
+    return `
+      &lt;div class="openContactUserImgMobile" style="background-color: ${colorCode}; color: ${textColor};">
+        ${getFirstLettersOfName(oneContact.name)}
+      &lt;/div>
+    `;
+}
+
+
+/**
+* Creates the HTML content for the contact overlay.
+* @param {Object} selectedContact - The selected contact object.
+* @returns {string} The HTML content for the contact overlay.
+*/
+function createContactOverlayContent(selectedContact) {    
+    return `
+    &lt;div class="openContactContainerHeader">                            
+        &lt;div class="openContactBlockHeader">
+            &lt;div>
+                &lt;p class="openContactH1">Contacts&lt;/p>
+                &lt;p class="openContactText">Better with a team!&lt;/p>                              
+                &lt;img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">                                                                        
+            &lt;/div>
+            &lt;div class="arrorLeftContainer">
+                &lt;div onclick="contactsInit()">
+                    &lt;img src="./assets/img/contacts/arrow-left-line.svg" alt="">
+                &lt;/div>
+            &lt;/div>                                                                
+        &lt;/div>                    
+    &lt;/div>  
+    &lt;div class="openContactContainerFooter">
+        &lt;div class="openContactUserImageAndNameContainer">
+            ${singleMemberToHTML(selectedContact)}           
+            &lt;h2 class="openContactH2">${selectedContact.name}&lt;/h2>
+        &lt;/div>
+        &lt;p class="openContactInformation">Contact Information&lt;/p>
+        &lt;p class="openContactEmail">Email&lt;/p>
+        &lt;a class="openContactEmailLink" href="mailto:${selectedContact.email}">${selectedContact.email}&lt;/a>
+        &lt;p class="openContactPhoneText">Phone&lt;/p>
+        &lt;p class="openContactPhoneNumber">${selectedContact.phone}&lt;/p>        
+    &lt;/div>  
+    &lt;div class="dropdown-container" id="contactOptionsDropdownContainer">
+        &lt;div class="dropdown-triggerContainer">
+          &lt;div class="dropdown-trigger" onclick="toggleDropdownMenu()">
+              &lt;img id="menuContactOptionsButton" src="./assets/img/contacts/menuContactOptionsButtonImg.svg" alt="">
+          &lt;/div>
+        &lt;/div>
+        &lt;div class="dropdown-menu" id="contactOptionsDropdown">
+            &lt;div class="dropdown-option" data-value="edit" onclick="editContactOverlayMobile('${selectedContact.id}')">
+                &lt;img src="./assets/img/contacts/editContactsDropDownIcon.svg" alt="Edit Contact">
+            &lt;/div>            
+            &lt;div class="dropdown-option" data-value="delete" onclick="deleteContactMobile('${selectedContact.id}')">
+                &lt;img src="./assets/img/contacts/DeleteContactDropwDownIcon.svg" alt="Delete Contact">
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>
+  `;  
+}
+
+
+/**
+* Generates HTML for editing contact information.
+* @param {Object} selectedContact - The contact object to be edited.
+* @param {string} colorCode - The background color code.
+* @param {string} textColor - The text color.
+* @returns {string} The HTML code for editing the contact.
+*/
+function createEditContactHTML(selectedContact, colorCode, textColor) {  
+    const { name, email, phone } = selectedContact;  
+    return /*html*/ `
+      &lt;div class="editContactContainerHeader">
+    &lt;div class="addContactCloseXContainer">
+        &lt;button class="addContactCloseXButtonMobile" onclick="redirectToContacts()">X&lt;/button>
+    &lt;/div>
+    &lt;div class="addContactBlockHeader">
+        &lt;p class="addContactH1">Edit contact&lt;/p>
+        &lt;img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">          
+    &lt;/div>
+    &lt;/div>
+    &lt;div class="addContactBlankUserImg">        
+        ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
+    &lt;/div>            
+        &lt;div class="addContactContainerFooter">
+            &lt;input class="openContactInputNameMobile" name="editContactInputNameMobile" id="editContactInputNameMobileID" type="text" required pattern="[A-Za-z'\\- ]+" placeholder="Name" value="${name}">
+            &lt;input class="openContactInputMailAddresssMobile" name="editContactInputMailAddresssMobile" id="editContactInputMailAddresssMobileID" type="email" required placeholder="E Mail" value="${email}">
+            &lt;input class="openContactInputPhoneMobile" name="editContactInputPhoneMobile" id="editContactInputPhoneMobileID" type="tel" required pattern="[0-9]{1,}" placeholder="Phone" value="${phone}">
+            &lt;div>
+                &lt;button type="button" class="createContactButtonImg" onclick="deleteContactMobile('${selectedContact.id}')">
+                &lt;img src="./assets/img/contacts/editContactDeleteButtonImg.svg" alt="">
+            &lt;/button>
+            &lt;button onclick="updateContactMobile(event, '${selectedContact.id}')" class="createContactButtonImg">
+                &lt;img src="./assets/img/contacts/editContactSaveButtonImg.svg" alt="">
+            &lt;/button>
+        &lt;/div>
+    &lt;/div>    
+    `;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactFormMobileHTML">addContactFormMobileHTML</a></li><li><a href="global.html#createContactContainer">createContactContainer</a></li><li><a href="global.html#createContactOverlayContent">createContactOverlayContent</a></li><li><a href="global.html#createEditContactHTML">createEditContactHTML</a></li><li><a href="global.html#createLetterAndContactsContainer">createLetterAndContactsContainer</a></li><li><a href="global.html#createOneContactContainerHTML">createOneContactContainerHTML</a></li><li><a href="global.html#generateHTMLAddContactShowOverlayDesktop">generateHTMLAddContactShowOverlayDesktop</a></li><li><a href="global.html#generateHTMLEditContactDesktop">generateHTMLEditContactDesktop</a></li><li><a href="global.html#openContactScreenDesktopHTML">openContactScreenDesktopHTML</a></li><li><a href="global.html#renderSingleMemberToHTMLMobile">renderSingleMemberToHTMLMobile</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:12:30 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

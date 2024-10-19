@@ -26,64 +26,124 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const STORAGE_TOKEN = "1YZW4TY9W0XF6M4IBJ1F19MV8LK8PIHTCGVU4471";
-const STORAGE_URL = "https://remote-storage.developerakademie.org/item";
-let rmCheckboxConfirmed = false;
-let ppCheckboxConfirmed = false;
-let users = {};
-let newUserArray = [];
-let emptyInput = true;
-let pwVisibility = { pwVisibilityOn: false };
-let confirmPwVisibility = { pwVisibilityOn: false };
-
-
-/**
- * Initializes the application by loading users from the backend and setting up password visibility listener.
+            <pre class="prettyprint source linenums"><code>/**
+ * Registers a new user if validation checks pass, the privacy policy checkbox is confirmed, and the user does not already exist.
  */
-async function init() {
-    users = await loadUsersFromBackend('users');
-    console.log(users);
-    addPasswordVisibilityListener('login-pw-border-id', 
-                                'lock-id', 
-                                'login-pw-visibility-off-id',
-                                'login-pw-visibility-id',
-                                pwVisibility);
+async function register() {
+    if (!(registerValidationCheck() &amp;&amp; ppCheckboxConfirmed)) {
+        return;
+    }
+    const newUser = generateNewUserObject();
+    const emailExistsInBackend = await checkEmailExistsInBackend(newUser.userEMail);
+    if (emailExistsInBackend) {
+        document.getElementById('existing-user-msg').innerText = "User with this email already exists in backend.";
+        document.getElementById('existing-user-msg').classList.remove('d-none');
+        return;
+    }
+    await registerFinsh(newUser);
 }
 
 
 /**
- * Loads users data from the backend.
- * @param {string} key - The key to identify the data in the backend.
- * @returns {Promise&lt;Array>} - An array of user objects.
+ * Checks if a given email exists in the backend user database.
+ *
+ * @async
+ * @param {string} email - The email address to check for existence.
+ * @returns {Promise&lt;boolean>} - Returns true if the email exists, otherwise false.
  */
-async function loadUsersFromBackend(key) {
+async function checkEmailExistsInBackend(email) {
     try {
-        const result = await getItem(key);
-        return JSON.parse(result) || [];
-    } catch (e) {
-        console.error('loading error:', e);
-        return [];
+        const users = await fetchUsersFromBackend();
+        const userArray = extractEmailsFromUsers(users);
+        return userArray.includes(email);
+    } catch (error) {
+        console.error('Error checking email in backend:', error);
+        return false;
     }
 }
 
 
 /**
- * Registers a new user if validation checks pass and privacy policy checkbox is confirmed.
+ * Fetches the list of users from the backend storage.
+ *
+ * @async
+ * @returns {Promise&lt;Object>} - Returns a promise that resolves to the user data from the backend.
  */
-function register() {
-    if (!(registerValidationCheck() &amp;&amp; ppCheckboxConfirmed))
-        return;
-    addNewUser();
+async function fetchUsersFromBackend() {
+    const response = await fetch(STORAGE_URL + "/users.json");
+    const users = await response.json();
+    return users;
+}
+
+
+/**
+ * Extracts email addresses from the provided users object.
+ *
+ * @param {Object} users - The users object fetched from the backend.
+ * @returns {string[]} - An array of email addresses extracted from the users.
+ */
+function extractEmailsFromUsers(users) {
+    const userArray = [];
+    for (const key in users) {
+        const user = users[key];
+        if (isUserObject(user)) {
+            userArray.push(user.userEMail);
+        } else if (Array.isArray(user)) {
+            extractEmailsFromArray(user, userArray);
+        }
+    }
+    return userArray;
+}
+
+
+/**
+ * Checks if the given input is a user object.
+ *
+ * @param {any} user - The input to check.
+ * @returns {boolean} - Returns true if the input is a user object, otherwise false.
+ */
+function isUserObject(user) {
+    return typeof user === 'object' &amp;&amp; !Array.isArray(user);
+}
+
+
+/**
+ * Extracts email addresses from an array of user objects and adds them to a given list.
+ *
+ * @param {Object[]} userArray - An array of user objects.
+ * @param {string[]} emailList - The list to which extracted email addresses will be added.
+ */
+function extractEmailsFromArray(userArray, emailList) {
+    userArray.forEach(u => {
+        if (u.userEMail) {
+            emailList.push(u.userEMail);
+        }
+    });
+}
+
+
+/**
+ * Completes the registration process by adding a new user, showing a success message,
+ * closing the sign-up form, and redirecting to the index page.
+ * 
+ * @async
+ * @param {Object} newUser - The new user object to be registered.
+ * @returns {Promise&lt;void>} - Resolves when the registration process is finished.
+ */
+async function registerFinsh(newUser) {
+    addDefaultContactsAndTasksToUser(newUser)
+    await addNewUser(newUser);
     toggleSuccessesMsg();
-    closeSignUp();
+    closeSignUp();    
+    init();
 }
 
 
 /**
  * Adds a new user to the application.
+ * @param {Object} newUser - The new user object to be added.
  */
-async function addNewUser() {
-    const newUser = generateNewUserObject();
+async function addNewUser(newUser) {
     newUserArray.push(newUser);
     try {
         await addNewUserToBackend(newUser);
@@ -145,7 +205,7 @@ async function addNewUserToBackend(user) {
             existingUsers = [];
         }
         existingUsers.push(user);
-        await setItem('users', JSON.stringify(existingUsers));        
+        await setItem('users', existingUsers);
     } catch (error) {
         console.error('Error adding new user to backend:', error);
     }
@@ -281,52 +341,6 @@ function toggleSuccessesMsg() {
 
 
 /**
- * Resets the login inputs and validation states.
- */
-function resetLoginInputs() {
-    const boolArr = [false, false, false, false, false, false, false];
-    handlerFieldValidationLogin(boolArr);
-    document.getElementById("login-user-e-mail-id").value = "";
-    document.getElementById("login-user-password-id").value = "";
-    const pwInput = document.getElementById('lock-id');
-    showImage(pwInput, './assets/img/lock.png');
-}
-
-
-/**
- * Handles errors by logging them to the console.
- * @param {Error} error - The error object to be handled.
- */
-function handleError(error) {
-    console.error("Error sending user data to the backend:", error);
-}
-
-
-/**
- * Push request to backend.
- * Either it is fulfilled successfully (resolved) or it fails (rejected).
- * @param {lokal storage key} key
- * @param {string} value
- * @returns Promise: resolved or rejected.
- */
-async function setItem(key, value) {
-    const payload = { key, value, token: STORAGE_TOKEN };
-    return fetch(STORAGE_URL, { method: 'POST', body: JSON.stringify(payload)})
-    .then(res => res.json());
-}
-
-
-/**
- * Get request to backend.
- * @param {lokal storage key} key
- */
-async function getItem(key) {
-    const url = `${STORAGE_URL}?key=${key}&amp;token=${STORAGE_TOKEN}`;
-    return fetch(url).then(res => res.json()).then(res => res.data.value);
-}
-
-
-/**
  * Displays the sign-up form and initializes password visibility options.
  */
 function signUp() {
@@ -373,267 +387,6 @@ function closeSignUp() {
     toggleVisibility('login-id', true);
     document.getElementById('sign-up-popup-id').innerHTML = "";
     ppCheckboxConfirmed = false;
-}
-
-
-/**
- * Attempts to log in the user.
- */
-async function login() {
-    try {
-        const loggedInUser = await authenticateUser();
-        if (loggedInUser) {
-            localStorage.setItem('currentUser', JSON.stringify(loggedInUser));            
-            window.location.assign('./summary.html');
-            setTimeout(showHeaderUserInitials, 500);
-        } else {
-            console.error('Error: Unable to log in user.');
-        }
-    } catch (error) {
-        console.error('Error during login:', error);
-    }
-}
-
-
-/**
- * Authenticates the user based on the provided credentials.
- * @returns {object|null} The authenticated user object if successful, otherwise null.
- */
-async function authenticateUser() {
-    const { foundUser, loginUserPassword } = await authenticateUserVariables();    
-    if (foundUser) {
-        if (foundUser.userPassword === loginUserPassword) {
-            return foundUser;
-        } else {
-            console.error("Error: Incorrect password.");
-            return null;
-        }
-    } else {
-        console.error("Error: User not found.");
-        return null;
-    }
-}
-
-
-/**
- * Retrieves user email and password inputs, loads users from the backend, and finds the user with the provided email.
- * @returns {object} An object containing the found user and the login user password.
- */
-async function authenticateUserVariables() {
-    const loginUserEmail = document.getElementById("login-user-e-mail-id").value;
-    const loginUserPassword = document.getElementById("login-user-password-id").value;
-    const users = await loadUsersFromBackend('users');
-    const foundUser = users.find(user => user.userEMail === loginUserEmail);
-    return { foundUser, loginUserPassword };
-}
-
-
-/**
- * Handles field validation for the login form.
- * @param {boolean[]} boolArr - An array representing validation error flags.
- */
-function handlerFieldValidationLogin(boolArr) {
-    toggleVisibility('empty-email-id', boolArr[0]);
-    toggleVisibility('this-is-no-email-id', boolArr[1]);
-    toggleVisibility('invalid-email-id', boolArr[2]);
-    toggleVisibility('invalid-password-id', boolArr[3]);
-    toggleVisibility('empty-password-id', boolArr[4]);
-    toggleVisibility('login-email-border-id', !boolArr[5],'error-border');
-    toggleVisibility('login-pw-border-id', !boolArr[6],'error-border');
-}
-
-
-/**
- * Toggles the visibility of an element.
- * @param {string} elementId - The ID of the element to toggle.
- * @param {boolean} show - Indicates whether to show or hide the element.
- * @param {string} className - The class name used to control visibility.
- */
-function toggleVisibility(elementId, show = true, className = 'd-none') {
-    const element = document.getElementById(elementId);
-    show ? element.classList.remove(className) : element.classList.add(className);
-}
-
-
-/**
- * Toggles the checkbox state based on the event target ID.
- * @param {Event} event - The event object.
- */
-function toggleCheckbox(event) {
-    const { loginCheckbox, ppCheckbox } = toggleCheckboxVariables();
-    if (event.target.id === 'uncheckbox-id') {
-        rmCheckboxConfirmed = !rmCheckboxConfirmed;
-        loginCheckbox.src = rmCheckboxConfirmed
-            ? './assets/img/checkbox_confirmed.svg'
-            : './assets/img/checkbox.svg';
-        ppCheckboxConfirmed = false;
-    } else if (event.target.id === 'privacy-checkbox-id') {
-        ppCheckbox.src = ppCheckboxConfirmed
-            ? './assets/img/checkbox_confirmed.svg'
-            : './assets/img/checkbox.svg'; 
-    }
-}
-
-
-/**
- * Retrieves checkbox elements and toggles their states.
- * @returns {object} An object containing references to the login and privacy policy checkboxes.
- */
-function toggleCheckboxVariables() {
-    const loginCheckbox = document.getElementById("uncheckbox-id");
-    const ppCheckbox = document.getElementById("privacy-checkbox-id");
-    ppCheckboxConfirmed = !ppCheckboxConfirmed;
-    return { loginCheckbox, ppCheckbox };
-}
-
-
-/**
- * Adds an event listener to a password input element to toggle password visibility.
- * @param {string} elementId - The ID of the password input element.
- * @param {string} lockImgId - The ID of the lock image element.
- * @param {string} visibilityOffImg - The ID of the visibility off image element.
- * @param {string} visibilityOnImg - The ID of the visibility on image element.
- * @param {object} visibilityObj - An object representing password visibility state.
- */
-function addPasswordVisibilityListener(elementId, lockImgId, visibilityOffImg, visibilityOnImg, visibilityObj) {
-    const inputElement = document.getElementById(elementId);
-    inputElement.addEventListener("input", function(event) {
-        const passwordNotEmpty = isValueNotEmpty(event.target.value);
-        toggleVisibility(lockImgId, !passwordNotEmpty);
-        toggleVisibility(visibilityOffImg, passwordNotEmpty &amp;&amp; !visibilityObj.pwVisibilityOn);
-        toggleVisibility(visibilityOnImg, passwordNotEmpty &amp;&amp; visibilityObj.pwVisibilityOn);
-        if (!passwordNotEmpty) 
-            visibilityObj.pwVisibilityOn = false;
-    });
-}
-
-
-/**
- * Checks if the provided input value is not empty.
- * @param {string} passwordInput - The input value to check.
- * @returns {boolean} Indicates whether the input value is not empty.
- */
-function isValueNotEmpty(passwordInput) {
-    return passwordInput.trim().length !== 0;
-}
-
-
-/**
- * Displays an image by setting its source attribute.
- * @param {HTMLElement} lockImage - The lock image element.
- * @param {string} src - The source URL of the image.
- */
-function showImage(lockImage, src) {
-    lockImage.src = src;
-}
-
-
-/**
- * Toggles password visibility based on the input type and form.
- * @param {Event} event - The event object.
- * @param {string} ImgId - The ID of the image element.
- * @param {string} whichform - The type of form ('password' or 'confirmPw').
- * @param {number} value - The value indicating visibility state (-1 for hidden, 1 for visible).
- */
-function togglePasswordVisibility(event, ImgId, whichform, value) {
-    let visibilityOn, inputType;
-    if ((whichform === 'password' || whichform === 'registerPw') &amp;&amp; value === 1) 
-        visibilityOn = true;
-    else if ((whichform === 'password' || whichform === 'registerPw') &amp;&amp; value === -1) 
-        visibilityOn = false;
-    else if (whichform === 'confirmPw' &amp;&amp; value === 1) 
-        visibilityOn = true;
-    else if (whichform === 'confirmPw' &amp;&amp; value === -1) 
-        visibilityOn = false;
-    toggleVisibility(event.target.id, false);
-    toggleVisibility(ImgId, true);
-    inputType = visibilityOn ? 'text' : 'password';
-    updatePasswordInput(whichform, inputType);
-}
-
-
-/**
- * Updates the input type of the password input element.
- * @param {string} whichform - The type of form ('password' or 'confirmPw').
- * @param {string} inputType - The type of input ('text' or 'password').
- */
-function updatePasswordInput(whichform, inputType) {
-    const passwordInput = getPasswordInput(whichform);
-    passwordInput.type = inputType;
-}
-
-
-/**
- * Retrieves the password input element based on the specified form.
- * @param {string} whichform - The type of form ('password', 'registerPw', or 'confirmPw').
- * @returns {HTMLElement} The password input element.
- */
-function getPasswordInput(whichform) {
-    const formMap = {
-        'password': 'login-user-password-id',
-        'registerPw': 'add-pw-id',
-        'confirmPw': 'add-confirm-pw-id'
-    };
-    const elementId = formMap[whichform];
-    return document.getElementById(elementId);
-}
-
-
-/**
- * Logs in a guest user with predefined guest credentials.
- */
-function guestLogin() {    
-    const guestEmail = "guest@login.de";
-    const guestPassword = "Guest!login1";    
-    document.getElementById("login-user-e-mail-id").value = guestEmail;
-    document.getElementById("login-user-password-id").value = guestPassword;    
-    login();
-    setTimeout(showHeaderUserInitials, 500);
-}
-
-
-/**
- * Displays the initials of the current user in the header profile section.
- */
-function showHeaderUserInitials() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser &amp;&amp; currentUser.userName) {
-        const userName = currentUser.userName;
-        const [firstName, lastName] = userName.split(' ');
-        const initials = `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
-        const headerProfil = document.querySelector(".header-profil");
-        if (headerProfil) {
-            headerProfil.textContent = initials;
-        }
-    }
-}
-
-/**
- * Function only for developers to clear double user entrys.
- */
-async function removeDuplicateUsers() {
-    try {
-        let existingUsers = await loadUsersFromBackend('users');
-        let uniqueUsers = [];
-        let emailsSet = new Set();
-        for (let user of existingUsers) {            
-            if (!emailsSet.has(user.userEMail)) {                
-                uniqueUsers.push(user);                
-                emailsSet.add(user.userEMail);
-            }
-        }
-        await setItem('users', JSON.stringify(uniqueUsers));
-    } catch (error) {
-        console.error('Fehler beim Entfernen doppelter Benutzer:', error);
-    }
-}
-
-
-/**
- * Function only for developers to clear double user entrys.
- */
-async function deletAllUsersInBackend() {
-    await setItem("users", JSON.stringify({}));
 }</code></pre>
         </article>
     </section>
@@ -644,13 +397,13 @@ async function deletAllUsersInBackend() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addNewUser">addNewUser</a></li><li><a href="global.html#addNewUserToBackend">addNewUserToBackend</a></li><li><a href="global.html#addPasswordVisibilityListener">addPasswordVisibilityListener</a></li><li><a href="global.html#addPasswordVisibilityOption">addPasswordVisibilityOption</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#authenticateUserVariables">authenticateUserVariables</a></li><li><a href="global.html#closeSignUp">closeSignUp</a></li><li><a href="global.html#deletAllUsersInBackend">deletAllUsersInBackend</a></li><li><a href="global.html#generateNewUserObject">generateNewUserObject</a></li><li><a href="global.html#generateNewUserObjectConstructor">generateNewUserObjectConstructor</a></li><li><a href="global.html#getItem">getItem</a></li><li><a href="global.html#getPasswordInput">getPasswordInput</a></li><li><a href="global.html#guestLogin">guestLogin</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handlerFieldValidationLogin">handlerFieldValidationLogin</a></li><li><a href="global.html#handlerFieldValidationRegister">handlerFieldValidationRegister</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#isValueNotEmpty">isValueNotEmpty</a></li><li><a href="global.html#loadUsersFromBackend">loadUsersFromBackend</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#registerValidationCheck">registerValidationCheck</a></li><li><a href="global.html#removeDuplicateUsers">removeDuplicateUsers</a></li><li><a href="global.html#resetLoginInputs">resetLoginInputs</a></li><li><a href="global.html#setItem">setItem</a></li><li><a href="global.html#showHeaderUserInitials">showHeaderUserInitials</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleCheckbox">toggleCheckbox</a></li><li><a href="global.html#toggleCheckboxVariables">toggleCheckboxVariables</a></li><li><a href="global.html#togglePasswordVisibility">togglePasswordVisibility</a></li><li><a href="global.html#toggleSuccessesMsg">toggleSuccessesMsg</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updatePasswordInput">updatePasswordInput</a></li><li><a href="global.html#validateCheckBoxClicked">validateCheckBoxClicked</a></li><li><a href="global.html#validateConfirmPassword">validateConfirmPassword</a></li><li><a href="global.html#validateName">validateName</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#validateRegisterEmail">validateRegisterEmail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addNewUser">addNewUser</a></li><li><a href="global.html#addNewUserToBackend">addNewUserToBackend</a></li><li><a href="global.html#addPasswordVisibilityOption">addPasswordVisibilityOption</a></li><li><a href="global.html#checkEmailExistsInBackend">checkEmailExistsInBackend</a></li><li><a href="global.html#closeSignUp">closeSignUp</a></li><li><a href="global.html#extractEmailsFromArray">extractEmailsFromArray</a></li><li><a href="global.html#extractEmailsFromUsers">extractEmailsFromUsers</a></li><li><a href="global.html#fetchUsersFromBackend">fetchUsersFromBackend</a></li><li><a href="global.html#generateNewUserObject">generateNewUserObject</a></li><li><a href="global.html#generateNewUserObjectConstructor">generateNewUserObjectConstructor</a></li><li><a href="global.html#handlerFieldValidationRegister">handlerFieldValidationRegister</a></li><li><a href="global.html#isUserObject">isUserObject</a></li><li><a href="global.html#register">register</a></li><li><a href="global.html#registerFinsh">registerFinsh</a></li><li><a href="global.html#registerValidationCheck">registerValidationCheck</a></li><li><a href="global.html#signUp">signUp</a></li><li><a href="global.html#toggleSuccessesMsg">toggleSuccessesMsg</a></li><li><a href="global.html#validateCheckBoxClicked">validateCheckBoxClicked</a></li><li><a href="global.html#validateConfirmPassword">validateConfirmPassword</a></li><li><a href="global.html#validateName">validateName</a></li><li><a href="global.html#validatePassword">validatePassword</a></li><li><a href="global.html#validateRegisterEmail">validateRegisterEmail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 09 2024 17:22:12 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:14:59 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: registerAndLogin2.js</title>
+    <title>JSDoc: Source: loginAndGuestLoginAndLogout.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: registerAndLogin2.js</h1>
+    <h1 class="page-title">Source: loginAndGuestLoginAndLogout.js</h1>
 
     
 
@@ -27,47 +27,6 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Check if the logged-in user is added as a contact. If not, create a new contact.
- */
-async function checkIfUserAddedAsContact() {
-    const currentUser = getLoggedInUser();
-    ensureContactsArray(currentUser);
-    if (!isUserAddedAsContact(currentUser)) addLoggedInUserAsContact(currentUser);
-}
-
-
-/**
- * Ensures the contacts array exists for the user.
- * @param {Object} user - The current user object.
- */
-function ensureContactsArray(user) {
-    if (!Array.isArray(user.contacts)) user.contacts = [];
-}
-
-
-/**
- * Checks if the logged-in user is already added as a contact.
- * @param {Object} user - The current user object.
- * @returns {boolean} True if the user is added, otherwise false.
- */
-function isUserAddedAsContact(user) {
-    return user.contacts.some(contact => 
-        contact.name === `${user.userName} (you)` &amp;&amp; contact.email === user.userEMail
-    );
-}
-
-
-/**
- * Adds the logged-in user as a contact.
- * @param {Object} user - The current user object.
- */
-function addLoggedInUserAsContact(user) {
-    const newContact = { name: `${user.userName} (you)`, email: user.userEMail, phone: '0', id: generateUniqueID() };
-    addContactToCurrentUser(newContact);
-}
-
-
-/**
  * Attempts to log in the user.
  */
 async function login() {
@@ -329,30 +288,12 @@ function guestLogin() {
 
 
 /**
- * Displays the initials of the current user in the header profile section.
- */
-function showHeaderUserInitials() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser &amp;&amp; currentUser.userName) {
-        const userName = currentUser.userName;
-        const [firstName, lastName] = userName.split(' ');
-        const initials = `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
-        const headerProfil = document.querySelector(".header-profil");
-        if (headerProfil) {
-            headerProfil.textContent = initials;
-        }
-    }
-}
-
-
-/**
  * Logs out the current user by updating the local storage items.
  * Sets the 'isLoggedIn' item to 'false' and removes the 'currentUser' item.
  */
 function userLogOut() {
     localStorage.setItem('isLoggedIn', 'false');
-    localStorage.removeItem('currentUser');
-    resetActiveLinkId();
+    localStorage.removeItem('currentUser');    
 }</code></pre>
         </article>
     </section>
@@ -363,13 +304,13 @@ function userLogOut() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addLoggedInUserAsContact">addLoggedInUserAsContact</a></li><li><a href="global.html#addPasswordVisibilityListener">addPasswordVisibilityListener</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfUserAddedAsContact">checkIfUserAddedAsContact</a></li><li><a href="global.html#ensureContactsArray">ensureContactsArray</a></li><li><a href="global.html#findUserByEmail">findUserByEmail</a></li><li><a href="global.html#getLoginInputs">getLoginInputs</a></li><li><a href="global.html#getPasswordInput">getPasswordInput</a></li><li><a href="global.html#guestLogin">guestLogin</a></li><li><a href="global.html#handlerFieldValidationLogin">handlerFieldValidationLogin</a></li><li><a href="global.html#isUserAddedAsContact">isUserAddedAsContact</a></li><li><a href="global.html#isValidUsersObject">isValidUsersObject</a></li><li><a href="global.html#isValueNotEmpty">isValueNotEmpty</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#showHeaderUserInitials">showHeaderUserInitials</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#showLoginError">showLoginError</a></li><li><a href="global.html#toggleCheckbox">toggleCheckbox</a></li><li><a href="global.html#toggleCheckboxVariables">toggleCheckboxVariables</a></li><li><a href="global.html#togglePasswordVisibility">togglePasswordVisibility</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updatePasswordInput">updatePasswordInput</a></li><li><a href="global.html#userLogOut">userLogOut</a></li><li><a href="global.html#validateUserCredentials">validateUserCredentials</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addPasswordVisibilityListener">addPasswordVisibilityListener</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#findUserByEmail">findUserByEmail</a></li><li><a href="global.html#getLoginInputs">getLoginInputs</a></li><li><a href="global.html#getPasswordInput">getPasswordInput</a></li><li><a href="global.html#guestLogin">guestLogin</a></li><li><a href="global.html#handlerFieldValidationLogin">handlerFieldValidationLogin</a></li><li><a href="global.html#isValidUsersObject">isValidUsersObject</a></li><li><a href="global.html#isValueNotEmpty">isValueNotEmpty</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#showLoginError">showLoginError</a></li><li><a href="global.html#toggleCheckbox">toggleCheckbox</a></li><li><a href="global.html#toggleCheckboxVariables">toggleCheckboxVariables</a></li><li><a href="global.html#togglePasswordVisibility">togglePasswordVisibility</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updatePasswordInput">updatePasswordInput</a></li><li><a href="global.html#userLogOut">userLogOut</a></li><li><a href="global.html#validateUserCredentials">validateUserCredentials</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Oct 10 2024 22:47:05 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:13:48 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

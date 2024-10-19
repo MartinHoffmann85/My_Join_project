@@ -32,298 +32,6 @@ let lastClickedContactId;
 
 
 /**
- * Renders the contacts list on the desktop view.
- */
-function renderContactsDesktop() {
-    const content = document.getElementById("all-contacts-id");
-    content.innerHTML = "";
-    renderAddContactButtonDesktop();
-    const contactsByFirstLetter = groupContactsByFirstLetter();
-    renderContactsByFirstLetterDesktop(content, contactsByFirstLetter);    
-}
-
-
-/**
- * Create add contact button for desktop view
- */
-function renderAddContactButtonDesktop() {
-    const contentDesktop = document.getElementById("all-contacts-id");
-    const addContactButtonContainerDesktop = document.createElement("div");
-    addContactButtonContainerDesktop.classList.add("addContactButtonContainerDesktop");
-    addContactButtonContainerDesktop.innerHTML = /*html*/ `
-      &lt;button class="addContactButtonDesktop" onclick="addContactShowOverlayDesktop()">Add new contact
-        &lt;span>&lt;img class="addContactButtonDesktopImg" src="./assets/img/contacts/addNewContactDesktopButtonImg.svg" alt="">&lt;/span>&lt;/button>    
-      `;    
-    contentDesktop.appendChild(addContactButtonContainerDesktop);  
-    addContactButtonContainerDesktop.addEventListener("click", function () { 
-    });
-}
-
-
-/**
- * Create letter div container for sorted contacts by first letter
- */
-function groupContactsByFirstLetter() {
-    const contactsByFirstLetter = {};
-    const loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
-    loggedInUser.contacts.sort((a, b) => a.name.localeCompare(b.name));
-    loggedInUser.contacts.forEach((oneContact) => {
-        const firstLetter = oneContact.name.charAt(0).toUpperCase();
-        if (!contactsByFirstLetter[firstLetter]) {
-            contactsByFirstLetter[firstLetter] = createLetterContainer(firstLetter);
-        }
-        const oneContactContainer = createContactContainer(oneContact);
-        contactsByFirstLetter[firstLetter] += oneContactContainer;
-    });
-    return contactsByFirstLetter;
-}
-
-
-/**
- * Generate HTML for the letters
- * @param {string} firstLetter - This is the first letter from contact name
- */
-function createLetterContainer(firstLetter) {
-    return `
-        &lt;div class="letterAndContactsContainer">
-            &lt;div class="letter-column">
-                &lt;h2 class="contact-first-letter-desktop">${firstLetter}&lt;/h2>
-            &lt;/div>
-        &lt;/div>
-    `;
-}
-
-
-/**
- * Generate HTML for each contact
- * @param {string} oneContact - One contact data oneContact.id / oneContact color / oneContact.name / oneContact.email
- */
-function createContactContainer(oneContact) {    
-    return `
-        &lt;div class="oneContactContainer" id="contact-${oneContact.id}" onclick="openContactScreenDesktop('${oneContact.id}')" data-contact-id="${oneContact.id}">
-            &lt;div>                
-                ${singleMemberToHTML(oneContact, 0)}
-            &lt;/div>
-            &lt;div class="contact-info-container-Desktop">
-                &lt;h2 class="oneContactContainerH2Desktop">${oneContact.name}&lt;/h2>
-                &lt;a class="oneContactContainerAElementDesktop">${oneContact.email}&lt;/a>
-            &lt;/div>
-        &lt;/div>
-    `;
-}
-
-
-/**
- * Add each contact to the section on desktop view
- * @param {string} content - contactsContent div container
- * @param {string} contactsByFirstLetter - Sorted contacts by first letter
- */
-function renderContactsByFirstLetterDesktop(content, contactsByFirstLetter) {
-    Object.values(contactsByFirstLetter).forEach((section) => {
-        content.innerHTML += section;
-    });
-}
-
-
-/* Open contact desktop view */
-
-/**
- * Show clicked contact details for desktop view
- * @param {string} contactId - This is the contact ID example "5"
- */
-function openContactScreenDesktop(contactId) {    
-    const { content, selectedContact } = openContactScreenDesktopVariables(contactId);
-    if (lastClickedContactId !== contactId) {
-        openContactsScreenDesktopChangeColorWhite(lastClickedContactId);
-        lastClickedContactId = contactId;
-        openContactsScreenDesktopChangeColorBlack(contactId);
-    }    
-    openContactScreenDesktopHTML(content, selectedContact);    
-    showHeaderAndFooter();    
-    showContactsContentRightSideDesktop();    
-    const contactContainer = document.getElementById("contactsContentRightSideContactDataContainerID");
-    contactContainer.style.animation = "slide-in-desktop 0.5s ease-out";
-}
-
-
-/**
- * Retrieves necessary variables for opening the contact screen on desktop.
- * @param {string} contactId - The ID of the selected contact.
- * @returns {Object} An object containing the content element and the selected contact.
- */
-function openContactScreenDesktopVariables(contactId) {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  const content = document.getElementById("contactsContentRightSideID");
-  const selectedContact = currentUser.contacts.find(contact => contact.id === contactId);
-  return { content, selectedContact };
-}
-
-
-/**
- * Changes the background color of the selected contact container to black.
- * @param {string} contactId - The ID of the selected contact.
- */
-function openContactsScreenDesktopChangeColorBlack(contactId) {
-    const currentContactContainer = document.querySelector(`.oneContactContainer[data-contact-id="${contactId}"]`);
-    if (currentContactContainer) {
-        currentContactContainer.style.backgroundColor = "#2A3647";
-        const currentContactH2 = currentContactContainer.querySelector("h2");
-        if (currentContactH2) {
-            currentContactH2.style.color = "white";
-        }
-    }
-}
-
-
-/**
- * Changes the background color of the previously clicked contact container to white.
- * @param {string} contactId - The ID of the previously clicked contact.
- */
-function openContactsScreenDesktopChangeColorWhite(contactId) {
-    const lastClickedContactContainer = document.querySelector(`.oneContactContainer[data-contact-id="${contactId}"]`);
-    if (lastClickedContactContainer) {
-        lastClickedContactContainer.style.backgroundColor = "white";
-        const lastClickedContactH2 = lastClickedContactContainer.querySelector("h2");
-        if (lastClickedContactH2) {
-            lastClickedContactH2.style.color = "black";
-        }
-    }
-}
-
-
-/**
- * Generate HTML for clicked contact details
- * @param {string} content - contactsContent div container
- * @param {string} selectedContact - This is the selected contact to open
- */
-function openContactScreenDesktopHTML(content, selectedContact) {
-    content.innerHTML = /*html*/ `
-      &lt;div class="contactsContentRightSideHeadLine">
-          &lt;h1 class="contactsContentRightSideH1">
-            Contacts
-          &lt;/h1>
-          &lt;img class="contactsContentRightSideBlueStribeSvg" src="./assets/img/contacts/contactsContentRightSideBlueStripe.svg" alt="">        
-          &lt;p class="contactsContentRightSideHeadLinePElement">Better with a team&lt;/p>
-      &lt;/div>  
-      &lt;div id="contactsContentRightSideContactDataContainerID">
-        &lt;div class="contactsContentRightSideUserImgAndNameContainer">
-          ${singleMemberToHTMLOpenContactDesktop(selectedContact, 0)}
-        &lt;div>
-            &lt;h2 class="contactsContentRightSideUserNameH2">${selectedContact.name}&lt;/h2>
-              &lt;div class="contactsContentRightSideEditAndDeleteButtonContainer">
-                &lt;img class="contactsContentRightSideEditButton" src="./assets/img/contacts/editContactsButtonDesktop.svg" alt="" onclick="editContactDestop(lastClickedContactId)">
-                &lt;img class="contactsContentRightSideDeleteButton" src="./assets/img/contacts/DeleteContactButtonDesktop.svg" alt="" onclick="deleteContactDesktop(lastClickedContactId)">
-              &lt;/div>
-          &lt;/div> 
-        &lt;/div>
-        &lt;div class="contactsContentRightSideContactInformationDesktop">
-          &lt;p class="contactsContentRightSideContactInformationDesktopPText">Contact Information&lt;/p>
-        &lt;/div>
-        &lt;div class="contactsContentRightSideContactEmailH2Desktop">
-          &lt;h2 class="contactsContentRightSideContactEmailH2">Email&lt;/h2>
-        &lt;/div>
-        &lt;div class="openContactEmailLinkDesktopContainer">
-          &lt;a class="openContactEmailLinkDesktop" href="mailto:${selectedContact.email}">${selectedContact.email}&lt;/a>
-        &lt;/div>
-        &lt;div class="contactsContentRightSideContactPhoneH2DesktopContainer">
-          &lt;h2 class="contactsContentRightSideContactPhoneH2Desktop">Phone&lt;/h2>
-        &lt;/div>
-        &lt;div class="openphoneNumberDesktopContainer">
-          &lt;p class="openphoneNumberDesktopPElement">${selectedContact.phone}&lt;/p>
-        &lt;/div>
-      &lt;/div>
-     `;
-}
-
-
-/**
- * Show the color from user image background html
- * @param {string} member - This is the user or contact name
- * @param {string} index - This is the ID for the user or contact
- */
-function singleMemberToHTMLOpenContactDesktop(member, index) {
-    let textcolor;
-    let iconRightStep = 10;
-    if (!isColorLight(member.colorCode)) textcolor = 'white';
-    return `
-        &lt;div class="openContactUserImgDesktop" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
-              ${getFirstLettersOfName(member.name)}
-        &lt;/div>
-    `;
-}
-
-
-/**
- * Show contacts content right side only for desktop view
- */
-function showContactsContentRightSideDesktop() {
-    const showcontactsContentRightSide = document.getElementById("contactsContentRightSideID");
-    showcontactsContentRightSide.style.display = "flex";
-}
-
-
-// Delete contact desktop
-
-/**
- * Deletes a contact from the desktop view and removes the contact from all tasks.
- * @param {string} contactId - The ID of the contact to be deleted.
- */
-function deleteContactDesktop(contactId) {
-  const currentUser = getLoggedInUser();    
-  const index = currentUser.contacts.findIndex(contact => contact.id === contactId);  
-  if (index !== -1) {
-    const contactToDelete = currentUser.contacts[index];
-    removeContactFromList(currentUser, index);
-    removeContactFromTasks(currentUser, contactToDelete);
-    saveUserData(currentUser);
-    refreshUI();
-  }
-}
-
-
-/**
- * Removes the contact from the user's contact list.
- * @param {Object} currentUser - The currently logged-in user.
- * @param {number} index - The index of the contact to be removed.
- */
-function removeContactFromList(currentUser, index) {
-  currentUser.contacts.splice(index, 1);
-}
-
-
-/**
- * Removes the contact from all assigned tasks.
- * @param {Object} currentUser - The currently logged-in user.
- * @param {Object} contactToDelete - The contact to be removed from tasks.
- */
-function removeContactFromTasks(currentUser, contactToDelete) {
-  if (currentUser.tasks &amp;&amp; Array.isArray(currentUser.tasks)) {
-    currentUser.tasks.forEach(task => {
-      if (task.assignedTo &amp;&amp; Array.isArray(task.assignedTo.userNames)) {
-        removeContactFromTask(task, contactToDelete);
-      }
-    });
-  }
-}
-
-
-/**
- * Removes the contact from a single task.
- * @param {Object} task - The task to update.
- * @param {Object} contactToDelete - The contact to remove from the task.
- */
-function removeContactFromTask(task, contactToDelete) {
-  const userIndex = task.assignedTo.userNames.indexOf(contactToDelete.name);  
-  if (userIndex !== -1) {
-    task.assignedTo.colorCodes.splice(userIndex, 1);
-    task.assignedTo.initials.splice(userIndex, 1);
-    task.assignedTo.textColor.splice(userIndex, 1);
-    task.assignedTo.userNames.splice(userIndex, 1);
-  }
-}
-
-
-/**
  * Saves the updated user data in localStorage and updates the backend.
  * @param {Object} currentUser - The currently logged-in user.
  */
@@ -343,69 +51,167 @@ function refreshUI() {
 
 
 /**
- * Show overlay for add contact at desktop view
+ * Show overlay for editing a contact at desktop view
+ * @param {string} lastClickedContactId - The ID of the last clicked contact
  */
-function addContactShowOverlayDesktop() {
-    const overlayContainer = document.createElement("div");
-    overlayContainer.classList.add("overlay-container");
-    document.body.appendChild(overlayContainer);
-    const overlayContent = document.createElement("div");
-    overlayContent.classList.add("overlay-content");
-    overlayContainer.appendChild(overlayContent);
-    generateHTMLAddContactShowOverlayDesktop(overlayContent);    
-    overlayContainer.style.animation = "slide-in-menu 0.5s ease-out";
+function editContactDestop(lastClickedContactId) {
+  const currentUser = getLoggedInUser();
+  const selectedContact = currentUser.contacts.find(contact => contact.id === lastClickedContactId);    
+  const overlayContainer = document.createElement("div");
+  overlayContainer.classList.add("overlay-container");
+  document.body.appendChild(overlayContainer);  
+  const overlayContent = document.createElement("div");
+  overlayContent.classList.add("overlay-content");
+  overlayContainer.appendChild(overlayContent);  
+  generateHTMLEditContactDesktop(overlayContent, selectedContact);  
+  overlayContainer.style.animation = "slide-in-menu 0.5s ease-out";
 }
 
 
 /**
-  * Generate HTML for add contact show overlay desktop
-  * @param {string} overlayContent - Overlay div container
-  */
-function generateHTMLAddContactShowOverlayDesktop(overlayContent) {
-    overlayContent.innerHTML = /*html*/ `
-      &lt;div class="overlay-card">
-        &lt;div class="addContactDesktopLeftSideContainer">
-          &lt;div class="flexDirectionColumn">
-            &lt;img class="joinLogoGreyBackgroundImg" src="./assets/img/contacts/joinLogoGreyBackground.png" alt="">
-            &lt;h1 class="addContactDesktopLeftSideContainerH1">Add contact&lt;/h1>
-            &lt;p class="addContactDesktopLeftSideContainerPElement">Tasks are better with a team!&lt;/p>
-            &lt;img class="addContactBlueStroked" src="./assets/img/contacts/addContactBlueStroked.svg" alt="">
-          &lt;/div>
-        &lt;/div>
-        &lt;div class="addContactDesktopRightSideContent">
-            &lt;div class="addContactCloseXContainerDesktop">
-              &lt;button class="addContactCloseXButton" onclick="hideOverlay()">X&lt;/button>
-            &lt;/div>
-            &lt;div id="edit-contact-destop-id">
-              &lt;div class="addContactContainerFooter">
-              &lt;form id="add-contact-show-overlay-desktop-id" name="addContactShowOverlayDesktop" onsubmit="event.preventDefault(); createContactDesktop()">
-              &lt;div class="addContactContainerFooter">
-              &lt;input class="addContactInputNameDesktop" type="text" name="addContactInputNameDesktop" id="add-contact-input-name-desktop-id" required pattern="[A-Za-z]+" placeholder="Name" data-contacts>
-                &lt;input class="addContactInputMailAddresssDesktop" name="addContactInputMailAddresssDesktop" id="add-contact-input-mail-addresss-desktop-id" type="email" required placeholder="E Mail" data-contacts>
-                &lt;input class="addContactInputPhoneDesktop" type="tel" name="addContactInputPhoneDesktop" id="add-contact-input-phone-desktop-id" required pattern="[0-9]{1,}" placeholder="Phone" data-contacts>
-                &lt;div class="addContactButtonContainerDesktop">
-                  &lt;button class="cancelContactDesktopDeleteButton" onclick="event.preventDefault(); hideOverlay()">Cancel&lt;/button>
-                  &lt;button class="createContactButton" onclick="event.preventDefault();createContactDesktop()">Create contact&lt;/button>
-                  &lt;/div>
-                &lt;/div>
-              &lt;/form>  
-              &lt;/div>
-            &lt;/div>
-          &lt;/div>
-        &lt;/div>
-      &lt;/div>
-      `;
+* Converts a single member object to HTML markup for displaying in the open contact desktop view.
+* @param {Object} member - The member object containing details like name and color code.
+* @param {number} index - The index of the member.
+* @returns {string} - The HTML markup representing the member.
+*/
+function singleMemberToHTMLOpenContactDesktop2(member, index) {
+let textcolor;
+let iconRightStep = 10;
+if (!isColorLight(member.colorCode)) textcolor = 'white';
+return `
+    &lt;div class="openContactUserImgMobile2" style="background-color: ${member.colorCode};color:${textcolor};right:${index * iconRightStep}px">
+        ${getFirstLettersOfName(member.name)}
+    &lt;/div>
+`;
 }
 
 
 /**
- * Function to hide the overlay screen on desktop view
- */
-function hideOverlay() {
-    const overlayContainer = document.querySelector(".overlay-container");
-    if (overlayContainer) {
-      overlayContainer.parentNode.removeChild(overlayContainer);
-    }
+* Updates the contact data on the desktop after validation.
+* @param {string} contactId - The ID of the contact to be updated.
+*/
+function updateContactsDataDesktop(contactId) {
+const { currentUser, contactIndex } = updateContactsDataDesktopVariables(contactId);  
+try {
+    const { updatedName, updatedEmail, updatedPhone } = editContactInputValidation();
+    currentUser.contacts[contactIndex].name = updatedName;
+    currentUser.contacts[contactIndex].email = updatedEmail;
+    currentUser.contacts[contactIndex].phone = updatedPhone;
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateCurrentUserInBackend(currentUser);  
+    clearAddContactDesktopRightSideContainer();
+    hideOverlay();
+    contactsInit();    
+} catch (error) {
+    displayErrorMessage(document.getElementById('editContactInputNameDesktopID'), error.message);
+}
+}
+
+
+/**
+* Validates the input fields for editing contact information.
+* @returns {Object} - An object containing the updated contact data or throws an error.
+*/
+function editContactInputValidation() {
+const updatedName = document.getElementById('editContactInputNameDesktopID').value.trim();
+const updatedEmail = document.getElementById('editContactInputMailAddresssDesktopID').value.trim();
+const updatedPhone = document.getElementById('editContactInputPhoneDesktopID').value.trim();
+if (!updatedName) {
+    throw new Error("Name is required.");
+}
+if (/[\d]/.test(updatedName)) {
+    throw new Error("Name cannot contain numbers.");
+}
+if (!updatedEmail || !validateEmailFormat(updatedEmail)) {
+    throw new Error("A valid email address is required.");
+}
+if (!updatedPhone || !validatePhoneFormat(updatedPhone)) {
+    throw new Error("A valid phone number is required.");
+}
+return { updatedName, updatedEmail, updatedPhone };
+}
+
+
+/**
+* Show successfully contact created image.
+*/
+function showSuccessfullyContactCreatedImageDesktop() {  
+  const imageElement = document.createElement("img");
+  imageElement.src = './assets/img/contacts/contactSuccessfullyCreatedOverlay.svg';
+  imageElement.style.position = "fixed";
+  imageElement.style.top = "50%";
+  imageElement.style.left = "50%";
+  imageElement.style.transform = "translate(-50%, -50%)";
+  imageElement.style.zIndex = "9999";  
+  document.body.appendChild(imageElement);
+  setTimeout(() => {
+    document.body.removeChild(imageElement);
+  }, 2000);
+}
+
+
+/**
+* Retrieves variables required for updating contact data on desktop.
+* @param {string} contactId - The ID of the contact to be updated.
+* @returns {Object} - Object containing updated contact data and related variables.
+*/
+function updateContactsDataDesktopVariables(contactId) {
+  const currentUser = getLoggedInUser();
+  const contactIndex = currentUser.contacts.findIndex(contact => contact.id === contactId);
+  return { currentUser, contactIndex };
+}
+
+
+/**
+* Validate email format.
+* @param {string} email - The email to validate.
+* @returns {boolean} - Returns true if valid, otherwise false.
+*/
+function validateEmailFormat(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+
+/**
+* Validate phone format (simple validation).
+* @param {string} phone - The phone number to validate.
+* @returns {boolean} - Returns true if valid, otherwise false.
+*/
+function validatePhoneFormat(phone) {
+  const phoneRegex = /^[0-9]+$/;
+  return phoneRegex.test(phone);
+}
+
+
+/**
+* Clear add contact desktop right side container
+*/
+function clearAddContactDesktopRightSideContainer() {
+  let addContactDesktopRightSideContainer = document.getElementById("contactsContentRightSideContactDataContainerID");
+  addContactDesktopRightSideContainer.innerHTML = "";
+}
+
+
+/**
+* Hide header and footer for edit contact and create contact screen on mobile view
+*/
+function hideHeaderAndFooter() {
+  const mobileHeader = document.querySelector(".header"); 
+  const menuTemplate = document.querySelector(".footer");
+  mobileHeader.style.display = "none";
+  menuTemplate.style.display = "none";
+}
+
+
+/**
+* Show header and footer screen on mobile view
+*/
+function showHeaderAndFooter() {
+  const mobileHeader = document.querySelector(".header");
+  const menuTemplate = document.querySelector(".footer");
+  mobileHeader.style.display = "block";
+  menuTemplate.style.display = "flex";
 }</code></pre>
         </article>
     </section>
@@ -416,13 +222,13 @@ function hideOverlay() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addContactShowOverlayDesktop">addContactShowOverlayDesktop</a></li><li><a href="global.html#createContactContainer">createContactContainer</a></li><li><a href="global.html#createLetterContainer">createLetterContainer</a></li><li><a href="global.html#deleteContactDesktop">deleteContactDesktop</a></li><li><a href="global.html#generateHTMLAddContactShowOverlayDesktop">generateHTMLAddContactShowOverlayDesktop</a></li><li><a href="global.html#groupContactsByFirstLetter">groupContactsByFirstLetter</a></li><li><a href="global.html#hideOverlay">hideOverlay</a></li><li><a href="global.html#openContactScreenDesktop">openContactScreenDesktop</a></li><li><a href="global.html#openContactScreenDesktopHTML">openContactScreenDesktopHTML</a></li><li><a href="global.html#openContactScreenDesktopVariables">openContactScreenDesktopVariables</a></li><li><a href="global.html#openContactsScreenDesktopChangeColorBlack">openContactsScreenDesktopChangeColorBlack</a></li><li><a href="global.html#openContactsScreenDesktopChangeColorWhite">openContactsScreenDesktopChangeColorWhite</a></li><li><a href="global.html#refreshUI">refreshUI</a></li><li><a href="global.html#removeContactFromList">removeContactFromList</a></li><li><a href="global.html#removeContactFromTask">removeContactFromTask</a></li><li><a href="global.html#removeContactFromTasks">removeContactFromTasks</a></li><li><a href="global.html#renderAddContactButtonDesktop">renderAddContactButtonDesktop</a></li><li><a href="global.html#renderContactsByFirstLetterDesktop">renderContactsByFirstLetterDesktop</a></li><li><a href="global.html#renderContactsDesktop">renderContactsDesktop</a></li><li><a href="global.html#saveUserData">saveUserData</a></li><li><a href="global.html#showContactsContentRightSideDesktop">showContactsContentRightSideDesktop</a></li><li><a href="global.html#singleMemberToHTMLOpenContactDesktop">singleMemberToHTMLOpenContactDesktop</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#clearAddContactDesktopRightSideContainer">clearAddContactDesktopRightSideContainer</a></li><li><a href="global.html#editContactDestop">editContactDestop</a></li><li><a href="global.html#editContactInputValidation">editContactInputValidation</a></li><li><a href="global.html#hideHeaderAndFooter">hideHeaderAndFooter</a></li><li><a href="global.html#refreshUI">refreshUI</a></li><li><a href="global.html#saveUserData">saveUserData</a></li><li><a href="global.html#showHeaderAndFooter">showHeaderAndFooter</a></li><li><a href="global.html#showSuccessfullyContactCreatedImageDesktop">showSuccessfullyContactCreatedImageDesktop</a></li><li><a href="global.html#singleMemberToHTMLOpenContactDesktop2">singleMemberToHTMLOpenContactDesktop2</a></li><li><a href="global.html#updateContactsDataDesktop">updateContactsDataDesktop</a></li><li><a href="global.html#updateContactsDataDesktopVariables">updateContactsDataDesktopVariables</a></li><li><a href="global.html#validateEmailFormat">validateEmailFormat</a></li><li><a href="global.html#validatePhoneFormat">validatePhoneFormat</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Oct 10 2024 22:34:28 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Oct 19 2024 23:08:53 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
