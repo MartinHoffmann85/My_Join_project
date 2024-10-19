@@ -30,12 +30,13 @@ function contactsInit() {
         setTimeout(showHeaderUserInitials, 500);
         contactsInitVariables();
         setMaxHeightReduced();
+        hideOverlay();
     } else {
         setTimeout(showHeaderAndFooter, 300);
         renderContactsDesktop();        
         document.body.style.overflow = 'hidden';
         setTimeout(showHeaderUserInitials, 500);      
-    }
+    }    
 }
 
 
