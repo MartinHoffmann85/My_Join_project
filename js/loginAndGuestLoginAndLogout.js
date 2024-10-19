@@ -1,45 +1,4 @@
 /**
- * Check if the logged-in user is added as a contact. If not, create a new contact.
- */
-async function checkIfUserAddedAsContact() {
-    const currentUser = getLoggedInUser();
-    ensureContactsArray(currentUser);
-    if (!isUserAddedAsContact(currentUser)) addLoggedInUserAsContact(currentUser);
-}
-
-
-/**
- * Ensures the contacts array exists for the user.
- * @param {Object} user - The current user object.
- */
-function ensureContactsArray(user) {
-    if (!Array.isArray(user.contacts)) user.contacts = [];
-}
-
-
-/**
- * Checks if the logged-in user is already added as a contact.
- * @param {Object} user - The current user object.
- * @returns {boolean} True if the user is added, otherwise false.
- */
-function isUserAddedAsContact(user) {
-    return user.contacts.some(contact => 
-        contact.name === `${user.userName} (you)` && contact.email === user.userEMail
-    );
-}
-
-
-/**
- * Adds the logged-in user as a contact.
- * @param {Object} user - The current user object.
- */
-function addLoggedInUserAsContact(user) {
-    const newContact = { name: `${user.userName} (you)`, email: user.userEMail, phone: '0', id: generateUniqueID() };
-    addContactToCurrentUser(newContact);
-}
-
-
-/**
  * Attempts to log in the user.
  */
 async function login() {
@@ -297,23 +256,6 @@ function guestLogin() {
     login();
     setTimeout(showHeaderUserInitials, 200);
     setTimeout(showMenuIfLoggedIn, 300);
-}
-
-
-/**
- * Displays the initials of the current user in the header profile section.
- */
-function showHeaderUserInitials() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser && currentUser.userName) {
-        const userName = currentUser.userName;
-        const [firstName, lastName] = userName.split(' ');
-        const initials = `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
-        const headerProfil = document.querySelector(".header-profil");
-        if (headerProfil) {
-            headerProfil.textContent = initials;
-        }
-    }
 }
 
 
