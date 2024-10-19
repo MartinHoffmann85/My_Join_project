@@ -12,6 +12,13 @@ if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.
   window.onload = contactsInit;
 
 
+  window.addEventListener('resize', function() {
+    if (!document.querySelector('.overlay-container')) {
+        contactsInit();
+    }
+});  
+
+
 /**
 * Initialize the contacts page based on the window width.
 * Renders contacts differently for mobile and desktop views.
