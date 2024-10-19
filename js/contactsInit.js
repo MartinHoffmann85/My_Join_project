@@ -1,22 +1,20 @@
 /**
- * Initializes or removes the 'resize' event listener for the 'contactsInit' function 
- * based on the current page's URL path. 
- * - If the current page is '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' or '/contacts.html',
- *   the 'contactsInit' function will be called on window resize.
- * - If the current page is not one of the specified paths, the 'resize' event listener will be removed. 
- * Additionally, the 'contactsInit' function is called when the page is fully loaded.
+ * Initializes the contacts page only if the current page is the contacts page.
+ * Adds a 'resize' event listener to trigger contactsInit on window resize.
+ * Calls contactsInit immediately after the page is loaded.
  */
-if (window.location.pathname === '/modul_10_gruppe_2_backup_21_03_2024/contacts.html' || window.location.pathname === '/contacts.html') {
-    window.addEventListener('resize', contactsInit);
-  }
-  window.onload = contactsInit;
-
-
-  window.addEventListener('resize', function() {
-    if (!document.querySelector('.overlay-container')) {
-        contactsInit();
+function initializeContactsPage() {
+    const isContactsPage = window.location.href === 'https://martin-hoffmann.developerakademie.net/join%20eigene%20version%203/contacts.html' || 
+                           window.location.href === 'http://127.0.0.1:5500/contacts.html';
+    
+    if (isContactsPage) {
+        window.addEventListener('resize', contactsInit);
+        window.onload = contactsInit;
     }
-});  
+}
+
+
+initializeContactsPage();
 
 
 /**
