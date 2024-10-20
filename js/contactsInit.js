@@ -24,7 +24,7 @@ initializeContactsPage();
 function contactsInit() {
     const maxWidth = 949;    
     if (window.innerWidth <= maxWidth) {
-        setTimeout(showHeaderAndFooter, 300);
+        setTimeout(showHeaderAndFooter, 500);
         renderContacts();
         renderAddContactButtonMobile();
         setTimeout(showHeaderUserInitials, 500);
@@ -32,7 +32,7 @@ function contactsInit() {
         setMaxHeightReduced();
         hideOverlay();
     } else {
-        setTimeout(showHeaderAndFooter, 300);
+        setTimeout(showHeaderAndFooter, 500);
         renderContactsDesktop();        
         document.body.style.overflow = 'hidden';
         setTimeout(showHeaderUserInitials, 500);      

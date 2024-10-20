@@ -10,7 +10,7 @@ function openContactScreenDesktop(contactId) {
         openContactsScreenDesktopChangeColorBlack(contactId);
     }    
     openContactScreenDesktopHTML(content, selectedContact);    
-    showHeaderAndFooter();    
+    setTimeout(showHeaderAndFooter, 500);
     showContactsContentRightSideDesktop();    
     const contactContainer = document.getElementById("contactsContentRightSideContactDataContainerID");
     contactContainer.style.animation = "slide-in-desktop 0.5s ease-out";
