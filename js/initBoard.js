@@ -105,15 +105,6 @@ function deleteTask(id) {
 
 
 /**
- * Fetches the current user from localStorage.
- * @returns {Object} - The current user object.
- */
-function getCurrentUser() {
-    return JSON.parse(localStorage.getItem('currentUser'));
-}
-
-
-/**
  * Finds the index of the task in the user's task list.
  * @param {Object} currentUser - The current user object.
  * @param {string} taskId - The task ID.

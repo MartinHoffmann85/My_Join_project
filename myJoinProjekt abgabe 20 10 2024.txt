@@ -1,0 +1,32 @@
+Hallo, ich möchte gern mein Join Projekt nochmal abgeben. Ich habe die angesprochenen Punkte behoben. Bei der letzten Abgabe, waren Fehler aufgetaucht die folge Fehler beinhalteten. Ich habe hier eine Liste mit den Fehlern erstellt und eine kleine Notitz hinter jedem Fehler Punkt geschrieben, zum besseren verständniss.
+
+1) Einloggen nach dem Registrieren war nicht möglich. (Hab ich gefixt, sollte nun gehen).
+2) Mehrere User konnten die gleiche E Mail Adresse haben. (Hab ich gefixt, sollte nun nicht gehen).
+3) Auf der index.html Seite (Login Bereich) habe ich den Abstand für den Sign Up Button erhöht.
+4) Wenn ein neuer User registriert wurde, sollen Kontakte und Tasks automatisch erstellt werden. (Habe ich implementiert).
+5) Header User initialen wurden nicht richtig erkannt. (Dieser Fehler tritt nur auf weil ein anderer Fehler aufgetreten ist, so vermute ich weil bei mir geht es).
+6) Bei der Kontakt Erstellung waren Buchstaben bei der Telefon Nummer möglich. (Wird nun validiert).
+7) Validierungen mit Custom Meldungen und nicht über HTML 5. (Habe ich geändert).
+8) Resize Window wurde nicht immer richtig erkannt. (Dieser Fehler hat meiner Meinung nach mehrere andere Fehler verursacht. Sollte nun funktionieren).
+9) Padding bei den Kontakten in der Mobilen Ansicht war nicht vorhanden. (Dieser Fehler trat auf weil die Seite nicht richtig geladen wurde wegen Punkt 8.)
+10) Blauer Punkt vom Logo war auf einmal zu sehen. (Dieser Fehler trat auf weil die Seite nicht richtig geladen wurde wegen Punkt 8.)
+11) Kontakte in der mobilen Ansicht konnten nicht angeklickt werden. (Dieser Fehler trat auf weil die Seite nicht richtig geladen wurde wegen Punkt 8.)
+12) Auf der Add Task Seite waren die Assignet to Felder zu breit. (Habe ich kleiner gemacht).
+13) Auf der Add Task Seite wurden die Assignet to Kontakte mit highlight nicht richtig angezeigt. (Bei mir funktioniert es immer wieder Einwand frei. Ich denke auch hier ist Punkt 8 wieder zu beachten.)
+14) Auf der Add Task Seite konnte man leere Subtasks erstellen. (Sollte nun nicht mehr gehen).
+15) Auf der Add Task Seite waren die category Auswahlfelder zu breit. (Habe ich verkleinert).
+16) Auf der Board Seite wurde das Highlite von den Tasks nach einem drag and drop nicht immer aus geschaltet. (Sollte nun nicht mehr vorkommen, habe es ganz oft versucht.)
+17) Auf der Board Seit in der mobilen Ansicht sollten die Spalten von links nach rechts gehen mit einer Scrollbar. (Habe ich gemacht, dachte wir sollen keinen seitlichen Scrollbalken haben?)
+18) Auf der Board Seite wenn man einen Task Editiert hat und mehrere Sachen geändert hatte, dann wurde nicht alles übernommen. (Habe ich geändert, nun sollten alle Änderungen gespeichert werden.)
+19) Auf der Board Seite wurden Assignet to Kontakte sofort übernommen. (Bei mir erst wenn ich den Task geschlossen habe, sollte eigentlich gehen).
+20) Auf der Board Seite wenn ein Task editiert werden soll dann wird nun ein "Save" Button angezeigt anstelle von "Edit".
+21) Auf der Summary Seite in der mobilen Ansicht wurde der Header mit falschen Abständen angezeigt. (Habe ich gefixt).
+22) Die js Dateien habe ich neu aufgeteilt und viele umbenannt.
+
+Das sollten alle Punkte gewesen sein. Sollte die Seite mal nicht wie gewohnt funktionieren bitte ich darum, die Seite neu zu laden. Ich weiß das sollte nicht vorkommen aber falls doch dann entstehen dadurch andere Fehler, die bei mir so nicht entstehen, weil die Seite richtig geladen wurde. Ich habe viel herum getestet und bei mir scheint es sehr gut zu funktionieren nach den Änderungen. Vielen Dank im Voraus.
+
+Projekt Link:https://martin-hoffmann.developerakademie.net/join%20eigene%20version%203/index.html
+
+GitHub Link:https://github.com/MartinHoffmann85/My_Join_project
+
+Grüße Martin

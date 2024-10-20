@@ -174,12 +174,21 @@ function ensureContactsArray(user) {
  * Displays the initials of the current user in the header profile section.
  */
 function showHeaderUserInitials() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));    
     if (currentUser && currentUser.userName) {
-        const userName = currentUser.userName;
-        const [firstName, lastName] = userName.split(' ');
-        const initials = `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
-        const headerProfil = document.querySelector(".header-profil");
+        const userName = currentUser.userName.trim();
+        const nameParts = userName.split(' ').filter(part => part.length > 0);        
+        let initials = '';
+        if (nameParts.length > 0) {
+            initials += nameParts[0].charAt(0).toUpperCase();
+        }
+        if (nameParts.length > 1) {
+            initials += nameParts[1].charAt(0).toUpperCase();
+        }
+        if (!initials) {
+            initials = '?';
+        }        
+        const headerProfil = document.querySelector(".header-profil");        
         if (headerProfil) {
             headerProfil.textContent = initials;
         }
