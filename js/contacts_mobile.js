@@ -4,15 +4,19 @@
 * @returns {string} The initials of the name.
 */
 function getFirstLettersOfName(name) {
-  let words = name.replace(/\s+/g, ' ').trim().split(" ");
+  let words = name.replace(/\s+/g, ' ').trim().split(" ");  
   let initials = "";
-  let namesProcessed = 0;  
+  let namesProcessed = 0;
   for (let word of words) {
+    word = word.replace(/[()]/g, '');
+    if (word.toLowerCase() === "you") {
+      continue;
+    }
     if (namesProcessed < 2 && word) {
       initials += word[0].toUpperCase();
       namesProcessed++;
     }
-  }  
+  }
   return initials;
 }
 
