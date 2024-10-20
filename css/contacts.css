@@ -166,8 +166,12 @@
 }
 
 .addContactButtonImgMobile {
-    height: 51px;    
-    cursor: pointer;    
+    height: 51px;
+    cursor: pointer;
+    position: fixed;
+    right: 40px;
+    bottom: 100px;
+    z-index: 1000;
 }
 
 .letterAndContactsContainer {
