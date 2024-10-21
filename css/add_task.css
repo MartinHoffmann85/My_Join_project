@@ -29,6 +29,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .content-container h1 {
+    margin-top: 40px;
     font-size: 47px;
     line-height: 56.4px;
     font-weight: 700;
@@ -569,7 +570,8 @@ li:active .hidden-Edit_menu {
         height: 30px;        
     }
 
-    .content-container h1 {
+    .content-container h1 {        
+        margin-top: 40px;
         font-size: 47px;
     }
 
