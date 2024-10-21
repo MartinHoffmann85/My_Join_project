@@ -1137,6 +1137,8 @@
 
     .task-container {
         margin-bottom: 50px;
+        gap: 10px;
+        min-width: 350px;
     }
 }
 
