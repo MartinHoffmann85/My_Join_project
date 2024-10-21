@@ -163,25 +163,3 @@ function clearAddContactDesktopRightSideContainer() {
   let addContactDesktopRightSideContainer = document.getElementById("contactsContentRightSideContactDataContainerID");
   addContactDesktopRightSideContainer.innerHTML = "";
 }
-
-
-/**
-* Hide header and footer for edit contact and create contact screen on mobile view
-*/
-function hideHeaderAndFooter() {
-  const mobileHeader = document.querySelector(".header"); 
-  const menuTemplate = document.querySelector(".footer");
-  mobileHeader.style.display = "none";
-  menuTemplate.style.display = "none";
-}
-
-
-/**
-* Show header and footer screen on mobile view
-*/
-function showHeaderAndFooter() {
-  const mobileHeader = document.querySelector(".header");
-  const menuTemplate = document.querySelector(".footer");
-  mobileHeader.style.display = "block";
-  menuTemplate.style.display = "flex";
-}
