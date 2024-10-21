@@ -94,6 +94,226 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="defaultContacts"><span class="type-signature">(constant) </span>defaultContacts<span class="type-signature"> :Array.&lt;Object></span></h4>
+
+
+
+
+<div class="description">
+    A list of default contacts that will be added to a new user.Each contact includes a name, email, phone number, a color code for display, and a text color code.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array.&lt;Object></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The name of the contact.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The email address of the contact.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>phone</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The phone number of the contact.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>colorCode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The color code used for representing the contact in the UI.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>textColorCode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The text color code for displaying the contact's name.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="userContactsAndTaskDummys.js.html">userContactsAndTaskDummys.js</a>, <a href="userContactsAndTaskDummys.js.html#line12">line 12</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -104,7 +324,7 @@
     
 
     
-    <h4 class="name" id="contactsInit"><span class="type-signature"></span>contactsInit<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addDefaultContactsAndTasksToUser"><span class="type-signature"></span>addDefaultContactsAndTasksToUser<span class="signature">(user)</span><span class="type-signature"></span></h4>
     
 
     
@@ -112,7 +332,7 @@
 
 
 <div class="description">
-    Initialize the contacts page based on the window width.Renders contacts differently for mobile and desktop views.
+    Adds default contacts and tasks to a newly registered user.
 </div>
 
 
@@ -121,6 +341,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The newly registered user.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -156,7 +425,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contactsInit.js.html">contactsInit.js</a>, <a href="contactsInit.js.html#line24">line 24</a>
+        <a href="userContactsAndTaskDummys.js.html">userContactsAndTaskDummys.js</a>, <a href="userContactsAndTaskDummys.js.html#line200">line 200</a>
     </li></ul></dd>
     
 
@@ -192,7 +461,7 @@
     
 
     
-    <h4 class="name" id="contactsInitVariables"><span class="type-signature"></span>contactsInitVariables<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="generateDefaultTasks"><span class="type-signature"></span>generateDefaultTasks<span class="signature">(contacts)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span></h4>
     
 
     
@@ -200,7 +469,7 @@
 
 
 <div class="description">
-    Initializes variables and styling for the contacts page on mobile view.
+    Generates default tasks for a newly registered user.The tasks are automatically assigned to the user's created contacts,and each task's `assignedTo` includes colorCodes, initials, textColor, and userNames.
 </div>
 
 
@@ -211,92 +480,53 @@
 
 
 
-
-
-
-
-<dl class="details">
-
+    <h5>Parameters:</h5>
     
 
-    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contactsInit.js.html">contactsInit.js</a>, <a href="contactsInit.js.html#line46">line 46</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <th>Type</th>
 
         
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>contacts</code></td>
             
 
-    
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of contact objects to assign tasks to.</td>
+        </tr>
 
     
-    <h4 class="name" id="initializeContactsPage"><span class="type-signature"></span>initializeContactsPage<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Initializes the contacts page only if the current page is the contacts page.Adds a 'resize' event listener to trigger contactsInit on window resize.Calls contactsInit immediately after the page is loaded.
-</div>
-
-
-
-
-
-
-
+    </tbody>
+</table>
 
 
 
@@ -332,7 +562,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="contactsInit.js.html">contactsInit.js</a>, <a href="contactsInit.js.html#line6">line 6</a>
+        <a href="userContactsAndTaskDummys.js.html">userContactsAndTaskDummys.js</a>, <a href="userContactsAndTaskDummys.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -357,6 +587,28 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Array of task objects.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -378,13 +630,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#contactsInit">contactsInit</a></li><li><a href="global.html#contactsInitVariables">contactsInitVariables</a></li><li><a href="global.html#initializeContactsPage">initializeContactsPage</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addDefaultContactsAndTasksToUser">addDefaultContactsAndTasksToUser</a></li><li><a href="global.html#defaultContacts">defaultContacts</a></li><li><a href="global.html#generateDefaultTasks">generateDefaultTasks</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 20 2024 01:32:22 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Oct 22 2024 01:28:09 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
