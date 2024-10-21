@@ -401,24 +401,21 @@
 
 .dropdown-container {
     position: fixed;
-    display: none;
-    overflow-x: hidden;
+    display: none;    
     bottom: 6rem;
     right: 0.5rem;
 }
 
 .dropdown-triggerContainer {
     display: flex;
-    flex-direction: row-reverse;
-    margin-right: 30px; 
+    flex-direction: row-reverse;    
 }
 
 .dropdown-trigger {
     cursor: pointer;
     display: flex;
     justify-content: right;
-    align-items: center;
-    margin-right: 1.5em;
+    align-items: center;    
     margin-top: 16em;
 }
 
@@ -429,8 +426,7 @@
     top: 5em;
     border-radius: 15px;
     background-color: var(--white-color);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    overflow-x: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);    
     animation: slide-in-menu 0.3s ease forwards;
 }
 
@@ -443,7 +439,7 @@
         left: 100%;
     }
     to {
-        left: 0;
+        left: -50px;
     }
 }
 

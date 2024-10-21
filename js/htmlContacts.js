@@ -235,7 +235,7 @@ function renderSingleMemberToHTMLMobile(oneContact, colorCode, textColor) {
 */
 function createContactOverlayContent(selectedContact) {    
     return `
-    <div class="openContactContainerHeader">                            
+    <div class="openContactContainerHeader">
         <div class="openContactBlockHeader">
             <div>
                 <p class="openContactH1">Contacts</p>
