@@ -815,6 +815,11 @@ body {
         height: 24px;
         width: 81px;
     }
+
+    .task-container {
+        gap: 10px;
+        min-width: 350px;
+    }
 }
 
 @media only screen and (max-width: 610px) and (min-width: 320px) {
