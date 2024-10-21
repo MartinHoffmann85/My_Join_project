@@ -185,6 +185,7 @@
 .letter-column {
     display: flex;
     flex-direction: column;
+    margin-top: 40px;
 }
 
 .contact-first-letter {
