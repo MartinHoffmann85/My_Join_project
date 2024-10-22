@@ -1,9 +1,10 @@
 /**
  * Initializes the footer module by setting the default color for the active link.
  */
-function footerInit() {
+async function footerInit() {
+    await showMenuIfLoggedIn();
     setInitialActiveLinkColor();    
-    showMenuIfLoggedIn();    
+    
 }
 
 
