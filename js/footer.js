@@ -4,7 +4,6 @@
 async function footerInit() {
     await showMenuIfLoggedIn();
     setInitialActiveLinkColor();    
-    
 }
 
 
@@ -12,7 +11,6 @@ async function footerInit() {
  * Displays or hides the menu and profile section based on the user's login status.
  * This function checks if the user is logged in by retrieving the login status from local storage
  * and adjusts the visibility of the profile and menu elements accordingly.
- * 
  * @returns {Promise<void>} This function is asynchronous and returns a promise that resolves to void.
  */
 async function showMenuIfLoggedIn() {

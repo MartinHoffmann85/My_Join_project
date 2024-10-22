@@ -19,9 +19,11 @@ document.addEventListener("click", function(event) {
   let headerProfilContainer = document.getElementById("headerProfilID");
   let dropdown = document.getElementById("dropdown");
   let targetElement = event.target;
-  if (!headerProfilContainer.contains(targetElement)) {    
+  if (headerProfilContainer && dropdown) {
+    if (!headerProfilContainer.contains(targetElement)) {    
       if (dropdown.style.display === "block") {    
-          dropdown.style.display = "none";
+        dropdown.style.display = "none";
       }
+    }
   }
 });
