@@ -50,7 +50,7 @@
 .toDoAndDoneCountContainer {
     display: flex;
     align-items: center;
-    gap: 18px;   
+    gap: 32px;   
 }
 
 .toDoAndDoneCountContainer a{
@@ -156,7 +156,9 @@
 .allTasksAndProgressAndFeedbackContainer {
     display: flex;
     align-items: center;
-    gap: 13px;
+    gap: 28px;
+    width: 560px;
+    height: 170px;
 }
 
 .allTasksAndProgressAndFeedbackContainer a {
@@ -169,11 +171,13 @@
     flex-direction: column;
     justify-content: center;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
+    border-radius: 30px;
     background-color: #ffffff;
-    padding: 15px;
+    padding-top: 25px;
+    padding-bottom: 25px;
     width: 168px;
     height: 168px;
+    gap: 13px;
     cursor: pointer;
 }
 
@@ -278,7 +282,7 @@
         flex-direction: column;
         align-items: center;
         margin-left: 0;
-        gap: 10px;
+        gap: 30px;
     }
 
     .summary-title {
@@ -301,6 +305,7 @@
 
     .allTasksAndProgressAndFeedbackContainer {
         margin-left: 20px;
+        width: 396px;
     }
 
     .toDoContainer {
@@ -401,7 +406,7 @@
     }
 }
 
-@media only screen and (max-width: 410px) and (min-width: 320px) {
+@media only screen and (max-width: 430px) and (min-width: 320px) {
     .summary-greeting {
         font-size: 24px;
         font-weight: 400;
@@ -409,7 +414,7 @@
 
     .summarypriorityAndNextDate {
         gap: 10px;
-        width: 250px;
+        width: 280px;
         height: 100px;      
     }
 
@@ -436,6 +441,7 @@
 
     .allTasksAndProgressAndFeedbackContainer {
         margin-left: 10px;
+        width: 300px;
     }
 
     .toDoAndDoneCountContainer {
