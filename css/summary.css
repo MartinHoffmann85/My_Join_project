@@ -30,8 +30,8 @@
 }
 
 .summary-icon {
-    height: 40px;
-    width: 40px;
+    height: 69px;
+    width: 69px;
     margin-right: 10px;
 }
 
@@ -444,6 +444,11 @@
     .toDoContainer {
         width: 120px;
         height: 90px;
+    }
+
+    .summary-icon {
+        height: 40px;
+        width: 40px;
     }
 }
 
