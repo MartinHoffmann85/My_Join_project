@@ -236,12 +236,15 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
+    border-radius: 30px;
     background-color: #ffffff;
-    padding: 10px;
-    width: 540px;
+    padding-top: 28px;
+    padding-right: 48px;
+    padding-bottom: 28px;
+    padding-left: 48px;
+    width: 560px;
     height: 168px;
-    gap: 20px;
+    gap: 61px;
     cursor: pointer;
 }
 
