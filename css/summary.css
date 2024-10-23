@@ -358,15 +358,13 @@
     }
 
     .toDoContainer {
-        width: 186px;
-        height: 110px;
+        width: 186px;        
     }
 
     .doneContainer {        
         justify-content: center;
         align-items: center;
-        width: 186px;
-        height: 110px;
+        width: 186px;        
     }
 
     .priorityAndNextDateContainer {
@@ -387,8 +385,7 @@
     }
 
     .progressContainer {
-        width: 116px;
-        height: 116px;      
+        width: 116px;             
     }
 
     .summary-greeting {
@@ -396,13 +393,11 @@
     }
 
     .allTasksContainer {
-        width: 116px;
-        height: 116px;
+        width: 116px;        
     }
 
     .feedbackContainer {
-        width: 116px;
-        height: 116px;
+        width: 116px;        
     }
 }
 
