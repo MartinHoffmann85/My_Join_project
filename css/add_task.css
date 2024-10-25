@@ -432,7 +432,8 @@ li:active .hidden-Edit_menu {
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 22px;
+        font-size: 20px;
+        font-weight: 400;
         height: 56px;
         width: 110px;
     }
