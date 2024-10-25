@@ -15,6 +15,7 @@ body {
 .boardH1AndSearchAndAddTaskButton {
     display: flex;
     justify-content: space-between;
+    padding-right: 80px;
 }
 
 .boardH1 {
